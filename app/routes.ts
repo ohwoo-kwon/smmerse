@@ -28,6 +28,9 @@ export default [
       route("/profile", "features/users/screens/profile.tsx"),
       route("/logout", "features/auth/screens/logout.tsx"),
     ]),
+    ...prefix("/basketball", [
+      route("/games", "features/basketball/games/screens/games.tsx"),
+    ]),
   ]),
   ...prefix("/api", [
     ...prefix("/users", [

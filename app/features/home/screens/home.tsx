@@ -1,10 +1,16 @@
 import type { Route } from "./+types/home";
 
+import { redirect } from "react-router";
+
 export const meta: Route.MetaFunction = () => {
   return [
     { title: import.meta.env.VITE_APP_NAME },
-    { name: "description", content: "Just Start Making Your Project" },
+    { name: "description", content: "농구 게스트 및 픽업 게임 모집글" },
   ];
+};
+
+export const loader = () => {
+  return redirect("/basketball/games");
 };
 
 export default function Home() {
