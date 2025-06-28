@@ -15,6 +15,13 @@
       "when": 1750766171036,
       "tag": "0001_lyrical_whistler",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1750767709868,
+      "tag": "0002_unknown_molten_man",
+      "breakpoints": true
     }
   ]
 }

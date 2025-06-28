@@ -25,6 +25,12 @@ export const basketballSkillLevelEnum = pgEnum("basketball_skill_level", [
   "level_5",
 ]);
 
+export const genderTypeEnum = pgEnum("gender_type", [
+  "male",
+  "female",
+  "mixed",
+]);
+
 export const basketballGames = pgTable(
   "basketball_games",
   {
@@ -44,6 +50,7 @@ export const basketballGames = pgTable(
     sido: varchar({ length: 50 }).notNull(),
     city: varchar({ length: 50 }).notNull(),
     address: varchar({ length: 255 }).notNull(),
+    genderType: genderTypeEnum("gender_type").notNull().default("mixed"),
     link: text(),
     ...timestamps,
   },
