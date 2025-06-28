@@ -7,6 +7,7 @@ import {
   Sheet,
   SheetClose,
   SheetContent,
+  SheetDescription,
   SheetFooter,
   SheetHeader,
   SheetTitle,
@@ -75,12 +76,18 @@ export default function SidoFilter() {
     <Sheet>
       <SheetTrigger asChild>
         <Button size="sm" variant="outline">
-          지역
+          지역{" "}
+          {selected.length > 0 && (
+            <span className="text-primary-foreground bg-primary flex size-4 items-center justify-center rounded-full p-1 text-xs">
+              {selected.length}
+            </span>
+          )}
         </Button>
       </SheetTrigger>
       <SheetContent side="bottom">
         <SheetHeader>
           <SheetTitle>지역을 골라주세요.</SheetTitle>
+          <SheetDescription></SheetDescription>
         </SheetHeader>
         <div className="max-h-96 space-y-4 overflow-y-auto px-4">
           {sidoObject.map(
@@ -143,6 +150,16 @@ export default function SidoFilter() {
               </Badge>
             ))}
           </div>
+          <Button
+            variant="secondary"
+            onClick={() => {
+              searchParams.delete("city");
+              searchParams.delete("sido");
+              setSearchParams(searchParams);
+            }}
+          >
+            초기화
+          </Button>
           <SheetClose asChild>
             <Button variant="outline">닫기</Button>
           </SheetClose>

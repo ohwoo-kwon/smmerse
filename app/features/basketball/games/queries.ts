@@ -3,6 +3,8 @@ import type { Database } from "database.types";
 
 import type { basketballSkillLevelEnum, genderTypeEnum } from "./schema";
 
+import { DateTime } from "luxon";
+
 const PAGE_SIZE = 20;
 
 export const getBasketballGames = async (
@@ -14,6 +16,7 @@ export const getBasketballGames = async (
     city,
     genderType,
     level,
+    date,
   }: {
     page: number;
     search?: string;
@@ -21,17 +24,27 @@ export const getBasketballGames = async (
     city?: string;
     genderType?: (typeof genderTypeEnum.enumValues)[number];
     level?: (typeof basketballSkillLevelEnum.enumValues)[number];
+    date?: string;
   },
 ) => {
   const baseQuery = client
     .from("basketball_games")
     .select("*")
     .range((page - 1) * PAGE_SIZE, page * PAGE_SIZE - 1)
-    .order("created_at");
+    .order("date")
+    .order("start_time");
 
   if (search) baseQuery.like("name", `%${search}%`);
   if (genderType) baseQuery.eq("gender_type", genderType);
   if (level) baseQuery.eq("skill_level", level);
+  if (date) baseQuery.eq("date", date);
+  else {
+    baseQuery.gte("date", DateTime.now().toFormat("yyyy-MM-dd"));
+    baseQuery.lt(
+      "date",
+      DateTime.now().plus({ days: 14 }).toFormat("yyyy-MM-dd"),
+    );
+  }
 
   if (sido || city) {
     const orConditions: string[] = [];
@@ -64,12 +77,14 @@ export const getBasketballGamesPage = async (
     city,
     genderType,
     level,
+    date,
   }: {
     search?: string;
     sido?: string;
     city?: string;
     genderType?: (typeof genderTypeEnum.enumValues)[number];
     level?: (typeof basketballSkillLevelEnum.enumValues)[number];
+    date?: string;
   },
 ) => {
   const baseQuery = client
@@ -79,6 +94,14 @@ export const getBasketballGamesPage = async (
   if (search) baseQuery.like("name", `%${search}%`);
   if (genderType) baseQuery.eq("gender_type", genderType);
   if (level) baseQuery.eq("skill_level", level);
+  if (date) baseQuery.eq("date", date);
+  else {
+    baseQuery.gte("date", DateTime.now().toFormat("yyyy-MM-dd"));
+    baseQuery.lt(
+      "date",
+      DateTime.now().plus({ days: 14 }).toFormat("yyyy-MM-dd"),
+    );
+  }
 
   if (sido || city) {
     const orConditions: string[] = [];

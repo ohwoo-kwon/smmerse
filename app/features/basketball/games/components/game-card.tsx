@@ -42,19 +42,22 @@ export default function BasketballGameCard({
   const formatedDate = DateTime.fromFormat(date, "yyyy-MM-dd").toFormat(
     "yy.MM.dd",
   );
-  const formatedStartTime = DateTime.fromFormat(startTime, "hh:mm:ss").toFormat(
-    "hh:mm",
+  const formatedStartTime = DateTime.fromFormat(startTime, "HH:mm:ss").toFormat(
+    "HH:mm",
   );
-  const formatedEndTime = DateTime.fromFormat(endTime, "hh:mm:ss").toFormat(
-    "hh:mm",
+  const formatedEndTime = DateTime.fromFormat(endTime, "HH:mm:ss").toFormat(
+    "HH:mm",
   );
   return (
     <Card className="p-0">
-      <CardContent className="flex flex-col gap-3 p-3">
-        <div className="flex items-center justify-between">
-          <h2 className="overflow-auto text-sm font-bold break-words whitespace-normal md:text-lg">
-            {title}
-          </h2>
+      <CardContent className="flex flex-col gap-2 p-0">
+        <div className="flex items-center justify-between gap-2 px-6 pt-3">
+          <div className="flex flex-col overflow-auto break-words whitespace-normal">
+            <span className="text-primary text-xs font-semibold md:text-sm">
+              {formatedStartTime} - {formatedEndTime}
+            </span>
+            <h2 className="text-sm font-bold md:text-lg">{title}</h2>
+          </div>
           <div className="flex gap-1">
             {skillLevel && (
               <Badge variant="secondary">
@@ -64,10 +67,10 @@ export default function BasketballGameCard({
             <Badge variant="secondary">{genderTypeMap[genderType]}</Badge>
           </div>
         </div>
-        <div className="text-muted-foreground flex flex-col flex-wrap gap-1 text-xs md:text-sm">
+        <div className="text-muted-foreground flex flex-col flex-wrap gap-1 px-6 text-xs md:text-sm">
           <div className="flex items-center gap-1">
             <CalendarIcon className="text-primary" size={14} />
-            {formatedDate} {formatedStartTime}~{formatedEndTime}
+            {formatedDate}
           </div>
           <div className="flex items-center gap-1">
             <MapPinIcon className="text-primary" size={14} />
@@ -78,7 +81,7 @@ export default function BasketballGameCard({
             {maxParticipants} 명
           </div>
         </div>
-        <div className="flex items-center justify-between">
+        <div className="bg-accent flex items-center justify-between px-6 py-3">
           <div className="text-primary text-sm font-bold md:text-lg">
             {fee.toLocaleString()}원
           </div>
