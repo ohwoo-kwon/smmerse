@@ -30,6 +30,16 @@ export default [
     ]),
     ...prefix("/basketball", [
       route("/games", "features/basketball/games/screens/games.tsx"),
+      // layout(
+      //   "core/layouts/private.layout.tsx",
+      //   { id: "private-basketball-game" },
+      //   [
+      route(
+        "/games/create",
+        "features/basketball/games/screens/create-game.tsx",
+        //   ),
+        // ],
+      ),
     ]),
   ]),
   ...prefix("/api", [

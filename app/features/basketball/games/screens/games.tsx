@@ -1,10 +1,10 @@
 import type { Route } from "./+types/games";
 
-import { DateTime } from "luxon";
 import { Suspense } from "react";
-import { Await } from "react-router";
+import { Await, Link } from "react-router";
 import z from "zod";
 
+import { Button } from "~/core/components/ui/button";
 import makeServerClient from "~/core/lib/supa-client.server";
 
 import DateFilter from "../components/date-filter";
@@ -31,7 +31,7 @@ export const meta: Route.MetaFunction = ({ location }) => {
     },
     {
       name: "description",
-      content: `${selected.join(",")} 농구 게스트 모집 | ${import.meta.env.VITE_APP_NAME}`,
+      content: `${selected.join(",")} 농구 게스트 모집`,
     },
   ];
 };
@@ -95,10 +95,15 @@ export default function BasketballGames({ loaderData }: Route.ComponentProps) {
       {/* Filter bar */}
       <div className="space-y-2">
         <DateFilter />
-        <div className="flex flex-wrap gap-2">
-          <SidoFilter />
-          <GenderSelect />
-          <SkillLevelSelect />
+        <div className="flex items-center justify-between">
+          <div className="flex flex-wrap gap-2">
+            <SidoFilter />
+            <GenderSelect />
+            <SkillLevelSelect />
+          </div>
+          <Button>
+            <Link to="/basketball/games/create">경기 만들기</Link>
+          </Button>
         </div>
       </div>
 
