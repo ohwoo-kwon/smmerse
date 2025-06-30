@@ -9,6 +9,7 @@ import { Card, CardFooter } from "~/core/components/ui/card";
 
 import CreateGameDateCard from "../components/create-game-date-card";
 import CreateGameInfoCard from "../components/create-game-info-card";
+import CreateGameLocationCard from "../components/create-game-location-card";
 import CreatePagination from "../components/create-pagination";
 
 export const meta: Route.MetaFunction = () => {
@@ -35,8 +36,8 @@ export default function CreateGame() {
     skillLevel: "level_0",
     maxParticipants: 18,
     fee: 5000,
-    sido: "",
-    city: "",
+    sido: "서울",
+    city: "강남구",
     address: "",
     genderType: "male",
     link: "",
@@ -53,31 +54,48 @@ export default function CreateGame() {
   const onChangeDate = (date: string) =>
     setGameInfo((prev) => ({ ...prev, date }));
 
+  const onChangeLocation = (id: "sido" | "city", value: string) =>
+    setGameInfo((prev) => ({ ...prev, [id]: value }));
+
+  const handlePage = (type: "next" | "prev") => {
+    if (type === "next") {
+      currentPage < PAGE_SIZE
+        ? setCurrentPage((prev) =>
+            prev + 1 < PAGE_SIZE ? prev + 1 : PAGE_SIZE,
+          )
+        : console.log("완료");
+    } else if (type === "prev")
+      setCurrentPage((prev) => (prev - 1 > 0 ? prev - 1 : 1));
+  };
+
   return (
     <div className="space-y-8 p-4">
       <CreatePagination pageSize={PAGE_SIZE} currentPage={currentPage} />
       <Card className="mx-auto max-w-xl">
         {currentPage === 1 ? (
           <CreateGameInfoCard gameInfo={gameInfo} onChange={onChange} />
-        ) : (
+        ) : currentPage === 2 ? (
           <CreateGameDateCard
             gameInfo={gameInfo}
             onChange={onChange}
             onChangeDate={onChangeDate}
           />
+        ) : (
+          <CreateGameLocationCard
+            gameInfo={gameInfo}
+            onChange={onChange}
+            onChangeLocation={onChangeLocation}
+          />
         )}
         <CardFooter className="flex items-center justify-between">
           {currentPage !== 1 ? (
-            <Button
-              variant="secondary"
-              onClick={() => setCurrentPage((prev) => prev - 1)}
-            >
+            <Button variant="secondary" onClick={() => handlePage("prev")}>
               이전
             </Button>
           ) : (
             <span></span>
           )}
-          <Button onClick={() => setCurrentPage((prev) => prev + 1)}>
+          <Button onClick={() => handlePage("next")}>
             {currentPage !== PAGE_SIZE ? "다음" : "완료"}
           </Button>
         </CardFooter>
