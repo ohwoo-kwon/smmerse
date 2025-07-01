@@ -1,0 +1,2 @@
+ALTER TABLE "basketball_games" ADD COLUMN "min_participants" integer DEFAULT 0 NOT NULL;--> statement-breakpoint
+ALTER TABLE "basketball_games" ADD COLUMN "current_participants" integer DEFAULT 0 NOT NULL;

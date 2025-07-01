@@ -1,3 +1,4 @@
+import type { basketballSkillLevelEnum } from "../schema";
 import type { BasketballGame } from "../types";
 import type { Route } from "./+types/create-game";
 
@@ -8,6 +9,7 @@ import { Button } from "~/core/components/ui/button";
 import { Card, CardFooter } from "~/core/components/ui/card";
 
 import CreateGameDateCard from "../components/create-game-date-card";
+import CreateGameFeeCard from "../components/create-game-fee-card";
 import CreateGameInfoCard from "../components/create-game-info-card";
 import CreateGameLocationCard from "../components/create-game-location-card";
 import CreatePagination from "../components/create-pagination";
@@ -34,6 +36,7 @@ export default function CreateGame() {
     startTime: "18:00",
     endTime: "21:00",
     skillLevel: "level_0",
+    minParticipants: 0,
     maxParticipants: 18,
     fee: 5000,
     sido: "서울",
@@ -56,6 +59,10 @@ export default function CreateGame() {
 
   const onChangeLocation = (id: "sido" | "city", value: string) =>
     setGameInfo((prev) => ({ ...prev, [id]: value }));
+
+  const onChangeSkillLevel = (
+    value: (typeof basketballSkillLevelEnum.enumValues)[number],
+  ) => setGameInfo((prev) => ({ ...prev, skillLevel: value }));
 
   const handlePage = (type: "next" | "prev") => {
     if (type === "next") {
@@ -80,11 +87,17 @@ export default function CreateGame() {
             onChange={onChange}
             onChangeDate={onChangeDate}
           />
-        ) : (
+        ) : currentPage === 3 ? (
           <CreateGameLocationCard
             gameInfo={gameInfo}
             onChange={onChange}
             onChangeLocation={onChangeLocation}
+          />
+        ) : (
+          <CreateGameFeeCard
+            gameInfo={gameInfo}
+            onChange={onChange}
+            onChangeSkillLevel={onChangeSkillLevel}
           />
         )}
         <CardFooter className="flex items-center justify-between">

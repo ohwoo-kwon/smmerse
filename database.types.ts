@@ -15,6 +15,7 @@ export type Database = {
           basketball_game_id: number
           city: string
           created_at: string
+          current_participants: number
           date: string
           description: string | null
           end_time: string
@@ -22,6 +23,7 @@ export type Database = {
           gender_type: Database["public"]["Enums"]["gender_type"]
           link: string | null
           max_participants: number
+          min_participants: number
           profile_id: string | null
           sido: string
           skill_level:
@@ -36,6 +38,7 @@ export type Database = {
           basketball_game_id?: never
           city: string
           created_at?: string
+          current_participants?: number
           date: string
           description?: string | null
           end_time: string
@@ -43,6 +46,7 @@ export type Database = {
           gender_type?: Database["public"]["Enums"]["gender_type"]
           link?: string | null
           max_participants: number
+          min_participants?: number
           profile_id?: string | null
           sido: string
           skill_level?:
@@ -57,6 +61,7 @@ export type Database = {
           basketball_game_id?: never
           city?: string
           created_at?: string
+          current_participants?: number
           date?: string
           description?: string | null
           end_time?: string
@@ -64,6 +69,7 @@ export type Database = {
           gender_type?: Database["public"]["Enums"]["gender_type"]
           link?: string | null
           max_participants?: number
+          min_participants?: number
           profile_id?: string | null
           sido?: string
           skill_level?:
