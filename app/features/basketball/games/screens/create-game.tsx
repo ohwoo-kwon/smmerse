@@ -1,9 +1,10 @@
-import type { basketballSkillLevelEnum } from "../schema";
+import type { basketballSkillLevelEnum, genderTypeEnum } from "../schema";
 import type { BasketballGame } from "../types";
 import type { Route } from "./+types/create-game";
 
 import { DateTime } from "luxon";
-import { type ChangeEvent, useState } from "react";
+import { type ChangeEvent, useEffect, useState } from "react";
+import { redirect, useFetcher, useNavigate } from "react-router";
 
 import { Button } from "~/core/components/ui/button";
 import { Card, CardFooter } from "~/core/components/ui/card";
@@ -38,6 +39,7 @@ export default function CreateGame() {
     skillLevel: "level_0",
     minParticipants: 0,
     maxParticipants: 18,
+    currentParticipants: 0,
     fee: 5000,
     sido: "서울",
     city: "강남구",
@@ -46,6 +48,10 @@ export default function CreateGame() {
     link: "",
   });
   const [currentPage, setCurrentPage] = useState(1);
+
+  const fetcher = useFetcher();
+
+  const navigate = useNavigate();
 
   const onChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const {
@@ -64,16 +70,31 @@ export default function CreateGame() {
     value: (typeof basketballSkillLevelEnum.enumValues)[number],
   ) => setGameInfo((prev) => ({ ...prev, skillLevel: value }));
 
+  const onChangeGenderType = (
+    value: (typeof genderTypeEnum.enumValues)[number],
+  ) => setGameInfo((prev) => ({ ...prev, genderType: value }));
+
   const handlePage = (type: "next" | "prev") => {
     if (type === "next") {
       currentPage < PAGE_SIZE
         ? setCurrentPage((prev) =>
             prev + 1 < PAGE_SIZE ? prev + 1 : PAGE_SIZE,
           )
-        : console.log("완료");
+        : createGame();
     } else if (type === "prev")
       setCurrentPage((prev) => (prev - 1 > 0 ? prev - 1 : 1));
   };
+
+  const createGame = async () => {
+    fetcher.submit(gameInfo, {
+      method: "post",
+      action: "/api/basketball/games",
+    });
+  };
+
+  useEffect(() => {
+    if (fetcher.data?.success) navigate("/basketball/games");
+  }, [fetcher.data]);
 
   return (
     <div className="space-y-8 p-4">
@@ -98,6 +119,7 @@ export default function CreateGame() {
             gameInfo={gameInfo}
             onChange={onChange}
             onChangeSkillLevel={onChangeSkillLevel}
+            onChangeGenderType={onChangeGenderType}
           />
         )}
         <CardFooter className="flex items-center justify-between">

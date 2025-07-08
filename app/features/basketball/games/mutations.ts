@@ -1,0 +1,64 @@
+import type { SupabaseClient } from "@supabase/supabase-js";
+import type { Database } from "database.types";
+
+import type { basketballSkillLevelEnum, genderTypeEnum } from "./schema";
+
+export const insertBasketballGame = async (
+  client: SupabaseClient<Database>,
+  {
+    profileId,
+    title,
+    description,
+    date,
+    startTime,
+    endTime,
+    skillLevel,
+    minParticipants,
+    maxParticipants,
+    currentParticipants,
+    fee,
+    sido,
+    city,
+    address,
+    genderType,
+    link,
+  }: {
+    profileId?: string;
+    title: string;
+    description?: string;
+    date: string;
+    startTime: string;
+    endTime: string;
+    skillLevel: (typeof basketballSkillLevelEnum.enumValues)[number];
+    minParticipants: number;
+    maxParticipants: number;
+    currentParticipants: number;
+    fee: number;
+    sido: string;
+    city: string;
+    address: string;
+    genderType: (typeof genderTypeEnum.enumValues)[number];
+    link?: string;
+  },
+) => {
+  const { data, error } = await client.from("basketball_games").insert({
+    profile_id: profileId,
+    title,
+    description,
+    date,
+    start_time: startTime,
+    end_time: endTime,
+    skill_level: skillLevel,
+    min_participants: minParticipants,
+    max_participants: maxParticipants,
+    current_participants: currentParticipants,
+    fee,
+    sido,
+    city,
+    address,
+    gender_type: genderType,
+    link,
+  });
+  if (error) throw error;
+  return data;
+};

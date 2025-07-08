@@ -49,5 +49,14 @@ export default [
       route("/email", "features/users/apis/change-email.tsx"),
       route("/profile", "features/users/apis/edit-profile.tsx"),
     ]),
+    layout(
+      "core/layouts/private.layout.tsx",
+      { id: "private-basketball-game-api" },
+      [
+        ...prefix("/basketball", [
+          route("/games", "features/basketball/games/apis/create-game.tsx"),
+        ]),
+      ],
+    ),
   ]),
 ] satisfies RouteConfig;

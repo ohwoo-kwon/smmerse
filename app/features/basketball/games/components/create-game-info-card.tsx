@@ -53,7 +53,19 @@ export default function CreateGameInfoCard({
 정수기는 있지만 개인 컵은 가져오셔야 합니다.
 
 흡연은 체육관 밖에서 가능합니다.`}
-            className="h-60 resize-none text-sm md:text-base"
+            className="min-h-60 resize-none text-sm md:text-base"
+          />
+        </div>
+        <div className="space-y-1">
+          <Label htmlFor="link" className="md:text-base">
+            링크
+          </Label>
+          <Input
+            id="link"
+            value={gameInfo.link}
+            onChange={onChange}
+            placeholder="링크가 있다면 등록해주세요."
+            className="text-sm md:text-base"
           />
         </div>
       </CardContent>

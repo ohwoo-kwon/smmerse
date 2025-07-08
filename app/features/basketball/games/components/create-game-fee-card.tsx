@@ -15,18 +15,23 @@ import { cn } from "~/core/lib/utils";
 import {
   basketballSkillLevelDescMap,
   basketballSkillLevelMap,
+  genderTypeMap,
 } from "../constants";
-import { basketballSkillLevelEnum } from "../schema";
+import { basketballSkillLevelEnum, genderTypeEnum } from "../schema";
 
 export default function CreateGameFeeCard({
   gameInfo,
   onChange,
   onChangeSkillLevel,
+  onChangeGenderType,
 }: {
   gameInfo: BasketballGame;
   onChange: (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
   onChangeSkillLevel: (
     value: (typeof basketballSkillLevelEnum.enumValues)[number],
+  ) => void;
+  onChangeGenderType: (
+    value: (typeof genderTypeEnum.enumValues)[number],
   ) => void;
 }) {
   return (
@@ -58,6 +63,25 @@ export default function CreateGameFeeCard({
                 <p className="text-muted-foreground text-xs md:text-sm">
                   {basketballSkillLevelDescMap[skillLevel]}
                 </p>
+              </div>
+            ))}
+          </div>
+        </div>
+        <div className="space-y-1">
+          <Label className="md:text-base">성별</Label>
+          <div className="flex justify-between gap-1">
+            {genderTypeEnum.enumValues.map((gender) => (
+              <div
+                key={gender}
+                className={cn(
+                  "w-full rounded border py-2 text-center",
+                  gender === gameInfo.genderType
+                    ? "border-primary bg-primary/10"
+                    : "'",
+                )}
+                onClick={() => onChangeGenderType(gender)}
+              >
+                {genderTypeMap[gender]}
               </div>
             ))}
           </div>

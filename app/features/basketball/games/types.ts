@@ -10,14 +10,18 @@ export const basketballGameSchema = z.object({
   startTime: z.string().min(1, "시작 시간을 입력해주세요."),
   endTime: z.string().min(1, "종료 시간을 입력해주세요."),
   skillLevel: z.enum(basketballSkillLevelEnum.enumValues).default("level_0"),
-  minParticipants: z.number().int().positive(),
-  maxParticipants: z.number().int().positive(),
-  fee: z.number().int().nonnegative(),
+  minParticipants: z.coerce.number(),
+  maxParticipants: z.coerce.number(),
+  currentParticipants: z.coerce.number().default(0),
+  fee: z.coerce.number(),
   sido: z.string().min(1, "시/도를 입력해주세요."),
   city: z.string().min(1, "구/군을 입력해주세요."),
   address: z.string().min(1, "주소를 입력해주세요."),
   genderType: z.enum(genderTypeEnum.enumValues).default("male"),
-  link: z.string().url().optional(),
+  link: z
+    .string()
+    .transform((val) => (val === "" ? undefined : val))
+    .optional(),
 });
 
 export type BasketballGame = z.infer<typeof basketballGameSchema>;
