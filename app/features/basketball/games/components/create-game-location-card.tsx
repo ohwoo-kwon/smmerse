@@ -2,6 +2,7 @@ import type { BasketballGame } from "../types";
 
 import React, { type ChangeEvent } from "react";
 
+import FormErrors from "~/core/components/form-errors";
 import {
   CardContent,
   CardDescription,
@@ -21,10 +22,12 @@ import { sidoObject } from "~/core/lib/address";
 
 export default function CreateGameLocationCard({
   gameInfo,
+  error,
   onChange,
   onChangeLocation,
 }: {
   gameInfo: BasketballGame;
+  error: Partial<BasketballGame>;
   onChange: (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
   onChangeLocation: (id: "sido" | "city", value: string) => void;
 }) {
@@ -63,6 +66,7 @@ export default function CreateGameLocationCard({
                 ))}
               </SelectContent>
             </Select>
+            {error.sido && <FormErrors errors={[error.sido]} />}
           </div>
           <div className="flex-1 space-y-1">
             <Label htmlFor="city" className="md:text-base">
@@ -87,6 +91,7 @@ export default function CreateGameLocationCard({
                   ))}
               </SelectContent>
             </Select>
+            {error.city && <FormErrors errors={[error.city]} />}
           </div>
         </div>
         <div className="space-y-1">
@@ -100,6 +105,7 @@ export default function CreateGameLocationCard({
             onChange={onChange}
             className="text-sm md:text-base"
           />
+          {error.address && <FormErrors errors={[error.address]} />}
         </div>
       </CardContent>
     </React.Fragment>

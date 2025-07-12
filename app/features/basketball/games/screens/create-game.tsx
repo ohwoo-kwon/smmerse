@@ -4,7 +4,8 @@ import type { Route } from "./+types/create-game";
 
 import { DateTime } from "luxon";
 import { type ChangeEvent, useEffect, useState } from "react";
-import { redirect, useFetcher, useNavigate } from "react-router";
+import { useFetcher, useNavigate } from "react-router";
+import { z } from "zod";
 
 import { Button } from "~/core/components/ui/button";
 import { Card, CardFooter } from "~/core/components/ui/card";
@@ -28,26 +29,28 @@ export const meta: Route.MetaFunction = () => {
 };
 
 const PAGE_SIZE = 4;
+const DEFAULT_GAME_INFO: BasketballGame = {
+  title: "",
+  description: "",
+  date: DateTime.now().toFormat("yyyy-MM-dd"),
+  startTime: "18:00",
+  endTime: "21:00",
+  skillLevel: "level_0",
+  minParticipants: 0,
+  maxParticipants: 18,
+  currentParticipants: 0,
+  fee: 5000,
+  sido: "서울",
+  city: "강남구",
+  address: "",
+  genderType: "male",
+  link: "",
+};
 
 export default function CreateGame() {
-  const [gameInfo, setGameInfo] = useState<BasketballGame>({
-    title: "",
-    description: "",
-    date: DateTime.now().toFormat("yyyy-MM-dd"),
-    startTime: "18:00",
-    endTime: "21:00",
-    skillLevel: "level_0",
-    minParticipants: 0,
-    maxParticipants: 18,
-    currentParticipants: 0,
-    fee: 5000,
-    sido: "서울",
-    city: "강남구",
-    address: "",
-    genderType: "male",
-    link: "",
-  });
+  const [gameInfo, setGameInfo] = useState<BasketballGame>(DEFAULT_GAME_INFO);
   const [currentPage, setCurrentPage] = useState(1);
+  const [error, setError] = useState<Partial<BasketballGame>>({});
 
   const fetcher = useFetcher();
 
@@ -74,15 +77,86 @@ export default function CreateGame() {
     value: (typeof genderTypeEnum.enumValues)[number],
   ) => setGameInfo((prev) => ({ ...prev, genderType: value }));
 
+  const validatePage = (page: number): boolean => {
+    switch (page) {
+      case 1:
+        if (!gameInfo.title.trim()) {
+          setError((prev) => ({ ...prev, title: "경기 제목을 입력해주세요." }));
+        } else {
+          setError((prev) => ({ ...prev, title: "" }));
+        }
+        return !!gameInfo.title.trim();
+      case 2:
+        if (!gameInfo.date) {
+          setError((prev) => ({ ...prev, date: "경기 날짜를 선택해주세요." }));
+        } else {
+          setError((prev) => ({ ...prev, date: "" }));
+        }
+        if (!gameInfo.startTime) {
+          setError((prev) => ({
+            ...prev,
+            startTime: "시작 시간을 선택해주세요.",
+          }));
+        } else {
+          setError((prev) => ({ ...prev, startTime: "" }));
+        }
+        if (!gameInfo.endTime) {
+          setError((prev) => ({
+            ...prev,
+            endTime: "종료 시간을 선택해주세요.",
+          }));
+        } else {
+          setError((prev) => ({ ...prev, endTime: "" }));
+        }
+        return !!gameInfo.date && !!gameInfo.startTime && !!gameInfo.endTime;
+      case 3:
+        if (!gameInfo.sido) {
+          setError((prev) => ({ ...prev, sido: "시/도를 선택해주세요." }));
+        } else {
+          setError((prev) => ({ ...prev, sido: "" }));
+        }
+        if (!gameInfo.city) {
+          setError((prev) => ({
+            ...prev,
+            city: "구/군을 선택해주세요.",
+          }));
+        } else {
+          setError((prev) => ({ ...prev, city: "" }));
+        }
+        if (!gameInfo.address) {
+          setError((prev) => ({
+            ...prev,
+            address: "상세주소를 입력해주세요.",
+          }));
+        } else {
+          setError((prev) => ({ ...prev, address: "" }));
+        }
+        return !!gameInfo.sido && !!gameInfo.city && !!gameInfo.address;
+      case 4:
+        if (!gameInfo.fee || gameInfo.fee < 0) {
+          setError((prev) => ({ ...prev, fee: 1 }));
+        } else {
+          setError((prev) => ({ ...prev, fee: undefined }));
+        }
+        return gameInfo.fee >= 0;
+      default:
+        return true;
+    }
+  };
+
   const handlePage = (type: "next" | "prev") => {
     if (type === "next") {
-      currentPage < PAGE_SIZE
-        ? setCurrentPage((prev) =>
-            prev + 1 < PAGE_SIZE ? prev + 1 : PAGE_SIZE,
-          )
-        : createGame();
-    } else if (type === "prev")
-      setCurrentPage((prev) => (prev - 1 > 0 ? prev - 1 : 1));
+      const isValid = validatePage(currentPage);
+      if (!isValid) return;
+
+      if (currentPage < PAGE_SIZE) {
+        setCurrentPage((prev) => Math.min(prev + 1, PAGE_SIZE));
+      } else {
+        createGame();
+      }
+    } else {
+      setCurrentPage((prev) => Math.max(prev - 1, 1));
+    }
   };
 
   const createGame = async () => {
@@ -90,6 +164,49 @@ export default function CreateGame() {
       method: "post",
       action: "/api/basketball/games",
     });
+  };
+
+  const renderCurrentPage = () => {
+    switch (currentPage) {
+      case 1:
+        return (
+          <CreateGameInfoCard
+            gameInfo={gameInfo}
+            error={error}
+            onChange={onChange}
+          />
+        );
+      case 2:
+        return (
+          <CreateGameDateCard
+            gameInfo={gameInfo}
+            error={error}
+            onChange={onChange}
+            onChangeDate={onChangeDate}
+          />
+        );
+      case 3:
+        return (
+          <CreateGameLocationCard
+            gameInfo={gameInfo}
+            error={error}
+            onChange={onChange}
+            onChangeLocation={onChangeLocation}
+          />
+        );
+      case 4:
+        return (
+          <CreateGameFeeCard
+            gameInfo={gameInfo}
+            error={error}
+            onChange={onChange}
+            onChangeSkillLevel={onChangeSkillLevel}
+            onChangeGenderType={onChangeGenderType}
+          />
+        );
+      default:
+        return null;
+    }
   };
 
   useEffect(() => {
@@ -100,28 +217,7 @@ export default function CreateGame() {
     <div className="space-y-8 p-4">
       <CreatePagination pageSize={PAGE_SIZE} currentPage={currentPage} />
       <Card className="mx-auto max-w-xl">
-        {currentPage === 1 ? (
-          <CreateGameInfoCard gameInfo={gameInfo} onChange={onChange} />
-        ) : currentPage === 2 ? (
-          <CreateGameDateCard
-            gameInfo={gameInfo}
-            onChange={onChange}
-            onChangeDate={onChangeDate}
-          />
-        ) : currentPage === 3 ? (
-          <CreateGameLocationCard
-            gameInfo={gameInfo}
-            onChange={onChange}
-            onChangeLocation={onChangeLocation}
-          />
-        ) : (
-          <CreateGameFeeCard
-            gameInfo={gameInfo}
-            onChange={onChange}
-            onChangeSkillLevel={onChangeSkillLevel}
-            onChangeGenderType={onChangeGenderType}
-          />
-        )}
+        {renderCurrentPage()}
         <CardFooter className="flex items-center justify-between">
           {currentPage !== 1 ? (
             <Button variant="secondary" onClick={() => handlePage("prev")}>

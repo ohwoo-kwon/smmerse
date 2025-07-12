@@ -101,7 +101,7 @@ export default function BasketballGames({ loaderData }: Route.ComponentProps) {
             <GenderSelect />
             <SkillLevelSelect />
           </div>
-          <Button>
+          <Button size="sm">
             <Link to="/basketball/games/create">경기 만들기</Link>
           </Button>
         </div>

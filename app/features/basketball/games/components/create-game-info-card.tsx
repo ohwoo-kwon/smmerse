@@ -2,6 +2,7 @@ import type { BasketballGame } from "../types";
 
 import React, { type ChangeEvent } from "react";
 
+import FormErrors from "~/core/components/form-errors";
 import {
   CardContent,
   CardDescription,
@@ -14,9 +15,11 @@ import { Textarea } from "~/core/components/ui/textarea";
 
 export default function CreateGameInfoCard({
   gameInfo,
+  error,
   onChange,
 }: {
   gameInfo: BasketballGame;
+  error: Partial<BasketballGame>;
   onChange: (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
 }) {
   return (
@@ -39,6 +42,7 @@ export default function CreateGameInfoCard({
             placeholder="예) 강남 XX 체육관 게스트/픽업게임 모집"
             className="text-sm md:text-base"
           />
+          {error.title && <FormErrors errors={[error.title]} />}
         </div>
         <div className="space-y-1">
           <Label htmlFor="description" className="md:text-base">

@@ -2,6 +2,7 @@ import type { BasketballGame } from "../types";
 
 import React, { type ChangeEvent } from "react";
 
+import FormErrors from "~/core/components/form-errors";
 import {
   CardContent,
   CardDescription,
@@ -21,11 +22,13 @@ import { basketballSkillLevelEnum, genderTypeEnum } from "../schema";
 
 export default function CreateGameFeeCard({
   gameInfo,
+  error,
   onChange,
   onChangeSkillLevel,
   onChangeGenderType,
 }: {
   gameInfo: BasketballGame;
+  error: Partial<BasketballGame>;
   onChange: (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
   onChangeSkillLevel: (
     value: (typeof basketballSkillLevelEnum.enumValues)[number],
@@ -99,6 +102,9 @@ export default function CreateGameFeeCard({
             onChange={onChange}
             className="text-sm md:text-base"
           />
+          {error.fee == 1 && (
+            <FormErrors errors={["참가비는 0 이상이어야 합니다."]} />
+          )}
         </div>
         <div className="flex justify-between gap-1 md:gap-8">
           <div className="space-y-1">
