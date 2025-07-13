@@ -1,0 +1,1 @@
+ALTER TABLE "basketball_games" ALTER COLUMN "skill_level" SET NOT NULL;

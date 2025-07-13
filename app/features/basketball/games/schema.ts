@@ -43,7 +43,7 @@ export const basketballGames = pgTable(
     date: date().notNull(),
     startTime: time("start_time").notNull(),
     endTime: time("end_time").notNull(),
-    skillLevel: basketballSkillLevelEnum("skill_level"),
+    skillLevel: basketballSkillLevelEnum("skill_level").notNull(),
     minParticipants: integer("min_participants").default(0).notNull(),
     maxParticipants: integer("max_participants").notNull(),
     currentParticipants: integer("current_participants").default(0).notNull(),

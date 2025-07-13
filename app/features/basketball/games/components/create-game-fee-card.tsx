@@ -97,7 +97,7 @@ export default function CreateGameFeeCard({
             id="fee"
             type="number"
             min={0}
-            placeholder="예) 서울 강남구 언주로 332"
+            placeholder="예) 8000"
             value={gameInfo.fee}
             onChange={onChange}
             className="text-sm md:text-base"

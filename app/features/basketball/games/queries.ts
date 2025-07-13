@@ -138,5 +138,16 @@ export const getBasketballGameById = async (
     .eq("basketball_game_id", id)
     .single();
   if (error) throw error;
-  return data;
+  return {
+    ...data,
+    basketballGameId: data.basketball_game_id,
+    profileId: data.profile_id,
+    startTime: data.start_time,
+    endTime: data.end_time,
+    skillLevel: data.skill_level,
+    genderType: data.gender_type,
+    maxParticipants: data.max_participants,
+    minParticipants: data.min_participants,
+    currentParticipants: data.current_participants,
+  };
 };

@@ -1,58 +1,51 @@
 import type { basketballSkillLevelEnum, genderTypeEnum } from "../schema";
 import type { BasketballGame } from "../types";
-import type { Route } from "./+types/create-game";
+import type { Route } from "./+types/edit-game";
 
-import { DateTime } from "luxon";
 import { type ChangeEvent, useEffect, useState } from "react";
 import { useFetcher, useNavigate } from "react-router";
 
 import { Button } from "~/core/components/ui/button";
 import { Card, CardFooter } from "~/core/components/ui/card";
+import makeServerClient from "~/core/lib/supa-client.server";
 
 import CreateGameDateCard from "../components/create-game-date-card";
 import CreateGameFeeCard from "../components/create-game-fee-card";
 import CreateGameInfoCard from "../components/create-game-info-card";
 import CreateGameLocationCard from "../components/create-game-location-card";
 import CreatePagination from "../components/create-pagination";
+import { getBasketballGameById } from "../queries";
 
 export const meta: Route.MetaFunction = () => {
   return [
     {
-      title: `농구 경기 생성 | ${import.meta.env.VITE_APP_NAME}`,
+      title: `농구 경기 수정 | ${import.meta.env.VITE_APP_NAME}`,
     },
     {
       name: "description",
-      content: `농구 게스트를 모집할 수 있는 농구 경기 생성`,
+      content: `농구 경기 정보를 수정합니다.`,
     },
   ];
 };
 
-const PAGE_SIZE = 4;
-const DEFAULT_GAME_INFO: BasketballGame = {
-  title: "",
-  description: "",
-  date: DateTime.now().toFormat("yyyy-MM-dd"),
-  startTime: "18:00",
-  endTime: "21:00",
-  skillLevel: "level_0",
-  minParticipants: 0,
-  maxParticipants: 18,
-  currentParticipants: 0,
-  fee: 5000,
-  sido: "서울",
-  city: "강남구",
-  address: "",
-  genderType: "male",
-  link: "",
-};
+export async function loader({ request, params }: Route.LoaderArgs) {
+  if (!params.id) {
+    throw new Response("Not Found", { status: 404 });
+  }
+  const [client] = makeServerClient(request);
+  const game = await getBasketballGameById(client, Number(params.id));
+  return { game };
+}
 
-export default function CreateGame() {
-  const [gameInfo, setGameInfo] = useState<BasketballGame>(DEFAULT_GAME_INFO);
+const PAGE_SIZE = 4;
+
+export default function EditGame({ loaderData }: Route.ComponentProps) {
+  const { game } = loaderData;
+  const [gameInfo, setGameInfo] = useState<BasketballGame>(game);
   const [currentPage, setCurrentPage] = useState(1);
   const [error, setError] = useState<Partial<BasketballGame>>({});
 
   const fetcher = useFetcher();
-
   const navigate = useNavigate();
 
   const onChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -151,17 +144,25 @@ export default function CreateGame() {
       if (currentPage < PAGE_SIZE) {
         setCurrentPage((prev) => Math.min(prev + 1, PAGE_SIZE));
       } else {
-        createGame();
+        editGame();
       }
     } else {
       setCurrentPage((prev) => Math.max(prev - 1, 1));
     }
   };
 
-  const createGame = async () => {
-    fetcher.submit(gameInfo, {
-      method: "post",
-      action: "/api/basketball/games",
+  const editGame = async () => {
+    const { ...rest } = gameInfo;
+    fetcher.submit(rest, {
+      method: "put",
+      action: `/api/basketball/games/${game.basketball_game_id}`,
+    });
+  };
+
+  const deleteGame = async () => {
+    fetcher.submit(null, {
+      method: "delete",
+      action: `/api/basketball/games/${game.basketball_game_id}`,
     });
   };
 
@@ -223,10 +224,12 @@ export default function CreateGame() {
               이전
             </Button>
           ) : (
-            <span></span>
+            <Button variant="destructive" onClick={deleteGame}>
+              삭제
+            </Button>
           )}
           <Button onClick={() => handlePage("next")}>
-            {currentPage !== PAGE_SIZE ? "다음" : "완료"}
+            {currentPage !== PAGE_SIZE ? "다음" : "수정"}
           </Button>
         </CardFooter>
       </Card>

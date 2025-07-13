@@ -50,7 +50,7 @@ export default function CreateGameInfoCard({
           </Label>
           <Textarea
             id="description"
-            value={gameInfo.description}
+            value={gameInfo.description || ""}
             onChange={onChange}
             placeholder={`예) 주차는 체육관 옆 공터에 해주세요.
 
@@ -66,7 +66,7 @@ export default function CreateGameInfoCard({
           </Label>
           <Input
             id="link"
-            value={gameInfo.link}
+            value={gameInfo.link || ""}
             onChange={onChange}
             placeholder="링크가 있다면 등록해주세요."
             className="text-sm md:text-base"
