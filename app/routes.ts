@@ -30,19 +30,21 @@ export default [
     ]),
     ...prefix("/basketball", [
       route("/games", "features/basketball/games/screens/games.tsx"),
-      // layout(
-      //   "core/layouts/private.layout.tsx",
-      //   { id: "private-basketball-game" },
-      //   [
-      route(
-        "/games/create",
-        "features/basketball/games/screens/create-game.tsx",
+      layout(
+        "core/layouts/private.layout.tsx",
+        { id: "private-basketball-game" },
+        [
+          route(
+            "/games/create",
+            "features/basketball/games/screens/create-game.tsx",
+          ),
+          route(
+            "/games/:id/edit",
+            "features/basketball/games/screens/edit-game.tsx",
+          ),
+          route("/games/:id", "features/basketball/games/screens/game.tsx"),
+        ],
       ),
-      route(
-        "/games/:id/edit",
-        "features/basketball/games/screens/edit-game.tsx",
-      ),
-      // ),],
     ]),
   ]),
   ...prefix("/api", [

@@ -134,7 +134,7 @@ export const getBasketballGameById = async (
 ) => {
   const { data, error } = await client
     .from("basketball_games")
-    .select("*")
+    .select("*, profiles(*)")
     .eq("basketball_game_id", id)
     .single();
   if (error) throw error;
