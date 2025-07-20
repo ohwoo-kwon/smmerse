@@ -89,14 +89,12 @@ export default function BasketballGameCard({
             {link && (
               <Button asChild size="sm" variant="link">
                 <Link to={link} target="_blank">
-                  이동
+                  링크
                 </Link>
               </Button>
             )}
             <Button asChild size="sm">
-              <Link to={`/basketball/games/${basketballGameId}`}>
-                참가 신청
-              </Link>
+              <Link to={`/basketball/games/${basketballGameId}`}>보기</Link>
             </Button>
           </div>
         </div>

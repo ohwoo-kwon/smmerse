@@ -3,7 +3,7 @@ import z from "zod";
 import { basketballSkillLevelEnum, genderTypeEnum } from "./schema";
 
 export const basketballGameSchema = z.object({
-  basketballGameId: z.number().optional(),
+  basketballGameId: z.coerce.number().optional(),
   profileId: z.string().uuid().optional().nullable(),
   title: z.string().min(1, "제목을 입력해주세요."),
   description: z.string().optional().nullable(),

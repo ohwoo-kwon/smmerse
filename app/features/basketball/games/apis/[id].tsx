@@ -30,8 +30,7 @@ export async function action({ request, params }: Route.ActionArgs) {
         { status: 400 },
       );
     }
-
-    await updateBasketballGame(client, params.id, validData);
+    await updateBasketballGame(client, Number(params.id), validData);
     return data({ success: true }, { status: 200 });
   }
 

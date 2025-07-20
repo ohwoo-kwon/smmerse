@@ -1,8 +1,7 @@
 import type { Route } from "./+types/create-game";
 
-import { data } from "react-router";
+import { data, redirect } from "react-router";
 
-import adminClient from "~/core/lib/supa-admin-client.server";
 import makeServerClient from "~/core/lib/supa-client.server";
 
 import { insertBasketballGame } from "../mutations";
@@ -25,8 +24,10 @@ export async function action({ request }: Route.ActionArgs) {
     data: { user },
   } = await client.auth.getUser();
 
-  if (user) await insertBasketballGame(client, validData);
-  else await insertBasketballGame(adminClient, validData);
+  if (!user) return redirect("/login");
+
+  // @ts-ignore
+  insertBasketballGame(client, { profileId: user.id, ...validData });
 
   return data({ success: true }, { status: 200 });
 }

@@ -65,7 +65,7 @@ export const insertBasketballGame = async (
 
 export const updateBasketballGame = async (
   client: SupabaseClient<Database>,
-  id: string,
+  id: number,
   {
     title,
     description,
@@ -117,9 +117,9 @@ export const updateBasketballGame = async (
       city,
       address,
       gender_type: genderType,
-      link,
+      link: link || null,
     })
-    .eq("id", id);
+    .eq("basketball_game_id", id);
   if (error) throw error;
   return data;
 };
