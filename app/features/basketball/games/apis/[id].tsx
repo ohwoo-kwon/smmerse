@@ -1,6 +1,6 @@
 import type { Route } from "./+types/[id]";
 
-import { data } from "react-router";
+import { data, redirect } from "react-router";
 
 import makeServerClient from "~/core/lib/supa-client.server";
 
@@ -36,7 +36,7 @@ export async function action({ request, params }: Route.ActionArgs) {
 
   if (request.method === "DELETE") {
     await deleteBasketballGame(client, Number(params.id));
-    return data({ success: true }, { status: 200 });
+    return redirect("/basketball/games");
   }
 
   return data({ message: "Method not allowed" }, { status: 405 });
