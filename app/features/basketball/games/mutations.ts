@@ -126,12 +126,12 @@ export const updateBasketballGame = async (
 
 export const deleteBasketballGame = async (
   client: SupabaseClient<Database>,
-  id: string,
+  id: number,
 ) => {
   const { data, error } = await client
     .from("basketball_games")
     .delete()
-    .eq("id", id);
+    .eq("basketball_game_id", id);
   if (error) throw error;
   return data;
 };

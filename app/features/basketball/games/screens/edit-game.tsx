@@ -2,6 +2,7 @@ import type { basketballSkillLevelEnum, genderTypeEnum } from "../schema";
 import type { BasketballGame } from "../types";
 import type { Route } from "./+types/edit-game";
 
+import { DeleteIcon, Trash2Icon, TrashIcon } from "lucide-react";
 import { type ChangeEvent, useEffect, useState } from "react";
 import { useFetcher, useNavigate } from "react-router";
 
@@ -160,6 +161,8 @@ export default function EditGame({ loaderData }: Route.ComponentProps) {
   };
 
   const deleteGame = async () => {
+    const isOk = confirm("정말로 경기를 삭제하시겠습니까?");
+    if (!isOk) return;
     fetcher.submit(null, {
       method: "delete",
       action: `/api/basketball/games/${game.basketball_game_id}`,
@@ -216,7 +219,15 @@ export default function EditGame({ loaderData }: Route.ComponentProps) {
   return (
     <div className="space-y-8 p-4">
       <CreatePagination pageSize={PAGE_SIZE} currentPage={currentPage} />
-      <Card className="mx-auto max-w-xl">
+      <Card className="relative mx-auto max-w-xl">
+        <Button
+          size="icon"
+          className="text-destructive absolute top-1 right-1"
+          variant="link"
+          onClick={deleteGame}
+        >
+          <Trash2Icon />
+        </Button>
         {renderCurrentPage()}
         <CardFooter className="flex items-center justify-between">
           {currentPage !== 1 ? (
@@ -224,9 +235,7 @@ export default function EditGame({ loaderData }: Route.ComponentProps) {
               이전
             </Button>
           ) : (
-            <Button variant="destructive" onClick={deleteGame}>
-              삭제
-            </Button>
+            <span></span>
           )}
           <Button onClick={() => handlePage("next")}>
             {currentPage !== PAGE_SIZE ? "다음" : "수정"}

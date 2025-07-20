@@ -35,7 +35,7 @@ export async function action({ request, params }: Route.ActionArgs) {
   }
 
   if (request.method === "DELETE") {
-    await deleteBasketballGame(client, params.id);
+    await deleteBasketballGame(client, Number(params.id));
     return data({ success: true }, { status: 200 });
   }
 
