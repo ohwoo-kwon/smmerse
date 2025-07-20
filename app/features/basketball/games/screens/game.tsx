@@ -134,11 +134,13 @@ export default function Game({ loaderData }: Route.ComponentProps) {
               </Link>
             </Button>
           )}
-          <Button className="w-full">참가 신청</Button>
+          <Button className="w-full" disabled>
+            참가 신청
+          </Button>
         </CardFooter>
       </Card>
       {game.profiles && (
-        <Card>
+        <Card className="mx-auto max-w-4xl">
           <CardHeader>
             <CardTitle>호스트 정보</CardTitle>
           </CardHeader>
@@ -155,7 +157,7 @@ export default function Game({ loaderData }: Route.ComponentProps) {
               </Avatar>
               <p>{game.profiles?.name}</p>
             </div>
-            <Button size="icon">
+            <Button size="icon" disabled>
               <MessageSquareIcon />
             </Button>
           </CardContent>
