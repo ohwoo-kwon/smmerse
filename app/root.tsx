@@ -68,7 +68,7 @@ export default function App() {
   return (
     <Sheet>
       <Dialog>
-        <Outlet />;
+        <Outlet />
       </Dialog>
     </Sheet>
   );

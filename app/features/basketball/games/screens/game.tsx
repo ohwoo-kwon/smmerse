@@ -26,6 +26,7 @@ import {
   CardHeader,
   CardTitle,
 } from "~/core/components/ui/card";
+import { Textarea } from "~/core/components/ui/textarea";
 import makeServerClient from "~/core/lib/supa-client.server";
 
 import { basketballSkillLevelMap, genderTypeMap } from "../constants";
@@ -116,7 +117,11 @@ export default function Game({ loaderData }: Route.ComponentProps) {
           </div>
           <div className="break-words">
             <p className="text-base font-semibold">경기 설명</p>
-            <p>{game.description}</p>
+            <Textarea
+              readOnly
+              className="resize-none"
+              defaultValue={game.description || ""}
+            />
           </div>
         </CardContent>
         <CardFooter className="flex flex-col gap-2">

@@ -2,12 +2,20 @@ import type { basketballSkillLevelEnum, genderTypeEnum } from "../schema";
 import type { BasketballGame } from "../types";
 import type { Route } from "./+types/edit-game";
 
-import { DeleteIcon, Trash2Icon, TrashIcon } from "lucide-react";
+import { Trash2Icon } from "lucide-react";
 import { type ChangeEvent, useEffect, useState } from "react";
-import { useFetcher, useNavigate } from "react-router";
+import { Link, useFetcher, useNavigate } from "react-router";
 
 import { Button } from "~/core/components/ui/button";
-import { Card, CardFooter } from "~/core/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "~/core/components/ui/card";
+import { Label } from "~/core/components/ui/label";
 import makeServerClient from "~/core/lib/supa-client.server";
 
 import CreateGameDateCard from "../components/create-game-date-card";
@@ -48,6 +56,9 @@ export default function EditGame({ loaderData }: Route.ComponentProps) {
 
   const fetcher = useFetcher();
   const navigate = useNavigate();
+
+  const isLoading =
+    fetcher.state === "submitting" || fetcher.state === "loading";
 
   const onChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const {
@@ -169,6 +180,26 @@ export default function EditGame({ loaderData }: Route.ComponentProps) {
     });
   };
 
+  const onClickUpdate = () => {
+    if (!validatePage(1)) {
+      setCurrentPage(1);
+      return;
+    }
+    if (!validatePage(2)) {
+      setCurrentPage(2);
+      return;
+    }
+    if (!validatePage(3)) {
+      setCurrentPage(3);
+      return;
+    }
+    if (!validatePage(4)) {
+      setCurrentPage(4);
+      return;
+    }
+    editGame();
+  };
+
   const renderCurrentPage = () => {
     switch (currentPage) {
       case 1:
@@ -225,20 +256,56 @@ export default function EditGame({ loaderData }: Route.ComponentProps) {
           className="text-destructive absolute top-1 right-1"
           variant="link"
           onClick={deleteGame}
+          disabled={isLoading}
         >
           <Trash2Icon />
         </Button>
-        {renderCurrentPage()}
-        <CardFooter className="flex items-center justify-between">
-          {currentPage !== 1 ? (
-            <Button variant="secondary" onClick={() => handlePage("prev")}>
-              이전
+        {isLoading ? (
+          <>
+            <CardHeader>
+              <CardTitle className="mx-auto h-8 w-40 animate-pulse rounded bg-neutral-200"></CardTitle>
+              <CardDescription className="mx-auto h-4 w-80 animate-pulse rounded bg-neutral-200"></CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              <div className="space-y-1">
+                <Label className="h-8 w-40 animate-pulse rounded bg-neutral-200"></Label>
+                <div className="h-16 w-40 w-full animate-pulse rounded bg-neutral-200" />
+              </div>
+              <div className="space-y-1">
+                <Label className="h-8 w-40 animate-pulse rounded bg-neutral-200"></Label>
+                <div className="h-16 w-40 w-full animate-pulse rounded bg-neutral-200" />
+              </div>
+              <div className="space-y-1">
+                <Label className="h-8 w-40 animate-pulse rounded bg-neutral-200"></Label>
+                <div className="h-16 w-40 w-full animate-pulse rounded bg-neutral-200" />
+              </div>
+            </CardContent>
+          </>
+        ) : (
+          renderCurrentPage()
+        )}
+        <CardFooter className="flex flex-col gap-2">
+          <div className="flex w-full items-center justify-between">
+            {currentPage !== 1 ? (
+              <Button variant="secondary" onClick={() => handlePage("prev")}>
+                이전
+              </Button>
+            ) : (
+              <span></span>
+            )}
+            <Button onClick={() => handlePage("next")}>
+              {currentPage !== PAGE_SIZE ? "다음" : "수정"}
             </Button>
-          ) : (
-            <span></span>
-          )}
-          <Button onClick={() => handlePage("next")}>
-            {currentPage !== PAGE_SIZE ? "다음" : "수정"}
+          </div>
+          <Button
+            className="w-full"
+            onClick={onClickUpdate}
+            disabled={isLoading}
+          >
+            수정
+          </Button>
+          <Button variant="secondary" className="w-full" asChild>
+            <Link to={`/basketball/games/${game.basketballGameId}`}>취소</Link>
           </Button>
         </CardFooter>
       </Card>

@@ -7,7 +7,15 @@ import { type ChangeEvent, useEffect, useState } from "react";
 import { useFetcher, useNavigate } from "react-router";
 
 import { Button } from "~/core/components/ui/button";
-import { Card, CardFooter } from "~/core/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "~/core/components/ui/card";
+import { Label } from "~/core/components/ui/label";
 
 import CreateGameDateCard from "../components/create-game-date-card";
 import CreateGameFeeCard from "../components/create-game-fee-card";
@@ -52,6 +60,9 @@ export default function CreateGame() {
   const [error, setError] = useState<Partial<BasketballGame>>({});
 
   const fetcher = useFetcher();
+
+  const isLoading =
+    fetcher.state === "submitting" || fetcher.state === "loading";
 
   const navigate = useNavigate();
 
@@ -216,7 +227,30 @@ export default function CreateGame() {
     <div className="space-y-8 p-4">
       <CreatePagination pageSize={PAGE_SIZE} currentPage={currentPage} />
       <Card className="mx-auto max-w-xl">
-        {renderCurrentPage()}
+        {isLoading ? (
+          <>
+            <CardHeader>
+              <CardTitle className="mx-auto h-8 w-40 animate-pulse rounded bg-neutral-200"></CardTitle>
+              <CardDescription className="mx-auto h-4 w-80 animate-pulse rounded bg-neutral-200"></CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              <div className="space-y-1">
+                <Label className="h-8 w-40 animate-pulse rounded bg-neutral-200"></Label>
+                <div className="h-16 w-40 w-full animate-pulse rounded bg-neutral-200" />
+              </div>
+              <div className="space-y-1">
+                <Label className="h-8 w-40 animate-pulse rounded bg-neutral-200"></Label>
+                <div className="h-16 w-40 w-full animate-pulse rounded bg-neutral-200" />
+              </div>
+              <div className="space-y-1">
+                <Label className="h-8 w-40 animate-pulse rounded bg-neutral-200"></Label>
+                <div className="h-16 w-40 w-full animate-pulse rounded bg-neutral-200" />
+              </div>
+            </CardContent>
+          </>
+        ) : (
+          renderCurrentPage()
+        )}
         <CardFooter className="flex items-center justify-between">
           {currentPage !== 1 ? (
             <Button variant="secondary" onClick={() => handlePage("prev")}>
@@ -225,7 +259,7 @@ export default function CreateGame() {
           ) : (
             <span></span>
           )}
-          <Button onClick={() => handlePage("next")}>
+          <Button onClick={() => handlePage("next")} disabled={isLoading}>
             {currentPage !== PAGE_SIZE ? "다음" : "완료"}
           </Button>
         </CardFooter>
