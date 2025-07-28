@@ -13,11 +13,6 @@ import { insertBasketballGame } from "../mutations";
 const CAFE_URL = "https://m.cafe.daum.net/dongarry/Dilr";
 
 export const loader = async ({ request }: Route.LoaderArgs) => {
-  if (
-    request.headers.get("Authorization") !== `Bearer ${process.env.CRON_SECRET}`
-  ) {
-    return data({ success: false }, { status: 401 });
-  }
   const browser = await puppeteer.launch({
     headless: true,
     slowMo: 50,
