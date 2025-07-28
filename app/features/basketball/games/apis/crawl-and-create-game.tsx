@@ -1,6 +1,9 @@
+import type { Route } from "./+types/crawl-and-create-game";
+
 import OpenAI from "openai";
 import { zodTextFormat } from "openai/helpers/zod";
 import puppeteer from "puppeteer";
+import { data } from "react-router";
 import z from "zod";
 
 import adminClient from "~/core/lib/supa-admin-client.server";
@@ -9,7 +12,12 @@ import { insertBasketballGame } from "../mutations";
 
 const CAFE_URL = "https://m.cafe.daum.net/dongarry/Dilr";
 
-export const loader = async () => {
+export const loader = async ({ request }: Route.LoaderArgs) => {
+  if (
+    request.headers.get("Authorization") !== `Bearer ${process.env.CRON_SECRET}`
+  ) {
+    return data({ success: false }, { status: 401 });
+  }
   const browser = await puppeteer.launch({
     headless: true,
     slowMo: 50,
@@ -119,4 +127,5 @@ export const loader = async () => {
   } finally {
     await browser.close();
   }
+  return data({ success: true }, { status: 200 });
 };
