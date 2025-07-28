@@ -1,5 +1,6 @@
 import type { Route } from "./+types/crawl-and-create-game";
 
+import chromium from "@sparticuz/chromium";
 import OpenAI from "openai";
 import { zodTextFormat } from "openai/helpers/zod";
 import puppeteer from "puppeteer-core";
@@ -15,8 +16,9 @@ const CAFE_URL = "https://m.cafe.daum.net/dongarry/Dilr";
 export const loader = async ({ request }: Route.LoaderArgs) => {
   const browser = await puppeteer.launch({
     headless: true,
+    args: chromium.args,
+    executablePath: await chromium.executablePath(),
     slowMo: 50,
-    args: ["--no-sandbox", "--disable-setuid-sandbox"],
   });
 
   const page = await browser.newPage();
