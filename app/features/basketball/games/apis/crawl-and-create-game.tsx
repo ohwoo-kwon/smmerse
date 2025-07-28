@@ -2,7 +2,7 @@ import type { Route } from "./+types/crawl-and-create-game";
 
 import OpenAI from "openai";
 import { zodTextFormat } from "openai/helpers/zod";
-import puppeteer from "puppeteer";
+import puppeteer from "puppeteer-core";
 import { data } from "react-router";
 import z from "zod";
 
