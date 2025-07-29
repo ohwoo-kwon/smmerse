@@ -1,6 +1,7 @@
 import type { Route } from "./+types/crawl-and-create-game";
 
 import chromium from "@sparticuz/chromium";
+import { DateTime } from "luxon";
 import OpenAI from "openai";
 import { zodTextFormat } from "openai/helpers/zod";
 import puppeteer from "puppeteer-core";
@@ -84,8 +85,9 @@ export const loader = async ({ request }: Route.LoaderArgs) => {
         model: "gpt-4.1-nano",
         input: `${post.title}
         ###
-        위 내용에서 아래의 내용을 찾아서 정해진 형태로 알려줘.
-        날짜: MM-dd
+        위 내용에서 아래의 내용을 찾아서 정해진 형태로 알려줘. 오늘 날짜는 ${DateTime.now().toFormat("yyyy-MM-dd")}야. 오늘 날짜 이전의 날짜는 output으로 주지마.
+
+        날짜: yyyy-MM-dd
         시작시간: HH:mm
         마감시간: HH:mm
         `,
@@ -105,7 +107,7 @@ export const loader = async ({ request }: Route.LoaderArgs) => {
         description: `📌 주의사항
 이 게시물의 정보는 자동 수집된 데이터로, 실제 내용과 다를 수 있습니다.
 정확한 내용은 아래 링크를 통해 직접 게시글을 확인해주세요. 🙏`,
-        date: `${new Date().getFullYear()}-${output.date}`,
+        date: output.date,
         startTime: output.startTime,
         endTime: output.endTime,
         skillLevel: "level_0",
