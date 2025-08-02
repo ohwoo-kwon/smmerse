@@ -4,6 +4,7 @@ import { Suspense } from "react";
 import { Await, Link } from "react-router";
 import z from "zod";
 
+import CustomPagination from "~/core/components/custom-pagination";
 import { Button } from "~/core/components/ui/button";
 import makeServerClient from "~/core/lib/supa-client.server";
 
@@ -165,6 +166,7 @@ export default function BasketballGames({ loaderData }: Route.ComponentProps) {
             }
           ></Await>
         </Suspense>
+        <CustomPagination totalPages={totalPages} />
       </div>
     </div>
   );
