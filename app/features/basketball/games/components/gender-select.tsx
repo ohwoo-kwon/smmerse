@@ -22,6 +22,7 @@ export function GenderSelect() {
         genderType === "all"
           ? searchParams.delete("genderType")
           : searchParams.set("genderType", genderType);
+        searchParams.delete("page");
         setSearchParams(searchParams);
       }}
     >

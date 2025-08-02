@@ -52,7 +52,7 @@ export default function SidoFilter() {
         ? searchParams.set("sido", newSidos)
         : searchParams.delete("sido");
     } else searchParams.set("sido", sidoName);
-
+    searchParams.delete("page");
     setSearchParams(searchParams);
   };
 
@@ -69,6 +69,7 @@ export default function SidoFilter() {
         ? searchParams.set("city", newCities)
         : searchParams.delete("city");
     } else searchParams.set("city", `${sidoName} ${cityName}`);
+    searchParams.delete("page");
     setSearchParams(searchParams);
   };
 
@@ -155,6 +156,7 @@ export default function SidoFilter() {
             onClick={() => {
               searchParams.delete("city");
               searchParams.delete("sido");
+              searchParams.delete("page");
               setSearchParams(searchParams);
             }}
           >

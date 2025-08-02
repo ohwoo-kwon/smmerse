@@ -22,6 +22,7 @@ export function SkillLevelSelect() {
         level === "all"
           ? searchParams.delete("level")
           : searchParams.set("level", level);
+        searchParams.delete("page");
         setSearchParams(searchParams);
       }}
     >

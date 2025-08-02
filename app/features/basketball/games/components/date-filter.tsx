@@ -35,6 +35,7 @@ export default function DateFilter() {
             if (currentDate.toString() === date.toString())
               searchParams.delete("date");
             else searchParams.set("date", date.toISODate());
+            searchParams.delete("page");
             setSearchParams(searchParams);
           }}
         >
