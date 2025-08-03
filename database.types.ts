@@ -88,6 +88,93 @@ export type Database = {
           },
         ]
       }
+      chat_room_members: {
+        Row: {
+          chat_room_id: number
+          createdAt: string
+          profile_id: string
+        }
+        Insert: {
+          chat_room_id: number
+          createdAt?: string
+          profile_id: string
+        }
+        Update: {
+          chat_room_id?: number
+          createdAt?: string
+          profile_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "chat_room_members_chat_room_id_chat_rooms_chat_room_id_fk"
+            columns: ["chat_room_id"]
+            isOneToOne: false
+            referencedRelation: "chat_rooms"
+            referencedColumns: ["chat_room_id"]
+          },
+          {
+            foreignKeyName: "chat_room_members_profile_id_profiles_profile_id_fk"
+            columns: ["profile_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["profile_id"]
+          },
+        ]
+      }
+      chat_rooms: {
+        Row: {
+          chat_room_id: number
+          createdAt: string
+        }
+        Insert: {
+          chat_room_id?: never
+          createdAt?: string
+        }
+        Update: {
+          chat_room_id?: never
+          createdAt?: string
+        }
+        Relationships: []
+      }
+      chats: {
+        Row: {
+          chat_id: number
+          chat_room_id: number
+          content: string
+          createdAt: string
+          sender_id: string
+        }
+        Insert: {
+          chat_id?: never
+          chat_room_id: number
+          content: string
+          createdAt?: string
+          sender_id: string
+        }
+        Update: {
+          chat_id?: never
+          chat_room_id?: number
+          content?: string
+          createdAt?: string
+          sender_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "chats_chat_room_id_chat_rooms_chat_room_id_fk"
+            columns: ["chat_room_id"]
+            isOneToOne: false
+            referencedRelation: "chat_rooms"
+            referencedColumns: ["chat_room_id"]
+          },
+          {
+            foreignKeyName: "chats_sender_id_profiles_profile_id_fk"
+            columns: ["sender_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["profile_id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           avatar_url: string | null
@@ -117,7 +204,12 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      get_room: {
+        Args: { from_user_id: string; to_user_id: string }
+        Returns: {
+          chat_room_id: number
+        }[]
+      }
     }
     Enums: {
       basketball_skill_level:

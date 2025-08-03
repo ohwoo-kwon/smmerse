@@ -27,6 +27,10 @@ export default [
     layout("core/layouts/private.layout.tsx", { id: "private-auth" }, [
       route("/profile", "features/users/screens/profile.tsx"),
       route("/logout", "features/auth/screens/logout.tsx"),
+      ...prefix("/chats", [
+        index("features/users/screens/chats.tsx"),
+        route("/:chatRoomId", "features/users/screens/chat.tsx"),
+      ]),
     ]),
     ...prefix("/basketball", [
       route("/games", "features/basketball/games/screens/games.tsx"),
@@ -48,11 +52,14 @@ export default [
     ]),
   ]),
   ...prefix("/api", [
-    ...prefix("/users", [
-      index("features/users/apis/delete-profile.tsx"),
-      route("/password", "features/users/apis/change-password.tsx"),
-      route("/email", "features/users/apis/change-email.tsx"),
-      route("/profile", "features/users/apis/edit-profile.tsx"),
+    layout("core/layouts/private.layout.tsx", { id: "private-auth-api" }, [
+      ...prefix("/users", [
+        index("features/users/apis/delete-profile.tsx"),
+        route("/password", "features/users/apis/change-password.tsx"),
+        route("/email", "features/users/apis/change-email.tsx"),
+        route("/profile", "features/users/apis/edit-profile.tsx"),
+        route("/message/:userId", "features/users/apis/send-message.tsx"),
+      ]),
     ]),
     ...prefix("/crawl", [
       route(

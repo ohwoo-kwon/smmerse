@@ -1,0 +1,1 @@
+ALTER POLICY "select-chat-room-member-policy" ON "chat_rooms" TO authenticated USING (true);

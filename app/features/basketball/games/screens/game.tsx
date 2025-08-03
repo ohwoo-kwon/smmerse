@@ -10,7 +10,7 @@ import {
   UsersIcon,
 } from "lucide-react";
 import { DateTime } from "luxon";
-import { Link } from "react-router";
+import { Form, Link } from "react-router";
 
 import {
   Avatar,
@@ -139,9 +139,20 @@ export default function Game({ loaderData }: Route.ComponentProps) {
               </Link>
             </Button>
           )}
-          <Button className="w-full" disabled>
-            참가 신청
-          </Button>
+          {!isOwner && game.profile_id && (
+            <Form
+              method="POST"
+              action={`/api/users/message/${game.profile_id}`}
+              className="w-full"
+            >
+              <input
+                name="content"
+                type="hidden"
+                defaultValue="참가 신청합니다"
+              />
+              <Button className="w-full">참가 신청</Button>
+            </Form>
+          )}
         </CardFooter>
       </Card>
       {game.profiles && (
