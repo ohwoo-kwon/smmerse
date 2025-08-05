@@ -78,7 +78,7 @@ export const loader = async ({ request }: Route.LoaderArgs) => {
       date: z.string(),
       startTime: z.string(),
       endTime: z.string(),
-      city: z.enum([
+      sido: z.enum([
         "서울",
         "경기",
         "인천",
@@ -96,8 +96,9 @@ export const loader = async ({ request }: Route.LoaderArgs) => {
         "경남",
         "제주",
         "강원",
+        "",
       ]),
-      sido: z.enum([
+      city: z.enum([
         "종로구",
         "중구",
         "용산구",
@@ -326,19 +327,28 @@ export const loader = async ({ request }: Route.LoaderArgs) => {
         "인제군",
         "고성군",
         "양양군",
+        "",
       ]),
     });
 
     for (const post of posts) {
       const response = await client.responses.parse({
         model: "gpt-4.1-nano",
-        input: `${post.title}
-        ###
-        위 내용에서 아래의 내용을 찾아서 정해진 형태로 알려줘. 오늘 날짜는 ${DateTime.now().toFormat("yyyy-MM-dd")}야. 오늘 날짜 이전의 날짜는 output으로 주지마.
+        input: `
+        아래 경기제목 태그의 내용을 확인하고 정해진 date, startTime, endTie, city, sido 정보 알려줘.
+        오늘 날짜는 ${DateTime.now().toFormat("yyyy-MM-dd")}야. 오늘 날짜 이전의 날짜는 output으로 주지마.
+        불확실한 정보는 빈 string 형태로 답변해줘.
 
         date: yyyy-MM-dd
         startTime: HH:mm
         endTime: HH:mm
+        sido: 시,도
+        city: 구,군
+
+        ###
+        <경기제목>
+          ${post.title}
+        </경기제목>
         `,
         text: {
           format: zodTextFormat(outputSchema, "event"),
@@ -365,7 +375,7 @@ export const loader = async ({ request }: Route.LoaderArgs) => {
         currentParticipants: 0,
         fee: 5000,
         sido: output.sido || post.title.slice(1, 3),
-        city: output.city,
+        city: output.city || "",
         address: "",
         genderType: "male",
       });
