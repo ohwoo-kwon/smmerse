@@ -23,7 +23,6 @@ export const getOrCreateChatRoom = async (
       .single();
 
     if (roomError) throw roomError;
-    console.log("chat room members");
 
     const { data, error } = await client.from("chat_room_members").insert([
       {
@@ -35,8 +34,6 @@ export const getOrCreateChatRoom = async (
         profile_id: toUserId,
       },
     ]);
-    console.log(error);
-    console.log(data);
 
     return roomData.chat_room_id;
   }
@@ -56,5 +53,25 @@ export const sendMessage = async (
     content,
   });
 
+  if (error) throw error;
+};
+
+export const createMessage = async (
+  client: SupabaseClient<Database>,
+  {
+    chat_room_id,
+    sender_id,
+    content,
+  }: {
+    chat_room_id: number;
+    sender_id: string;
+    content: string;
+  },
+) => {
+  const { error } = await client.from("chats").insert({
+    chat_room_id,
+    sender_id,
+    content,
+  });
   if (error) throw error;
 };

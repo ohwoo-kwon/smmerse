@@ -137,30 +137,35 @@ export const chats = pgTable(
     createdAt: timestamp().notNull().defaultNow(),
   },
   (table) => [
-    pgPolicy("edit-chat-room-member-policy", {
+    pgPolicy("edit-chats-policy", {
       for: "update",
       to: authenticatedRole,
       as: "permissive",
       withCheck: sql`${authUid} = ${table.sender_id}`,
       using: sql`${authUid} = ${table.sender_id}`,
     }),
-    pgPolicy("insert-chat-room-member-policy", {
+    pgPolicy("insert-chats-policy", {
       for: "insert",
       to: authenticatedRole,
       as: "permissive",
       withCheck: sql`${authUid} = ${table.sender_id}`,
     }),
-    pgPolicy("delete-chat-room-member-policy", {
+    pgPolicy("delete-chats-policy", {
       for: "delete",
       to: authenticatedRole,
       as: "permissive",
       using: sql`${authUid} = ${table.sender_id}`,
     }),
-    pgPolicy("select-chat-room-member-policy", {
+    pgPolicy("select-chats-policy", {
       for: "select",
       to: authenticatedRole,
       as: "permissive",
-      using: sql`${authUid} = ${table.sender_id}`,
+      using: sql`EXISTS (
+      SELECT 1
+      FROM public.chat_room_members
+      WHERE chat_room_members.chat_room_id = ${table.chat_room_id}
+      AND chat_room_members.profile_id = ${authUid}
+    )`,
     }),
   ],
 );

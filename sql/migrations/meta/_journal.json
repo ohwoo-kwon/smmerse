@@ -50,6 +50,20 @@
       "when": 1754179534099,
       "tag": "0006_true_wild_pack",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1754187632238,
+      "tag": "0007_silky_barracuda",
+      "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1754187970531,
+      "tag": "0008_faithful_captain_midlands",
+      "breakpoints": true
     }
   ]
 }
