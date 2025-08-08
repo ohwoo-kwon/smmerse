@@ -333,7 +333,7 @@ export const loader = async ({ request }: Route.LoaderArgs) => {
 
     for (const post of posts) {
       const response = await client.responses.parse({
-        model: "gpt-4.1-nano",
+        model: "gpt-5-nano",
         input: `
         아래 경기제목 태그의 내용을 확인하고 정해진 date, startTime, endTie, city, sido 정보 알려줘.
         오늘 날짜는 ${DateTime.now().toFormat("yyyy-MM-dd")}야. 오늘 날짜 이전의 날짜는 output으로 주지마.
