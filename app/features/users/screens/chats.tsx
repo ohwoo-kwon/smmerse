@@ -16,7 +16,7 @@ import {
 } from "~/core/components/ui/card";
 import makeServerClient from "~/core/lib/supa-client.server";
 
-import { getChatRooms } from "../queries";
+import { getChats } from "../queries";
 
 export const meta: Route.MetaFunction = () => {
   return [
@@ -38,7 +38,7 @@ export const loader = async ({ request }: Route.LoaderArgs) => {
 
   if (!user) return;
 
-  const chatRooms = await getChatRooms(client, user.id);
+  const chatRooms = await getChats(client, user.id);
 
   return { chatRooms };
 };
@@ -57,26 +57,22 @@ export default function Chats({ loaderData }: Route.ComponentProps) {
           >
             <div className="flex cursor-pointer items-center gap-4 rounded-lg border p-2 hover:bg-gray-100">
               <Avatar>
-                <AvatarImage
-                  src={chatRoom.chat_room_members[0].profile.avatar_url || ""}
-                />
-                <AvatarFallback>
-                  {chatRoom.chat_room_members[0].profile.name.charAt(0)}
-                </AvatarFallback>
+                <AvatarImage src={chatRoom.avatar_url || ""} />
+                <AvatarFallback>{chatRoom.name?.charAt(0)}</AvatarFallback>
               </Avatar>
               <div className="flex-1">
                 <div className="flex items-center justify-between">
-                  <h3 className="text-sm font-semibold">
-                    {chatRoom.chat_room_members[0].profile.name}
-                  </h3>
-                  <p className="text-muted-foreground text-xs">
-                    {DateTime.fromISO(
-                      chatRoom.chats[chatRoom.chats.length - 1].createdAt,
-                    ).toFormat("MM-dd HH:mm")}
-                  </p>
+                  <h3 className="text-sm font-semibold">{chatRoom.name}</h3>
+                  {chatRoom.last_message_time && (
+                    <p className="text-muted-foreground text-xs">
+                      {DateTime.fromISO(chatRoom.last_message_time).toFormat(
+                        "MM-dd HH:mm",
+                      )}
+                    </p>
+                  )}
                 </div>
                 <p className="text-muted-foreground max-w-50 truncate text-sm sm:max-w-60 md:max-w-full">
-                  {chatRoom.chats[chatRoom.chats.length - 1].content}
+                  {chatRoom.last_sender_name}: {chatRoom.last_message}
                 </p>
               </div>
             </div>

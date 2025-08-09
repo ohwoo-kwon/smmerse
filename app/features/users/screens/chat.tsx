@@ -1,6 +1,6 @@
 import type { Route } from "./+types/chat";
 
-import { SendHorizonalIcon } from "lucide-react";
+import { Loader2Icon, SendHorizonalIcon } from "lucide-react";
 import { redirect, useFetcher } from "react-router";
 import { z } from "zod";
 
@@ -56,8 +56,6 @@ export const action = async ({ request, params }: Route.ActionArgs) => {
     sender_id: formValidData.senderId,
     content: formValidData.content,
   });
-
-  return { success: true };
 };
 
 export const loader = async ({ request, params }: Route.LoaderArgs) => {
@@ -74,27 +72,14 @@ export const loader = async ({ request, params }: Route.LoaderArgs) => {
 };
 
 export default function Chat({ loaderData }: Route.ComponentProps) {
-  const { messages, userId, chatRoomId } = loaderData;
+  const { messages, userId } = loaderData;
   const fetcher = useFetcher();
-
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const formData = new FormData(event.currentTarget);
-    const content = formData.get("content") as string;
-
-    if (content.trim() && userId) {
-      fetcher.submit(
-        { content, sender_id: userId, chat_room_id: chatRoomId },
-        { method: "POST", action: `/users/chat/${chatRoomId}` },
-      );
-      event.currentTarget.reset();
-    }
-  };
+  const isSubmitting = fetcher.state === "submitting";
 
   return (
     <div className="flex min-h-[calc(100vh-96px)] flex-col">
-      <div className="flex-1 overflow-y-auto p-4 pt-0">
-        <div className="flex min-h-[calc(100vh-164px)] flex-col justify-end gap-y-4">
+      <div className="flex-1 overflow-y-auto px-4">
+        <div className="flex h-[calc(100vh-148px)] flex-col gap-y-4 overflow-y-auto last:pb-4">
           {messages.map((message) => (
             <div
               key={`chat_${message.chat_id}`}
@@ -104,7 +89,7 @@ export default function Chat({ loaderData }: Route.ComponentProps) {
                 <Avatar className="h-8 w-8">
                   <AvatarImage src={message.sender.avatar_url || ""} />
                   <AvatarFallback>
-                    {message.sender.name.slice(0, 2)}
+                    {message.sender.name.charAt(0)}
                   </AvatarFallback>
                 </Avatar>
               )}
@@ -118,17 +103,15 @@ export default function Chat({ loaderData }: Route.ComponentProps) {
         </div>
       </div>
       <div className="border-t p-4 pb-0">
-        <fetcher.Form
-          onSubmit={handleSubmit}
-          className="flex items-center gap-2"
-        >
+        <fetcher.Form method="POST" className="flex items-center gap-2">
+          <Input name="senderId" type="hidden" defaultValue={userId} />
           <Input
             name="content"
             placeholder="메시지를 작성해주세요."
             autoComplete="off"
           />
-          <Button type="submit" size="icon">
-            <SendHorizonalIcon />
+          <Button type="submit" size="icon" disabled={isSubmitting}>
+            {isSubmitting ? <Loader2Icon /> : <SendHorizonalIcon />}
           </Button>
         </fetcher.Form>
       </div>

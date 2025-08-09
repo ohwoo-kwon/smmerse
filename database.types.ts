@@ -201,7 +201,41 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      chats_view: {
+        Row: {
+          avatar_url: string | null
+          chat_room_id: number | null
+          last_message: string | null
+          last_message_time: string | null
+          last_sender_name: string | null
+          name: string | null
+          other_profile_id: string | null
+          profile_id: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "chat_room_members_chat_room_id_chat_rooms_chat_room_id_fk"
+            columns: ["chat_room_id"]
+            isOneToOne: false
+            referencedRelation: "chat_rooms"
+            referencedColumns: ["chat_room_id"]
+          },
+          {
+            foreignKeyName: "chat_room_members_profile_id_profiles_profile_id_fk"
+            columns: ["profile_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["profile_id"]
+          },
+          {
+            foreignKeyName: "chat_room_members_profile_id_profiles_profile_id_fk"
+            columns: ["other_profile_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["profile_id"]
+          },
+        ]
+      }
     }
     Functions: {
       get_room: {
