@@ -21,8 +21,17 @@ export async function getUserProfile(
 
 export const getMessages = async (
   client: SupabaseClient<Database>,
+  profileId: string,
   chatRoomId: number,
 ) => {
+  const { count, error: countError } = await client
+    .from("chat_room_members")
+    .select("*", { count: "exact", head: true })
+    .eq("chat_room_id", chatRoomId)
+    .eq("profile_id", profileId);
+  if (countError) throw countError;
+  if (count === 0) throw new Error("존재하지 않는 채팅방입니다.");
+
   const { data, error } = await client
     .from("chats")
     .select("*, sender:sender_id(name, avatar_url)")

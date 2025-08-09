@@ -70,7 +70,7 @@ export const loader = async ({ request, params }: Route.LoaderArgs) => {
   } = await client.auth.getUser();
   if (!user) return redirect("/login");
 
-  const messages = await getMessages(client, paramsData.chatRoomId);
+  const messages = await getMessages(client, user.id, paramsData.chatRoomId);
   return { messages, userId: user.id, chatRoomId: paramsData.chatRoomId };
 };
 
