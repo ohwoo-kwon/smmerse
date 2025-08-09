@@ -4,13 +4,14 @@ import {
   CalendarIcon,
   DotIcon,
   HandCoinsIcon,
+  Loader2Icon,
   MapPinIcon,
   MessageSquareIcon,
   UserIcon,
   UsersIcon,
 } from "lucide-react";
 import { DateTime } from "luxon";
-import { Form, Link } from "react-router";
+import { Link, useFetcher } from "react-router";
 
 import {
   Avatar,
@@ -61,6 +62,24 @@ export async function loader({ request, params }: Route.LoaderArgs) {
 
 export default function Game({ loaderData }: Route.ComponentProps) {
   const { game, isOwner } = loaderData;
+
+  const fetcher = useFetcher();
+  const isSubmitting = fetcher.state === "submitting";
+
+  const handleSubmit = async () => {
+    const isOk = confirm(
+      `${game.profiles?.name || "호스트"}에게 참가 신청 메시지를 보낼까요?`,
+    );
+    if (!isOk) return;
+
+    fetcher.submit(
+      { content: `[${game.title}] 참가 신청합니다.` },
+      {
+        method: "POST",
+        action: `/api/users/message/${game.profile_id}`,
+      },
+    );
+  };
 
   if (!game) {
     return <div>경기를 찾을 수 없습니다.</div>;
@@ -140,18 +159,17 @@ export default function Game({ loaderData }: Route.ComponentProps) {
             </Button>
           )}
           {!isOwner && game.profile_id && (
-            <Form
-              method="POST"
-              action={`/api/users/message/${game.profile_id}`}
+            <Button
+              onClick={handleSubmit}
               className="w-full"
+              disabled={isSubmitting}
             >
-              <input
-                name="content"
-                type="hidden"
-                defaultValue="참가 신청합니다"
-              />
-              <Button className="w-full">참가 신청</Button>
-            </Form>
+              {isSubmitting ? (
+                <Loader2Icon className="size-4 animate-spin" />
+              ) : (
+                "참가 신청"
+              )}
+            </Button>
           )}
         </CardFooter>
       </Card>
@@ -173,9 +191,9 @@ export default function Game({ loaderData }: Route.ComponentProps) {
               </Avatar>
               <p>{game.profiles?.name}</p>
             </div>
-            <Button size="icon" disabled>
+            {/* <Button size="icon" disabled>
               <MessageSquareIcon />
-            </Button>
+            </Button> */}
           </CardContent>
         </Card>
       )}

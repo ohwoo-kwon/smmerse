@@ -71,29 +71,30 @@ function MenuButtons() {
     <>
       <SheetClose asChild>
         <Link
-          to="/"
+          to="/basketball/games"
           viewTransition
           className="hover:text-muted-foreground transition-colors"
         >
-          Link 1
+          게스트
         </Link>
       </SheetClose>
       <SheetClose asChild>
         <Link
-          to="/"
+          to="/chats"
           viewTransition
           className="hover:text-muted-foreground transition-colors"
         >
-          Link 2
+          채팅
         </Link>
       </SheetClose>
       <SheetClose asChild>
         <Link
-          to="/"
+          to="https://www.instagram.com/tiger.ow/"
           viewTransition
           className="hover:text-muted-foreground transition-colors"
+          target="_blank"
         >
-          Link 3
+          문의하기
         </Link>
       </SheetClose>
     </>
@@ -133,7 +134,7 @@ export default function NavigationBar({
 
       {/* PC 화면 */}
       <div className="hidden items-center gap-5 text-sm md:flex">
-        {/* <MenuButtons /> */}
+        <MenuButtons />
         {loading ? (
           <div className="flex items-center">
             <div className="bg-muted-foreground/50 size-8 animate-pulse rounded-full" />
@@ -154,7 +155,9 @@ export default function NavigationBar({
         <SheetDescription></SheetDescription>
       </SheetHeader>
       <SheetContent>
-        <SheetHeader>{/* <MenuButtons /> */}</SheetHeader>
+        <SheetHeader>
+          <MenuButtons />
+        </SheetHeader>
         <SheetFooter>
           {loading ? (
             <div className="flex items-center">

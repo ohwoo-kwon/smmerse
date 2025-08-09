@@ -1,6 +1,7 @@
 import type { Route } from "./+types/chat";
 
 import { Loader2Icon, SendHorizonalIcon } from "lucide-react";
+import { useEffect, useRef } from "react";
 import { redirect, useFetcher } from "react-router";
 import { z } from "zod";
 
@@ -46,7 +47,7 @@ export const action = async ({ request, params }: Route.ActionArgs) => {
     success: formSuccess,
     error,
   } = formSchema.safeParse(Object.fromEntries(formData));
-  if (!formSuccess) return { fieldErrors: error.flatten().fieldErrors };
+  if (!formSuccess) return { ok: false };
 
   const { data: paramsData, success } = paramsSchema.safeParse(params);
   if (!success) return redirect("/chats");
@@ -56,6 +57,8 @@ export const action = async ({ request, params }: Route.ActionArgs) => {
     sender_id: formValidData.senderId,
     content: formValidData.content,
   });
+
+  return { ok: true };
 };
 
 export const loader = async ({ request, params }: Route.LoaderArgs) => {
@@ -71,15 +74,32 @@ export const loader = async ({ request, params }: Route.LoaderArgs) => {
   return { messages, userId: user.id, chatRoomId: paramsData.chatRoomId };
 };
 
-export default function Chat({ loaderData }: Route.ComponentProps) {
+export default function Chat({ loaderData, actionData }: Route.ComponentProps) {
   const { messages, userId } = loaderData;
+
+  const formRef = useRef<HTMLFormElement>(null);
+  const scrollRef = useRef<HTMLDivElement>(null);
+
   const fetcher = useFetcher();
   const isSubmitting = fetcher.state === "submitting";
+
+  useEffect(() => {
+    if (fetcher.data.ok) formRef.current?.reset();
+  }, [fetcher.data]);
+
+  useEffect(() => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+    }
+  }, [messages]);
 
   return (
     <div className="flex min-h-[calc(100vh-96px)] flex-col">
       <div className="flex-1 overflow-y-auto px-4">
-        <div className="flex h-[calc(100vh-148px)] flex-col gap-y-4 overflow-y-auto last:pb-4">
+        <div
+          ref={scrollRef}
+          className="flex h-[calc(100vh-148px)] flex-col gap-y-4 overflow-y-auto last:pb-4"
+        >
           {messages.map((message) => (
             <div
               key={`chat_${message.chat_id}`}
@@ -94,16 +114,20 @@ export default function Chat({ loaderData }: Route.ComponentProps) {
                 </Avatar>
               )}
               <div
-                className={`max-w-xs rounded-lg px-4 py-2 ${userId === message.sender_id ? "bg-primary text-primary-foreground" : "bg-muted"}`}
+                className={`max-w-3/4 rounded-lg px-4 py-2 ${userId === message.sender_id ? "bg-primary text-primary-foreground" : "bg-muted"}`}
               >
-                <p className="text-sm">{message.content}</p>
+                <p className="text-sm wrap-break-word">{message.content}</p>
               </div>
             </div>
           ))}
         </div>
       </div>
       <div className="border-t p-4 pb-0">
-        <fetcher.Form method="POST" className="flex items-center gap-2">
+        <fetcher.Form
+          ref={formRef}
+          method="POST"
+          className="flex items-center gap-2"
+        >
           <Input name="senderId" type="hidden" defaultValue={userId} />
           <Input
             name="content"
@@ -111,7 +135,11 @@ export default function Chat({ loaderData }: Route.ComponentProps) {
             autoComplete="off"
           />
           <Button type="submit" size="icon" disabled={isSubmitting}>
-            {isSubmitting ? <Loader2Icon /> : <SendHorizonalIcon />}
+            {isSubmitting ? (
+              <Loader2Icon className="size-4 animate-spin" />
+            ) : (
+              <SendHorizonalIcon />
+            )}
           </Button>
         </fetcher.Form>
       </div>

@@ -50,34 +50,38 @@ export default function Chats({ loaderData }: Route.ComponentProps) {
         <CardTitle>채팅 내역</CardTitle>
       </CardHeader>
       <CardContent className="flex flex-col gap-2">
-        {loaderData?.chatRooms.map((chatRoom) => (
-          <Link
-            key={chatRoom.chat_room_id}
-            to={`/chats/${chatRoom.chat_room_id}`}
-          >
-            <div className="flex cursor-pointer items-center gap-4 rounded-lg border p-2 hover:bg-gray-100">
-              <Avatar>
-                <AvatarImage src={chatRoom.avatar_url || ""} />
-                <AvatarFallback>{chatRoom.name?.charAt(0)}</AvatarFallback>
-              </Avatar>
-              <div className="flex-1">
-                <div className="flex items-center justify-between">
-                  <h3 className="text-sm font-semibold">{chatRoom.name}</h3>
-                  {chatRoom.last_message_time && (
-                    <p className="text-muted-foreground text-xs">
-                      {DateTime.fromISO(chatRoom.last_message_time).toFormat(
-                        "MM-dd HH:mm",
-                      )}
-                    </p>
-                  )}
+        {loaderData && loaderData.chatRooms.length > 0 ? (
+          loaderData.chatRooms.map((chatRoom) => (
+            <Link
+              key={chatRoom.chat_room_id}
+              to={`/chats/${chatRoom.chat_room_id}`}
+            >
+              <div className="flex cursor-pointer items-center gap-4 rounded-lg border p-2 hover:bg-gray-100">
+                <Avatar>
+                  <AvatarImage src={chatRoom.avatar_url || ""} />
+                  <AvatarFallback>{chatRoom.name?.charAt(0)}</AvatarFallback>
+                </Avatar>
+                <div className="flex-1">
+                  <div className="flex items-center justify-between">
+                    <h3 className="text-sm font-semibold">{chatRoom.name}</h3>
+                    {chatRoom.last_message_time && (
+                      <p className="text-muted-foreground text-xs">
+                        {DateTime.fromISO(chatRoom.last_message_time).toFormat(
+                          "MM-dd HH:mm",
+                        )}
+                      </p>
+                    )}
+                  </div>
+                  <p className="text-muted-foreground max-w-50 truncate text-sm sm:max-w-60 md:max-w-full">
+                    {chatRoom.last_sender_name}: {chatRoom.last_message}
+                  </p>
                 </div>
-                <p className="text-muted-foreground max-w-50 truncate text-sm sm:max-w-60 md:max-w-full">
-                  {chatRoom.last_sender_name}: {chatRoom.last_message}
-                </p>
               </div>
-            </div>
-          </Link>
-        ))}
+            </Link>
+          ))
+        ) : (
+          <div className="text-center text-xl">참가 중인 채팅이 없습니다.</div>
+        )}
       </CardContent>
     </Card>
   );
