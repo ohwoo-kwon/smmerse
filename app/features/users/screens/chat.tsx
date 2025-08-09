@@ -84,7 +84,9 @@ export default function Chat({ loaderData, actionData }: Route.ComponentProps) {
   const isSubmitting = fetcher.state === "submitting";
 
   useEffect(() => {
-    if (fetcher.data.ok) formRef.current?.reset();
+    if (fetcher.data?.ok) {
+      formRef.current?.reset();
+    }
   }, [fetcher.data]);
 
   useEffect(() => {
