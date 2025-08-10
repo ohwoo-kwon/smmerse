@@ -115,9 +115,7 @@ export default function Join({ actionData }: Route.ComponentProps) {
       <Card className="w-full max-w-sm">
         <CardHeader>
           <CardTitle>회원가입</CardTitle>
-          <CardDescription>
-            Starting Project 에 오신 것을 환영합니다.
-          </CardDescription>
+          <CardDescription>스멀스에 오신 것을 환영합니다.</CardDescription>
         </CardHeader>
         <CardContent>
           <Form className="flex flex-col gap-4" method="POST" ref={formRef}>
@@ -128,7 +126,7 @@ export default function Join({ actionData }: Route.ComponentProps) {
                 name="name"
                 required
                 type="text"
-                placeholder="홍길동"
+                placeholder="스멀스"
               />
               {actionData &&
               "fieldErrors" in actionData &&
@@ -142,7 +140,7 @@ export default function Join({ actionData }: Route.ComponentProps) {
                 id="email"
                 name="email"
                 type="email"
-                placeholder="honggilldong@startingproject.com"
+                placeholder="smmerse@smmerse.com"
                 required
               />
               {actionData &&

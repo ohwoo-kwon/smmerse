@@ -114,7 +114,7 @@ export default function Login({
                 id="email"
                 name="email"
                 type="email"
-                placeholder="honggilldong@startingproject.com"
+                placeholder="smmerse@smmerse.com"
                 required
               />
               {actionData &&
