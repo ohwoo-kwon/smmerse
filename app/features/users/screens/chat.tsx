@@ -1,7 +1,9 @@
+import type { Database } from "database.types";
+
 import type { Route } from "./+types/chat";
 
 import { Loader2Icon, SendHorizonalIcon } from "lucide-react";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { redirect, useFetcher } from "react-router";
 import { z } from "zod";
 
@@ -12,10 +14,11 @@ import {
 } from "~/core/components/ui/avatar";
 import { Button } from "~/core/components/ui/button";
 import { Input } from "~/core/components/ui/input";
+import { browserClient } from "~/core/db/client.broswer";
 import makeServerClient from "~/core/lib/supa-client.server";
 
 import { createMessage } from "../mutations";
-import { getMessages } from "../queries";
+import { getMessages, getRoomsParticipant } from "../queries";
 
 export const meta: Route.MetaFunction = () => {
   return [
@@ -71,11 +74,24 @@ export const loader = async ({ request, params }: Route.LoaderArgs) => {
   if (!user) return redirect("/login");
 
   const messages = await getMessages(client, user.id, paramsData.chatRoomId);
-  return { messages, userId: user.id, chatRoomId: paramsData.chatRoomId };
+
+  const participant = await getRoomsParticipant(client, {
+    chatRoomId: paramsData.chatRoomId,
+    userId: user.id,
+  });
+
+  return {
+    messages,
+    userId: user.id,
+    chatRoomId: paramsData.chatRoomId,
+    participant,
+  };
 };
 
-export default function Chat({ loaderData, actionData }: Route.ComponentProps) {
-  const { messages, userId } = loaderData;
+export default function Chat({ loaderData }: Route.ComponentProps) {
+  const { userId, participant } = loaderData;
+
+  const [messages, setMessages] = useState(loaderData.messages);
 
   const formRef = useRef<HTMLFormElement>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -95,6 +111,26 @@ export default function Chat({ loaderData, actionData }: Route.ComponentProps) {
     }
   }, [messages]);
 
+  useEffect(() => {
+    const changes = browserClient
+      .channel(`room:${messages[0].chat_room_id}-${userId}`)
+      .on(
+        "postgres_changes",
+        { event: "INSERT", schema: "public", table: "chats" },
+        (payload) => {
+          setMessages((prev) => [
+            ...prev,
+            payload.new as Database["public"]["Tables"]["chats"]["Row"],
+          ]);
+        },
+      )
+      .subscribe();
+
+    return () => {
+      changes.unsubscribe();
+    };
+  }, []);
+
   return (
     <div className="flex min-h-[calc(100vh-96px)] flex-col">
       <div className="flex-1 overflow-y-auto px-4">
@@ -109,9 +145,9 @@ export default function Chat({ loaderData, actionData }: Route.ComponentProps) {
             >
               {userId !== message.sender_id && (
                 <Avatar className="h-8 w-8">
-                  <AvatarImage src={message.sender.avatar_url || ""} />
+                  <AvatarImage src={participant.profile.avatar_url || ""} />
                   <AvatarFallback>
-                    {message.sender.name.charAt(0)}
+                    {participant.profile.name.charAt(0)}
                   </AvatarFallback>
                 </Avatar>
               )}
@@ -148,3 +184,5 @@ export default function Chat({ loaderData, actionData }: Route.ComponentProps) {
     </div>
   );
 }
+
+export const shouldRevalidate = () => false;

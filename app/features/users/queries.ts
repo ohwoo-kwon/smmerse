@@ -34,7 +34,7 @@ export const getMessages = async (
 
   const { data, error } = await client
     .from("chats")
-    .select("*, sender:sender_id(name, avatar_url)")
+    .select("*")
     .eq("chat_room_id", chatRoomId)
     .order("createdAt");
 
@@ -51,6 +51,28 @@ export const getChats = async (
     .select("*")
     .eq("profile_id", userId)
     .neq("other_profile_id", userId);
+
+  if (error) throw error;
+
+  return data;
+};
+
+export const getRoomsParticipant = async (
+  client: SupabaseClient<Database>,
+  { chatRoomId, userId }: { chatRoomId: number; userId: string },
+) => {
+  const { data, error } = await client
+    .from("chat_room_members")
+    .select(
+      `profile:profiles!profile_id!inner(
+        name,
+        profile_id,
+        avatar_url
+      )`,
+    )
+    .eq("chat_room_id", chatRoomId)
+    .neq("profile_id", userId)
+    .single();
 
   if (error) throw error;
 
