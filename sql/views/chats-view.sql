@@ -1,48 +1,25 @@
-create or replace view chats_view as
-select
-  m1.chat_room_id,
-  p.name,
-  (
-    select
-      content
-    from
-      public.chats c
-    where
-      c.chat_room_id = m1.chat_room_id
-    order by
-      chat_id desc
-    limit
-      1
-  ) as last_message,
-  (
-    select
-      pp.name
-    from
-      public.chats c
-    left join public.profiles pp on c.sender_id = pp.profile_id
-    where
-      c.chat_room_id = m1.chat_room_id
-    order by
-      chat_id desc
-    limit
-      1
-  ) as last_sender_name,
-  (
-    select
-      c."createdAt"
-    from
-      public.chats c
-    where
-      c.chat_room_id = m1.chat_room_id
-    order by
-      chat_id desc
-    limit
-      1
-  ) as last_message_time,
-  m1.profile_id,
-  m2.profile_id as other_profile_id,
-  p.avatar_url
-from
-  public.chat_room_members m1
-  inner join public.chat_room_members m2 on m1.chat_room_id = m2.chat_room_id
-  inner join public.profiles p on p.profile_id = m2.profile_id;
+create view public.chats_view with (security_invoker = on) as
+ SELECT m1.chat_room_id,
+    p.name,
+    ( SELECT c.content
+           FROM chats c
+          WHERE c.chat_room_id = m1.chat_room_id
+          ORDER BY c.chat_id DESC
+         LIMIT 1) AS last_message,
+    ( SELECT pp.name
+           FROM chats c
+             LEFT JOIN profiles pp ON c.sender_id = pp.profile_id
+          WHERE c.chat_room_id = m1.chat_room_id
+          ORDER BY c.chat_id DESC
+         LIMIT 1) AS last_sender_name,
+    ( SELECT c."createdAt"
+           FROM chats c
+          WHERE c.chat_room_id = m1.chat_room_id
+          ORDER BY c.chat_id DESC
+         LIMIT 1) AS last_message_time,
+    m1.profile_id,
+    m2.profile_id AS other_profile_id,
+    p.avatar_url
+   FROM chat_room_members m1
+     JOIN chat_room_members m2 ON m1.chat_room_id = m2.chat_room_id
+     JOIN profiles p ON p.profile_id = m2.profile_id;
