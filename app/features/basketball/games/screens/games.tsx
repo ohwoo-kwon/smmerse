@@ -5,6 +5,7 @@ import { Await, Link } from "react-router";
 import z from "zod";
 
 import CustomPagination from "~/core/components/custom-pagination";
+import KakaoAdfit from "~/core/components/kakao-ad-fit";
 import { Button } from "~/core/components/ui/button";
 import makeServerClient from "~/core/lib/supa-client.server";
 
@@ -125,37 +126,43 @@ export default function BasketballGames({ loaderData }: Route.ComponentProps) {
             children={(games) =>
               games.length > 0 ? (
                 games.map(
-                  ({
-                    basketball_game_id,
-                    title,
-                    gender_type,
-                    date,
-                    start_time,
-                    end_time,
-                    sido,
-                    city,
-                    address,
-                    skill_level,
-                    max_participants,
-                    fee,
-                    link,
-                  }) => (
-                    <BasketballGameCard
-                      key={`basketball_game_${basketball_game_id}`}
-                      basketballGameId={basketball_game_id}
-                      title={title}
-                      genderType={gender_type}
-                      date={date}
-                      startTime={start_time}
-                      endTime={end_time}
-                      sido={sido}
-                      city={city}
-                      address={address}
-                      skillLevel={skill_level}
-                      maxParticipants={max_participants}
-                      fee={fee}
-                      link={link}
-                    />
+                  (
+                    {
+                      basketball_game_id,
+                      title,
+                      gender_type,
+                      date,
+                      start_time,
+                      end_time,
+                      sido,
+                      city,
+                      address,
+                      skill_level,
+                      max_participants,
+                      fee,
+                      link,
+                    },
+                    idx,
+                  ) => (
+                    <>
+                      <BasketballGameCard
+                        key={`basketball_game_${basketball_game_id}`}
+                        basketballGameId={basketball_game_id}
+                        title={title}
+                        genderType={gender_type}
+                        date={date}
+                        startTime={start_time}
+                        endTime={end_time}
+                        sido={sido}
+                        city={city}
+                        address={address}
+                        skillLevel={skill_level}
+                        maxParticipants={max_participants}
+                        fee={fee}
+                        link={link}
+                      />
+                      {idx % 5 === 0 && idx !== 0 && <KakaoAdfit />}
+                    </>
                   ),
                 )
               ) : (
