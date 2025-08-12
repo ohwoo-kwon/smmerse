@@ -27,10 +27,10 @@ export default [
     layout("core/layouts/private.layout.tsx", { id: "private-auth" }, [
       route("/profile", "features/users/screens/profile.tsx"),
       route("/logout", "features/auth/screens/logout.tsx"),
-      ...prefix("/chats", [
-        index("features/users/screens/chats.tsx"),
-        route("/:chatRoomId", "features/users/screens/chat.tsx"),
-      ]),
+      // ...prefix("/chats", [
+      //   index("features/users/screens/chats.tsx"),
+      //   route("/:chatRoomId", "features/users/screens/chat.tsx"),
+      // ]),
     ]),
     ...prefix("/basketball", [
       route("/games", "features/basketball/games/screens/games.tsx"),
