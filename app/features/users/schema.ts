@@ -1,6 +1,8 @@
 import { sql } from "drizzle-orm";
 import {
   bigint,
+  date,
+  integer,
   pgPolicy,
   pgTable,
   primaryKey,
@@ -21,6 +23,9 @@ export const profiles = pgTable(
         onDelete: "cascade",
       }),
     name: text().notNull(),
+    birth: date(),
+    height: integer(),
+    position: text().array(),
     avatar_url: text(),
     ...timestamps,
   },

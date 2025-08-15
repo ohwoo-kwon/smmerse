@@ -49,6 +49,15 @@ function UserMenu({
           <SheetClose asChild>
             <Link to="/profile" viewTransition>
               <UserIcon className="size-4" />
+              프로필
+            </Link>
+          </SheetClose>
+        </DropdownMenuItem>
+        <DropdownMenuSeparator />
+        <DropdownMenuItem asChild>
+          <SheetClose asChild>
+            <Link to="/my" viewTransition>
+              <UserIcon className="size-4" />
               마이페이지
             </Link>
           </SheetClose>

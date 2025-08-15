@@ -75,7 +75,7 @@ export default function SidoFilter() {
 
   return (
     <Sheet>
-      <SheetTrigger asChild>
+      <SheetTrigger asChild className="focus-visible:ring-0">
         <Button size="sm" variant="outline">
           지역{" "}
           {selected.length > 0 && (

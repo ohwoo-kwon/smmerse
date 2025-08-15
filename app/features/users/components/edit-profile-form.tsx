@@ -23,11 +23,19 @@ import {
 import { Input } from "~/core/components/ui/input";
 import { Label } from "~/core/components/ui/label";
 
+import PostionCheckbox from "./position-checkbox";
+
 export default function EditProfileForm({
   name,
+  birth,
+  height,
+  position,
   avatarUrl,
 }: {
   name: string;
+  birth: string;
+  height: number | null;
+  position: string[] | null;
   avatarUrl: string | null;
 }) {
   const fetcher = useFetcher<Route.ComponentProps["actionData"]>();
@@ -104,6 +112,70 @@ export default function EditProfileForm({
               "fieldErrors" in fetcher.data &&
               fetcher.data.fieldErrors?.name ? (
                 <FormErrors errors={fetcher.data?.fieldErrors?.name} />
+              ) : null}
+            </div>
+            <div className="flex flex-col items-start space-y-2">
+              <Label
+                htmlFor="birth"
+                className="flex flex-col items-start gap-1"
+              >
+                생년월일
+              </Label>
+              <Input
+                id="birth"
+                name="birth"
+                required
+                type="number"
+                placeholder="20250720"
+                defaultValue={birth || ""}
+              />
+              {fetcher.data &&
+              "fieldErrors" in fetcher.data &&
+              fetcher.data.fieldErrors?.birth ? (
+                <FormErrors errors={fetcher.data?.fieldErrors?.birth} />
+              ) : null}
+            </div>
+            <div className="flex flex-col items-start space-y-2">
+              <Label
+                htmlFor="height"
+                className="flex flex-col items-start gap-1"
+              >
+                신장
+              </Label>
+              <Input
+                id="height"
+                name="height"
+                required
+                type="number"
+                placeholder="180"
+                defaultValue={height || ""}
+              />
+              {fetcher.data &&
+              "fieldErrors" in fetcher.data &&
+              fetcher.data.fieldErrors?.height ? (
+                <FormErrors errors={fetcher.data?.fieldErrors?.height} />
+              ) : null}
+            </div>
+            <div className="flex flex-col items-start space-y-2">
+              <Label
+                htmlFor="position"
+                className="flex flex-col items-start gap-1"
+              >
+                포지션
+              </Label>
+              <div className="flex w-full justify-between gap-2">
+                {["PG", "SG", "SF", "PF", "C"].map((v) => (
+                  <PostionCheckbox
+                    key={`position_${v}`}
+                    defaultChecked={position?.includes(v) || false}
+                    position={v}
+                  />
+                ))}
+              </div>
+              {fetcher.data &&
+              "fieldErrors" in fetcher.data &&
+              fetcher.data.fieldErrors?.position ? (
+                <FormErrors errors={fetcher.data?.fieldErrors?.position} />
               ) : null}
             </div>
           </div>

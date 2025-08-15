@@ -26,7 +26,7 @@ export function GenderSelect() {
         setSearchParams(searchParams);
       }}
     >
-      <SelectTrigger size="sm">
+      <SelectTrigger size="sm" className="focus-visible:ring-0">
         <SelectValue />
       </SelectTrigger>
       <SelectContent>

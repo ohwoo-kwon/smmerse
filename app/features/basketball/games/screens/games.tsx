@@ -97,7 +97,7 @@ export default function BasketballGames({ loaderData }: Route.ComponentProps) {
       {/* Filter bar */}
       <div className="space-y-2">
         <DateFilter />
-        <div className="flex items-center justify-between">
+        <div className="mb-0 flex items-center justify-between">
           <div className="flex flex-wrap gap-2">
             <SidoFilter />
             <GenderSelect />
@@ -107,6 +107,7 @@ export default function BasketballGames({ loaderData }: Route.ComponentProps) {
             <Link to="/basketball/games/create">경기 만들기</Link>
           </Button>
         </div>
+        <KakaoAdfit />
       </div>
 
       {/* 게임 카드 리스트 */}
@@ -126,43 +127,37 @@ export default function BasketballGames({ loaderData }: Route.ComponentProps) {
             children={(games) =>
               games.length > 0 ? (
                 games.map(
-                  (
-                    {
-                      basketball_game_id,
-                      title,
-                      gender_type,
-                      date,
-                      start_time,
-                      end_time,
-                      sido,
-                      city,
-                      address,
-                      skill_level,
-                      max_participants,
-                      fee,
-                      link,
-                    },
-                    idx,
-                  ) => (
-                    <>
-                      <BasketballGameCard
-                        key={`basketball_game_${basketball_game_id}`}
-                        basketballGameId={basketball_game_id}
-                        title={title}
-                        genderType={gender_type}
-                        date={date}
-                        startTime={start_time}
-                        endTime={end_time}
-                        sido={sido}
-                        city={city}
-                        address={address}
-                        skillLevel={skill_level}
-                        maxParticipants={max_participants}
-                        fee={fee}
-                        link={link}
-                      />
-                      {idx % 5 === 0 && idx !== 0 && <KakaoAdfit />}
-                    </>
+                  ({
+                    basketball_game_id,
+                    title,
+                    gender_type,
+                    date,
+                    start_time,
+                    end_time,
+                    sido,
+                    city,
+                    address,
+                    skill_level,
+                    max_participants,
+                    fee,
+                    link,
+                  }) => (
+                    <BasketballGameCard
+                      key={`basketball_game_${basketball_game_id}`}
+                      basketballGameId={basketball_game_id}
+                      title={title}
+                      genderType={gender_type}
+                      date={date}
+                      startTime={start_time}
+                      endTime={end_time}
+                      sido={sido}
+                      city={city}
+                      address={address}
+                      skillLevel={skill_level}
+                      maxParticipants={max_participants}
+                      fee={fee}
+                      link={link}
+                    />
                   ),
                 )
               ) : (

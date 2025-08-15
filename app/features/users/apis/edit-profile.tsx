@@ -9,6 +9,29 @@ import { getUserProfile } from "../queries";
 
 const schema = z.object({
   name: z.string().min(1),
+  birth: z
+    .string()
+    .regex(/^\d{8}$/, "생년월일은 YYYYMMDD 형태로 입력해주세요 (예: 20250720)")
+    .refine((date) => {
+      const year = parseInt(date.substring(0, 4));
+      const month = parseInt(date.substring(4, 6));
+      const day = parseInt(date.substring(6, 8));
+
+      const dateObj = new Date(year, month - 1, day);
+      return (
+        dateObj.getFullYear() === year &&
+        dateObj.getMonth() === month - 1 &&
+        dateObj.getDate() === day &&
+        year >= 1900 &&
+        year <= new Date().getFullYear()
+      );
+    }, "올바른 날짜를 입력해주세요"),
+  height: z.coerce.number().positive("키를 올바르게 입력해주세요"),
+  PG: z.coerce.boolean(),
+  SG: z.coerce.boolean(),
+  SF: z.coerce.boolean(),
+  PF: z.coerce.boolean(),
+  C: z.coerce.boolean(),
   avatar: z.instanceof(File),
 });
 
@@ -34,9 +57,39 @@ export async function action({ request }: Route.ActionArgs) {
     error,
   } = schema.safeParse(Object.fromEntries(formData));
 
+  const positionError = !(
+    formData.get("PG") ||
+    formData.get("SG") ||
+    formData.get("SF") ||
+    formData.get("SG") ||
+    formData.get("C")
+  );
+
   if (!success) {
-    return data({ fieldErrors: error.flatten().fieldErrors }, { status: 400 });
+    return data(
+      {
+        fieldErrors: {
+          ...error.flatten().fieldErrors,
+          position: positionError
+            ? ["최소 한 개의 포지션을 선택해주세요."]
+            : undefined,
+        },
+      },
+      { status: 400 },
+    );
   }
+  if (positionError)
+    return data(
+      {
+        fieldErrors: {
+          name: undefined,
+          birth: undefined,
+          height: undefined,
+          position: ["최소 한 개의 포지션을 선택해주세요."],
+        },
+      },
+      { status: 400 },
+    );
 
   const profile = await getUserProfile(client, { userId: user.id });
   let avatarUrl = profile?.avatar_url || null;
@@ -64,10 +117,21 @@ export async function action({ request }: Route.ActionArgs) {
     avatarUrl = publicUrl;
   }
 
+  const position = [];
+
+  if (validData.PG) position.push("PG");
+  if (validData.SG) position.push("SG");
+  if (validData.SF) position.push("SF");
+  if (validData.PF) position.push("PF");
+  if (validData.C) position.push("C");
+
   const { error: updateProfileError } = await client
     .from("profiles")
     .update({
       name: validData.name,
+      birth: validData.birth,
+      height: validData.height,
+      position,
       avatar_url: avatarUrl,
     })
     .eq("profile_id", user.id);
