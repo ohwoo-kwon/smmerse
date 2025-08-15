@@ -71,6 +71,20 @@
       "when": 1755214598601,
       "tag": "0009_famous_skaar",
       "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1755247789435,
+      "tag": "0010_organic_sprite",
+      "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "7",
+      "when": 1755255399125,
+      "tag": "0011_chilly_lightspeed",
+      "breakpoints": true
     }
   ]
 }

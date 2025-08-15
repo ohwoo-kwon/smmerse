@@ -14,6 +14,48 @@ export type Database = {
   }
   public: {
     Tables: {
+      basketball_game_participants: {
+        Row: {
+          basketball_game_id: number
+          created_at: string
+          participant_id: number
+          profile_id: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          basketball_game_id: number
+          created_at?: string
+          participant_id?: number
+          profile_id: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          basketball_game_id?: number
+          created_at?: string
+          participant_id?: number
+          profile_id?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "basketball_game_participants_basketball_game_id_basketball_game"
+            columns: ["basketball_game_id"]
+            isOneToOne: false
+            referencedRelation: "basketball_games"
+            referencedColumns: ["basketball_game_id"]
+          },
+          {
+            foreignKeyName: "basketball_game_participants_profile_id_profiles_profile_id_fk"
+            columns: ["profile_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["profile_id"]
+          },
+        ]
+      }
       basketball_games: {
         Row: {
           address: string

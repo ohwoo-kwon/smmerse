@@ -6,13 +6,15 @@ import {
   HandCoinsIcon,
   Loader2Icon,
   MapPinIcon,
-  MessageSquareIcon,
   UserIcon,
   UsersIcon,
 } from "lucide-react";
 import { DateTime } from "luxon";
-import { Link, useFetcher } from "react-router";
+import { useEffect } from "react";
+import { Link, data, redirect, useFetcher, useNavigate } from "react-router";
+import { z } from "zod";
 
+import FormErrors from "~/core/components/form-errors";
 import {
   Avatar,
   AvatarFallback,
@@ -29,8 +31,10 @@ import {
 } from "~/core/components/ui/card";
 import { Textarea } from "~/core/components/ui/textarea";
 import makeServerClient from "~/core/lib/supa-client.server";
+import { getUserProfile } from "~/features/users/queries";
 
 import { basketballSkillLevelMap, genderTypeMap } from "../constants";
+import { applyForGame } from "../mutations";
 import { getBasketballGameById } from "../queries";
 
 export const meta: Route.MetaFunction = ({ data }) => {
@@ -45,6 +49,41 @@ export const meta: Route.MetaFunction = ({ data }) => {
   ];
 };
 
+const formSchema = z.object({
+  basketballGameId: z.coerce.number(),
+});
+
+export async function action({ request }: Route.ActionArgs) {
+  const [client] = makeServerClient(request);
+  const formData = await request.formData();
+  const {
+    data: validData,
+    success,
+    error,
+  } = formSchema.safeParse(Object.fromEntries(formData));
+
+  if (!success) {
+    return data({ fieldErrors: error.flatten().fieldErrors }, { status: 400 });
+  }
+
+  const {
+    data: { user },
+  } = await client.auth.getUser();
+
+  if (!user) return redirect("/login");
+
+  try {
+    await applyForGame(client, {
+      basketballGameId: validData.basketballGameId,
+      profileId: user.id,
+    });
+  } catch (error) {
+    return { error };
+  }
+
+  return { success: true };
+}
+
 export async function loader({ request, params }: Route.LoaderArgs) {
   if (!params.id) {
     throw new Response("Not Found", { status: 404 });
@@ -54,32 +93,41 @@ export async function loader({ request, params }: Route.LoaderArgs) {
   const {
     data: { user },
   } = await client.auth.getUser();
-  // if (!user) return redirect("/login");
-  const isOwner = user?.id === game.profile_id;
 
-  return { game, isOwner };
+  if (!user) return redirect("/login");
+
+  const isOwner = user.id === game.profile_id;
+
+  const profile = await getUserProfile(client, { userId: user.id });
+
+  if (!profile) return redirect("/login");
+
+  return { game, isOwner, profile };
 }
 
 export default function Game({ loaderData }: Route.ComponentProps) {
-  const { game, isOwner } = loaderData;
+  const { game, isOwner, profile } = loaderData;
+  const navigate = useNavigate();
 
   const fetcher = useFetcher();
   const isSubmitting = fetcher.state === "submitting";
 
   const handleSubmit = async () => {
-    const isOk = confirm(
-      `${game.profiles?.name || "호스트"}에게 참가 신청 메시지를 보낼까요?`,
-    );
-    if (!isOk) return;
+    if (!(profile.birth && profile.height && profile.position)) {
+      alert("프로필 정보를 입력해주셔야 참가 신청이 가능합니다.");
+      navigate("/profile");
+    }
 
     fetcher.submit(
-      { content: `[${game.title}] 참가 신청합니다.` },
-      {
-        method: "POST",
-        action: `/api/users/message/${game.profile_id}`,
-      },
+      { basketballGameId: game.basketball_game_id },
+      { method: "POST" },
     );
   };
+
+  useEffect(() => {
+    if (fetcher.data && "success" in fetcher.data && fetcher.data.success)
+      alert("참가 신청이 완료되었습니다.");
+  }, [fetcher.data]);
 
   if (!game) {
     return <div>경기를 찾을 수 없습니다.</div>;
@@ -170,6 +218,9 @@ export default function Game({ loaderData }: Route.ComponentProps) {
                 "참가 신청"
               )}
             </Button>
+          )}
+          {fetcher.data && "error" in fetcher.data && fetcher.data.error && (
+            <FormErrors errors={[fetcher.data.error.message]} />
           )}
         </CardFooter>
       </Card>

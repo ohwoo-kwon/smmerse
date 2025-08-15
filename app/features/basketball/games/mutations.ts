@@ -3,6 +3,8 @@ import type { Database } from "database.types";
 
 import type { basketballSkillLevelEnum, genderTypeEnum } from "./schema";
 
+import { DateTime } from "luxon";
+
 export const insertBasketballGame = async (
   client: SupabaseClient<Database>,
   {
@@ -135,3 +137,135 @@ export const deleteBasketballGame = async (
   if (error) throw error;
   return data;
 };
+
+export const applyForGame = async (
+  client: SupabaseClient<Database>,
+  {
+    basketballGameId,
+    profileId,
+  }: { basketballGameId: number; profileId: string },
+) => {
+  try {
+    // 이미 신청했는지 확인
+    const { data: isApplied } = await client
+      .from("basketball_game_participants")
+      .select()
+      .eq("basketball_game_id", basketballGameId)
+      .eq("profile_id", profileId)
+      .single();
+
+    if (isApplied) {
+      throw new Error("이미 해당 게임에 참가 신청하셨습니다.");
+    }
+
+    // 게임이 존재하는지 확인
+    const { data: gameData } = await client
+      .from("basketball_games")
+      .select()
+      .eq("basketball_game_id", basketballGameId)
+      .single();
+
+    if (!gameData) {
+      throw new Error("존재하지 않는 게임입니다.");
+    }
+
+    // 게임이 신청 가능한 상태인지 확인 (예: 시작 전, 정원 미달 등)
+    if (
+      DateTime.fromFormat(
+        `${gameData.date} ${gameData.start_time}`,
+        "yyyy-MM-dd HH:mm:ss",
+      ) < DateTime.now()
+    )
+      throw new Error("이미 시작된 게임에는 참가 신청할 수 없습니다.");
+
+    // 현재 참가자 수 확인
+    const { count, error: countError } = await client
+      .from("basketball_game_participants")
+      .select("", { count: "exact", head: true })
+      .eq("basketball_game_id", basketballGameId)
+      .eq("status", "approved");
+    if (countError) throw countError;
+    if (count && count >= gameData.max_participants)
+      throw new Error("참가자 모집이 마감되었습니다.");
+
+    // 일반 참가 신청
+    const result = await client.from("basketball_game_participants").insert({
+      basketball_game_id: basketballGameId,
+      profile_id: profileId,
+      status: "pending",
+    });
+
+    return {
+      success: true,
+    };
+  } catch (error) {
+    throw error;
+  }
+};
+
+export async function updateApplication(
+  client: SupabaseClient<Database>,
+  {
+    participantId,
+    basketballGameId,
+    profileId,
+    status,
+  }: {
+    participantId: number;
+    basketballGameId: number;
+    profileId: string;
+    status: "pending" | "approved" | "rejected";
+  },
+) {
+  try {
+    // 참가 신청 존재 확인
+    const { data: participantData } = await client
+      .from("basketball_game_participants")
+      .select()
+      .eq("participant_id", participantId)
+      .single();
+
+    if (!participantData) {
+      throw new Error("존재하지 않는 참가자입니다.");
+    }
+
+    // 게임이 존재하는지 확인
+    const { data: gameData } = await client
+      .from("basketball_games")
+      .select()
+      .eq("basketball_game_id", basketballGameId)
+      .single();
+
+    if (!gameData) {
+      throw new Error("존재하지 않는 게임입니다.");
+    }
+
+    // 승인하는 경우 정원 확인
+    if (status === "approved") {
+      const { count, error: countError } = await client
+        .from("basketball_game_participants")
+        .select("", { count: "exact", head: true })
+        .eq("basketball_game_id", basketballGameId)
+        .eq("status", "approved");
+
+      if (countError) throw countError;
+      if (count && count >= gameData.max_participants)
+        throw new Error("참가자 모집이 마감되었습니다.");
+    }
+
+    const { error } = await client.from("basketball_game_participants").update({
+      participant_id: participantId,
+      profile_id: profileId,
+      basketball_game_id: basketballGameId,
+      status,
+    });
+
+    if (error) throw error;
+
+    return {
+      success: true,
+    };
+  } catch (error) {
+    throw error;
+  }
+}

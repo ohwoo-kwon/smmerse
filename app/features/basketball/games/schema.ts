@@ -6,8 +6,10 @@ import {
   pgEnum,
   pgPolicy,
   pgTable,
+  serial,
   text,
   time,
+  unique,
   uuid,
   varchar,
 } from "drizzle-orm/pg-core";
@@ -34,10 +36,12 @@ export const genderTypeEnum = pgEnum("gender_type", [
 export const basketballGames = pgTable(
   "basketball_games",
   {
-    baskteballGameId: bigint("basketball_game_id", { mode: "number" })
+    basketballGameId: bigint("basketball_game_id", { mode: "number" })
       .primaryKey()
       .generatedAlwaysAsIdentity(),
-    profileId: uuid("profile_id").references(() => profiles.profile_id),
+    profileId: uuid("profile_id").references(() => profiles.profile_id, {
+      onDelete: "cascade",
+    }),
     title: text().notNull(),
     description: text(),
     date: date().notNull(),
@@ -82,4 +86,72 @@ export const basketballGames = pgTable(
       withCheck: sql`${authUid} = ${table.profileId}`,
     }),
   ],
+);
+
+export const basketballGameParticipants = pgTable(
+  "basketball_game_participants",
+  {
+    participantId: serial("participant_id").primaryKey(),
+    basketballGameId: bigint("basketball_game_id", { mode: "number" })
+      .references(() => basketballGames.basketballGameId, {
+        onDelete: "cascade",
+      })
+      .notNull(),
+    profileId: uuid("profile_id")
+      .references(() => profiles.profile_id, {
+        onDelete: "cascade",
+      })
+      .notNull(),
+    status: text("status", {
+      enum: ["pending", "approved", "rejected"],
+    })
+      .default("pending")
+      .notNull(),
+    ...timestamps,
+  },
+  (table) => ({
+    gameProfileUnique: unique().on(table.basketballGameId, table.profileId),
+    insertPolicy: pgPolicy("participants_insert_policy", {
+      for: "insert",
+      to: "authenticated",
+      withCheck: sql`profile_id = auth.uid()`,
+    }),
+    selectPolicy: pgPolicy("participants_select_policy", {
+      for: "select",
+      to: "authenticated",
+      using: sql`
+    profile_id = auth.uid() OR
+    EXISTS (
+      SELECT 1 FROM public.basketball_games bg 
+      WHERE bg.basketball_game_id = public.basketball_game_participants.basketball_game_id 
+      AND bg.profile_id = auth.uid()
+    )
+  `,
+    }),
+    updatePolicy: pgPolicy("participants_update_policy", {
+      for: "update",
+      to: "authenticated",
+      using: sql`
+    profile_id = auth.uid() OR
+    EXISTS (
+      SELECT 1 FROM public.basketball_games bg 
+      WHERE bg.basketball_game_id = public.basketball_game_participants.basketball_game_id 
+      AND bg.profile_id = auth.uid()
+    )
+  `,
+      withCheck: sql`
+    profile_id = auth.uid() OR
+    EXISTS (
+      SELECT 1 FROM public.basketball_games bg 
+      WHERE bg.basketball_game_id = public.basketball_game_participants.basketball_game_id 
+      AND bg.profile_id = auth.uid()
+    )
+  `,
+    }),
+    deletePolicy: pgPolicy("participants_delete_policy", {
+      for: "delete",
+      to: "authenticated",
+      using: sql`profile_id = auth.uid()`,
+    }),
+  }),
 );
