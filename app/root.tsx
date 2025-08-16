@@ -47,20 +47,22 @@ export function Layout({ children }: { children: React.ReactNode }) {
     }
   }, [searchParams]);
 
+  const adsenseClient =
+    typeof window !== "undefined"
+      ? import.meta.env.VITE_GOOGLE_ADSENSE_CLIENT
+      : process.env.VITE_GOOGLE_ADSENSE_CLIENT;
+
   return (
     <html lang="en">
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <meta
-          name="google-adsense-account"
-          content={process.env.GOOGLE_ADSENSE_CLIENT}
-        />
+        <meta name="google-adsense-account" content={adsenseClient} />
         <Meta />
         <Links />
         <script
           async
-          src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${process.env.GOOGLE_ADSENSE_CLIENT}`}
+          src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${adsenseClient}`}
           crossOrigin="anonymous"
         />
       </head>
