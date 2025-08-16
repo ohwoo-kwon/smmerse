@@ -52,12 +52,15 @@ export function Layout({ children }: { children: React.ReactNode }) {
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <meta name="google-adsense-account" content="ca-pub-1792324013654410" />
+        <meta
+          name="google-adsense-account"
+          content={process.env.GOOGLE_ADSENSE_CLIENT}
+        />
         <Meta />
         <Links />
         <script
           async
-          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1792324013654410"
+          src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${process.env.GOOGLE_ADSENSE_CLIENT}`}
           crossOrigin="anonymous"
         />
       </head>
