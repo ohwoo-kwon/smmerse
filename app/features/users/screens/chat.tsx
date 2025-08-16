@@ -89,7 +89,7 @@ export const loader = async ({ request, params }: Route.LoaderArgs) => {
 };
 
 export default function Chat({ loaderData }: Route.ComponentProps) {
-  const { userId, participant } = loaderData;
+  const { userId, participant, chatRoomId } = loaderData;
 
   const [messages, setMessages] = useState(loaderData.messages);
 
@@ -113,7 +113,7 @@ export default function Chat({ loaderData }: Route.ComponentProps) {
 
   useEffect(() => {
     const changes = browserClient
-      .channel(`room:${messages[0].chat_room_id}-${userId}`)
+      .channel(`room:${chatRoomId}-${userId}`)
       .on(
         "postgres_changes",
         { event: "INSERT", schema: "public", table: "chats" },

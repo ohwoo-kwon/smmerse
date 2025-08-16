@@ -28,10 +28,10 @@ export default [
       route("/profile", "features/users/screens/profile.tsx"),
       route("/my", "features/users/screens/my.tsx"),
       route("/logout", "features/auth/screens/logout.tsx"),
-      // ...prefix("/chats", [
-      //   index("features/users/screens/chats.tsx"),
-      //   route("/:chatRoomId", "features/users/screens/chat.tsx"),
-      // ]),
+      ...prefix("/chats", [
+        index("features/users/screens/chats.tsx"),
+        route("/:chatRoomId", "features/users/screens/chat.tsx"),
+      ]),
     ]),
     ...prefix("/basketball", [
       route("/games", "features/basketball/games/screens/games.tsx"),
@@ -59,6 +59,7 @@ export default [
         route("/password", "features/users/apis/change-password.tsx"),
         route("/email", "features/users/apis/change-email.tsx"),
         route("/profile", "features/users/apis/edit-profile.tsx"),
+        route("/chat-room", "features/users/apis/redirect-to-chat-room.tsx"),
         route("/message/:userId", "features/users/apis/send-message.tsx"),
       ]),
     ]),

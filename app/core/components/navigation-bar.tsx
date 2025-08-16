@@ -87,7 +87,7 @@ function MenuButtons() {
           게스트
         </Link>
       </SheetClose>
-      {/* <SheetClose asChild>
+      <SheetClose asChild>
         <Link
           to="/chats"
           viewTransition
@@ -95,7 +95,7 @@ function MenuButtons() {
         >
           채팅
         </Link>
-      </SheetClose> */}
+      </SheetClose>
       <SheetClose asChild>
         <Link
           to="https://www.instagram.com/tiger.ow/"

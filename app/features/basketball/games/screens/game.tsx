@@ -6,6 +6,7 @@ import {
   HandCoinsIcon,
   Loader2Icon,
   MapPinIcon,
+  MessageSquareIcon,
   UserIcon,
   UsersIcon,
 } from "lucide-react";
@@ -121,6 +122,13 @@ export default function Game({ loaderData }: Route.ComponentProps) {
     fetcher.submit(
       { basketballGameId: game.basketball_game_id },
       { method: "POST" },
+    );
+  };
+
+  const handleClickChat = () => {
+    fetcher.submit(
+      { fromUserId: profile.profile_id, toUserId: game.profile_id },
+      { method: "POST", action: "/api/users/chat-room" },
     );
   };
 
@@ -242,9 +250,13 @@ export default function Game({ loaderData }: Route.ComponentProps) {
               </Avatar>
               <p>{game.profiles?.name}</p>
             </div>
-            {/* <Button size="icon" disabled>
+            <Button
+              size="icon"
+              className="cursor-pointer"
+              onClick={handleClickChat}
+            >
               <MessageSquareIcon />
-            </Button> */}
+            </Button>
           </CardContent>
         </Card>
       )}
