@@ -107,7 +107,19 @@ export default function BasketballGames({ loaderData }: Route.ComponentProps) {
             <Link to="/basketball/games/create">경기 만들기</Link>
           </Button>
         </div>
-        <KakaoAdfit />
+        <script
+          async
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1792324013654410"
+          crossOrigin="anonymous"
+        ></script>
+        <ins
+          className="adsbygoogle block"
+          data-ad-client="ca-pub-1792324013654410"
+          data-ad-slot="2973856464"
+          data-ad-format="auto"
+          data-full-width-responsive="true"
+        ></ins>
+        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
       </div>
 
       {/* 게임 카드 리스트 */}
