@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 
 export default function AdsenseBanner({
-  adClient = process.env.GOOGLE_ADSENSE_CLIENT,
+  adClient = import.meta.env.VITE_GOOGLE_ADSENSE_CLIENT,
   adSlot,
   adFormat = "auto",
   fullWidthResponsive = true,
