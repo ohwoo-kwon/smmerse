@@ -36,26 +36,42 @@ export const meta: Route.MetaFunction = () => {
 };
 
 const PAGE_SIZE = 4;
-const DEFAULT_GAME_INFO: BasketballGame = {
+const DEFAULT_GAME_INFO: Omit<
+  BasketballGame,
+  | "basketball_game_id"
+  | "created_at"
+  | "profile_id"
+  | "updated_at"
+  | "current_participants"
+> = {
   title: "",
   description: "",
   date: DateTime.now().toFormat("yyyy-MM-dd"),
-  startTime: "18:00",
-  endTime: "21:00",
-  skillLevel: "level_0",
-  minParticipants: 0,
-  maxParticipants: 18,
-  currentParticipants: 0,
+  start_time: "18:00",
+  end_time: "21:00",
+  skill_level: "level_0",
+  min_participants: 0,
+  max_participants: 18,
   fee: 5000,
   sido: "서울",
   city: "강남구",
   address: "",
-  genderType: "male",
+  gender_type: "male",
   link: "",
 };
 
 export default function CreateGame() {
-  const [gameInfo, setGameInfo] = useState<BasketballGame>(DEFAULT_GAME_INFO);
+  const [gameInfo, setGameInfo] =
+    useState<
+      Omit<
+        BasketballGame,
+        | "basketball_game_id"
+        | "created_at"
+        | "profile_id"
+        | "updated_at"
+        | "current_participants"
+      >
+    >(DEFAULT_GAME_INFO);
   const [currentPage, setCurrentPage] = useState(1);
   const [error, setError] = useState<Partial<BasketballGame>>({});
 
@@ -81,11 +97,11 @@ export default function CreateGame() {
 
   const onChangeSkillLevel = (
     value: (typeof basketballSkillLevelEnum.enumValues)[number],
-  ) => setGameInfo((prev) => ({ ...prev, skillLevel: value }));
+  ) => setGameInfo((prev) => ({ ...prev, skill_level: value }));
 
   const onChangeGenderType = (
     value: (typeof genderTypeEnum.enumValues)[number],
-  ) => setGameInfo((prev) => ({ ...prev, genderType: value }));
+  ) => setGameInfo((prev) => ({ ...prev, gender_type: value }));
 
   const validatePage = (page: number): boolean => {
     switch (page) {
@@ -102,7 +118,7 @@ export default function CreateGame() {
         } else {
           setError((prev) => ({ ...prev, date: "" }));
         }
-        if (!gameInfo.startTime) {
+        if (!gameInfo.start_time) {
           setError((prev) => ({
             ...prev,
             startTime: "시작 시간을 선택해주세요.",
@@ -110,7 +126,7 @@ export default function CreateGame() {
         } else {
           setError((prev) => ({ ...prev, startTime: "" }));
         }
-        if (!gameInfo.endTime) {
+        if (!gameInfo.end_time) {
           setError((prev) => ({
             ...prev,
             endTime: "종료 시간을 선택해주세요.",
@@ -118,7 +134,7 @@ export default function CreateGame() {
         } else {
           setError((prev) => ({ ...prev, endTime: "" }));
         }
-        return !!gameInfo.date && !!gameInfo.startTime && !!gameInfo.endTime;
+        return !!gameInfo.date && !!gameInfo.start_time && !!gameInfo.end_time;
       case 3:
         if (!gameInfo.sido) {
           setError((prev) => ({ ...prev, sido: "시/도를 선택해주세요." }));

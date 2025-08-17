@@ -1,4 +1,4 @@
-import { LogOutIcon, MenuIcon, UserIcon } from "lucide-react";
+import { LogOutIcon, MenuIcon, SettingsIcon, UserIcon } from "lucide-react";
 import { Link } from "react-router";
 
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
@@ -57,7 +57,7 @@ function UserMenu({
         <DropdownMenuItem asChild>
           <SheetClose asChild>
             <Link to="/my" viewTransition>
-              <UserIcon className="size-4" />
+              <SettingsIcon className="size-4" />
               마이페이지
             </Link>
           </SheetClose>
@@ -87,6 +87,24 @@ function MenuButtons() {
           게스트
         </Link>
       </SheetClose>
+      <SheetClose asChild>
+        <Link
+          to="/basketball/games/my"
+          viewTransition
+          className="hover:text-muted-foreground transition-colors"
+        >
+          나의 모집글
+        </Link>
+      </SheetClose>
+      {/* <SheetClose asChild disabled>
+        <Link
+          to="/basketball/games/my"
+          viewTransition
+          className="hover:text-muted-foreground transition-colors"
+        >
+          참여 내역
+        </Link>
+      </SheetClose> */}
       <SheetClose asChild>
         <Link
           to="/chats"

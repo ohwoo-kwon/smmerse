@@ -153,9 +153,9 @@ export default function Game({ loaderData }: Route.ComponentProps) {
               {game.sido} {game.city}
             </span>
             <DotIcon size={16} />
-            <span>{basketballSkillLevelMap[game.skillLevel]}</span>
+            <span>{basketballSkillLevelMap[game.skill_level]}</span>
             <DotIcon size={16} />
-            <span>{genderTypeMap[game.genderType]}</span>
+            <span>{genderTypeMap[game.gender_type]}</span>
           </CardDescription>
         </CardHeader>
         <CardContent className="flex flex-col gap-4 text-sm">
@@ -168,11 +168,11 @@ export default function Game({ loaderData }: Route.ComponentProps) {
                   .toFormat("M월 d일 (ccc)")}
               </span>
               <span>
-                {DateTime.fromFormat(game.startTime, "HH:mm:ss").toFormat(
+                {DateTime.fromFormat(game.start_time, "HH:mm:ss").toFormat(
                   "HH:mm",
                 )}{" "}
                 -{" "}
-                {DateTime.fromFormat(game.endTime, "HH:mm:ss").toFormat(
+                {DateTime.fromFormat(game.end_time, "HH:mm:ss").toFormat(
                   "HH:mm",
                 )}
               </span>
@@ -183,7 +183,7 @@ export default function Game({ loaderData }: Route.ComponentProps) {
             </div>
             <div className="flex items-center gap-2">
               <UsersIcon size={16} className="text-primary" />
-              <span>{game.maxParticipants} 명</span>
+              <span>{game.max_participants} 명</span>
             </div>
             <div className="flex items-center gap-2">
               <HandCoinsIcon size={16} className="text-primary" />
@@ -208,8 +208,17 @@ export default function Game({ loaderData }: Route.ComponentProps) {
             </Button>
           )}
           {isOwner && (
+            <Button asChild className="w-full">
+              <Link
+                to={`/basketball/games/${game.basketball_game_id}/participants`}
+              >
+                참가자 관리
+              </Link>
+            </Button>
+          )}
+          {isOwner && (
             <Button asChild variant="secondary" className="w-full">
-              <Link to={`/basketball/games/${game.basketballGameId}/edit`}>
+              <Link to={`/basketball/games/${game.basketball_game_id}/edit`}>
                 수정
               </Link>
             </Button>
@@ -232,7 +241,7 @@ export default function Game({ loaderData }: Route.ComponentProps) {
           )}
         </CardFooter>
       </Card>
-      {game.profiles && (
+      {!isOwner && game.profiles && (
         <Card className="mx-auto max-w-4xl">
           <CardHeader>
             <CardTitle>호스트 정보</CardTitle>

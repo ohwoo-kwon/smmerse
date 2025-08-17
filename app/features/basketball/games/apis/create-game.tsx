@@ -15,6 +15,7 @@ export async function action({ request }: Route.ActionArgs) {
     data: validData,
     error,
   } = basketballGameSchema.safeParse(Object.fromEntries(formData));
+
   if (!success) {
     return data({ fieldErrors: error.flatten().fieldErrors }, { status: 400 });
   }
@@ -27,7 +28,7 @@ export async function action({ request }: Route.ActionArgs) {
   if (!user) return redirect("/login");
 
   // @ts-ignore
-  insertBasketballGame(client, { profileId: user.id, ...validData });
+  insertBasketballGame(client, { profile_id: user.id, ...validData });
 
   return data({ success: true }, { status: 200 });
 }

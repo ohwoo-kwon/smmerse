@@ -18,7 +18,14 @@ export default function CreateGameInfoCard({
   error,
   onChange,
 }: {
-  gameInfo: BasketballGame;
+  gameInfo: Omit<
+    BasketballGame,
+    | "basketball_game_id"
+    | "created_at"
+    | "profile_id"
+    | "updated_at"
+    | "current_participants"
+  >;
   error: Partial<BasketballGame>;
   onChange: (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
 }) {

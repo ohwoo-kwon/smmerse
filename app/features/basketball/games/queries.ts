@@ -140,14 +140,18 @@ export const getBasketballGameById = async (
   if (error) throw error;
   return {
     ...data,
-    basketballGameId: data.basketball_game_id,
-    profileId: data.profile_id,
-    startTime: data.start_time,
-    endTime: data.end_time,
-    skillLevel: data.skill_level,
-    genderType: data.gender_type,
-    maxParticipants: data.max_participants,
-    minParticipants: data.min_participants,
-    currentParticipants: data.current_participants,
   };
+};
+
+export const getMyBasketballGames = async (
+  client: SupabaseClient<Database>,
+  profileId: string,
+) => {
+  const { data, error } = await client
+    .from("basketball_games")
+    .select("*")
+    .eq("profile_id", profileId);
+
+  if (error) throw error;
+  return data;
 };

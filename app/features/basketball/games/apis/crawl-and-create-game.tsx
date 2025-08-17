@@ -367,17 +367,16 @@ export const loader = async ({ request }: Route.LoaderArgs) => {
 이 게시물의 정보는 자동 수집된 데이터로, 실제 내용과 다를 수 있습니다.
 정확한 내용은 아래 링크를 통해 직접 게시글을 확인해주세요. 🙏`,
         date: output.date,
-        startTime: output.startTime,
-        endTime: output.endTime,
-        skillLevel: "level_0",
-        minParticipants: 0,
-        maxParticipants: 5,
-        currentParticipants: 0,
+        start_time: output.startTime,
+        end_time: output.endTime,
+        skill_level: "level_0",
+        min_participants: 0,
+        max_participants: 5,
         fee: 5000,
         sido: output.sido || post.title.slice(1, 3),
         city: output.city || "",
         address: "",
-        genderType: "male",
+        gender_type: "male",
       });
     }
   } catch (e) {

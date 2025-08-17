@@ -26,7 +26,14 @@ export default function CreateGameLocationCard({
   onChange,
   onChangeLocation,
 }: {
-  gameInfo: BasketballGame;
+  gameInfo: Omit<
+    BasketballGame,
+    | "basketball_game_id"
+    | "created_at"
+    | "profile_id"
+    | "updated_at"
+    | "current_participants"
+  >;
   error: Partial<BasketballGame>;
   onChange: (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
   onChangeLocation: (id: "sido" | "city", value: string) => void;

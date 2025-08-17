@@ -50,7 +50,6 @@ export const basketballGames = pgTable(
     skillLevel: basketballSkillLevelEnum("skill_level").notNull(),
     minParticipants: integer("min_participants").default(0).notNull(),
     maxParticipants: integer("max_participants").notNull(),
-    currentParticipants: integer("current_participants").default(0).notNull(),
     fee: integer().notNull(),
     sido: varchar({ length: 50 }).notNull(),
     city: varchar({ length: 50 }).notNull(),

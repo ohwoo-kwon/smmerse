@@ -8,60 +8,61 @@ import { DateTime } from "luxon";
 export const insertBasketballGame = async (
   client: SupabaseClient<Database>,
   {
-    profileId,
+    profile_id,
     title,
     description,
     date,
-    startTime,
-    endTime,
-    skillLevel,
-    minParticipants,
-    maxParticipants,
-    currentParticipants,
+    start_time,
+    end_time,
+    skill_level,
+    min_participants,
+    max_participants,
     fee,
     sido,
     city,
     address,
-    genderType,
+    gender_type,
     link,
   }: {
-    profileId?: string;
+    profile_id?: string;
     title: string;
     description?: string;
     date: string;
-    startTime: string;
-    endTime: string;
-    skillLevel: (typeof basketballSkillLevelEnum.enumValues)[number];
-    minParticipants: number;
-    maxParticipants: number;
-    currentParticipants: number;
+    start_time: string;
+    end_time: string;
+    skill_level: (typeof basketballSkillLevelEnum.enumValues)[number];
+    min_participants: number;
+    max_participants: number;
     fee: number;
     sido: string;
     city: string;
     address: string;
-    genderType: (typeof genderTypeEnum.enumValues)[number];
+    gender_type: (typeof genderTypeEnum.enumValues)[number];
     link?: string;
   },
 ) => {
   const { data, error } = await client.from("basketball_games").insert({
-    profile_id: profileId,
+    profile_id,
     title,
     description,
     date,
-    start_time: startTime,
-    end_time: endTime,
-    skill_level: skillLevel,
-    min_participants: minParticipants,
-    max_participants: maxParticipants,
-    current_participants: currentParticipants,
+    start_time,
+    end_time,
+    skill_level,
+    min_participants,
+    max_participants,
     fee,
     sido,
     city,
     address,
-    gender_type: genderType,
+    gender_type,
     link,
   });
-  if (error) throw error;
+  if (error) {
+    console.log(error);
+
+    throw error;
+  }
   return data;
 };
 
@@ -72,33 +73,31 @@ export const updateBasketballGame = async (
     title,
     description,
     date,
-    startTime,
-    endTime,
-    skillLevel,
-    minParticipants,
-    maxParticipants,
-    currentParticipants,
+    start_time,
+    end_time,
+    skill_level,
+    min_participants,
+    max_participants,
     fee,
     sido,
     city,
     address,
-    genderType,
+    gender_type,
     link,
   }: {
     title: string;
     description?: string | null;
     date: string;
-    startTime: string;
-    endTime: string;
-    skillLevel: (typeof basketballSkillLevelEnum.enumValues)[number];
-    minParticipants: number;
-    maxParticipants: number;
-    currentParticipants: number;
+    start_time: string;
+    end_time: string;
+    skill_level: (typeof basketballSkillLevelEnum.enumValues)[number];
+    min_participants: number;
+    max_participants: number;
     fee: number;
     sido: string;
     city: string;
     address: string;
-    genderType: (typeof genderTypeEnum.enumValues)[number];
+    gender_type: (typeof genderTypeEnum.enumValues)[number];
     link?: string | null;
   },
 ) => {
@@ -108,17 +107,16 @@ export const updateBasketballGame = async (
       title,
       description,
       date,
-      start_time: startTime,
-      end_time: endTime,
-      skill_level: skillLevel,
-      min_participants: minParticipants,
-      max_participants: maxParticipants,
-      current_participants: currentParticipants,
+      start_time,
+      end_time,
+      skill_level,
+      min_participants,
+      max_participants,
       fee,
       sido,
       city,
       address,
-      gender_type: genderType,
+      gender_type,
       link: link || null,
     })
     .eq("basketball_game_id", id);

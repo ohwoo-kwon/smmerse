@@ -27,7 +27,14 @@ export default function CreateGameFeeCard({
   onChangeSkillLevel,
   onChangeGenderType,
 }: {
-  gameInfo: BasketballGame;
+  gameInfo: Omit<
+    BasketballGame,
+    | "basketball_game_id"
+    | "created_at"
+    | "profile_id"
+    | "updated_at"
+    | "current_participants"
+  >;
   error: Partial<BasketballGame>;
   onChange: (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
   onChangeSkillLevel: (
@@ -54,7 +61,7 @@ export default function CreateGameFeeCard({
                 key={skillLevel}
                 className={cn(
                   "rounded border px-4 py-2",
-                  skillLevel === gameInfo.skillLevel
+                  skillLevel === gameInfo.skill_level
                     ? "border-primary bg-primary/10"
                     : "'",
                 )}
@@ -78,7 +85,7 @@ export default function CreateGameFeeCard({
                 key={gender}
                 className={cn(
                   "w-full rounded border py-2 text-center",
-                  gender === gameInfo.genderType
+                  gender === gameInfo.gender_type
                     ? "border-primary bg-primary/10"
                     : "'",
                 )}
@@ -108,29 +115,29 @@ export default function CreateGameFeeCard({
         </div>
         <div className="flex justify-between gap-1 md:gap-8">
           <div className="space-y-1">
-            <Label htmlFor="minParticipants" className="md:text-base">
+            <Label htmlFor="min_participants" className="md:text-base">
               최소 인원
             </Label>
             <Input
-              id="minParticipants"
+              id="min_participants"
               type="number"
               min={0}
               placeholder="예) 서울 강남구 언주로 332"
-              value={gameInfo.minParticipants}
+              value={gameInfo.min_participants}
               onChange={onChange}
               className="text-sm md:text-base"
             />
           </div>
           <div className="space-y-1">
-            <Label htmlFor="maxParticipants" className="md:text-base">
+            <Label htmlFor="max_participants" className="md:text-base">
               최대 인원
             </Label>
             <Input
-              id="maxParticipants"
+              id="max_participants"
               type="number"
               min={0}
               placeholder="예) 서울 강남구 언주로 332"
-              value={gameInfo.maxParticipants}
+              value={gameInfo.max_participants}
               onChange={onChange}
               className="text-sm md:text-base"
             />

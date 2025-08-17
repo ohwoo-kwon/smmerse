@@ -33,21 +33,22 @@ export default [
         route("/:chatRoomId", "features/users/screens/chat.tsx"),
       ]),
     ]),
-    ...prefix("/basketball", [
-      route("/games", "features/basketball/games/screens/games.tsx"),
+    ...prefix("/basketball/games", [
+      index("features/basketball/games/screens/games.tsx"),
       layout(
         "core/layouts/private.layout.tsx",
         { id: "private-basketball-game" },
         [
-          route(
-            "/games/create",
-            "features/basketball/games/screens/create-game.tsx",
-          ),
-          route(
-            "/games/:id/edit",
-            "features/basketball/games/screens/edit-game.tsx",
-          ),
-          route("/games/:id", "features/basketball/games/screens/game.tsx"),
+          route("/create", "features/basketball/games/screens/create-game.tsx"),
+          route("/my", "features/basketball/games/screens/my-games.tsx"),
+          ...prefix("/:id", [
+            index("features/basketball/games/screens/game.tsx"),
+            route("/edit", "features/basketball/games/screens/edit-game.tsx"),
+            route(
+              "/participants",
+              "features/basketball/games/screens/game-participants.tsx",
+            ),
+          ]),
         ],
       ),
     ]),

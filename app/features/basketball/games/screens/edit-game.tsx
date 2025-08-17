@@ -50,7 +50,7 @@ const PAGE_SIZE = 4;
 
 export default function EditGame({ loaderData }: Route.ComponentProps) {
   const { game } = loaderData;
-  const [gameInfo, setGameInfo] = useState<BasketballGame>(game);
+  const [gameInfo, setGameInfo] = useState(game);
   const [currentPage, setCurrentPage] = useState(1);
   const [error, setError] = useState<Partial<BasketballGame>>({});
 
@@ -75,11 +75,11 @@ export default function EditGame({ loaderData }: Route.ComponentProps) {
 
   const onChangeSkillLevel = (
     value: (typeof basketballSkillLevelEnum.enumValues)[number],
-  ) => setGameInfo((prev) => ({ ...prev, skillLevel: value }));
+  ) => setGameInfo((prev) => ({ ...prev, skill_level: value }));
 
   const onChangeGenderType = (
     value: (typeof genderTypeEnum.enumValues)[number],
-  ) => setGameInfo((prev) => ({ ...prev, genderType: value }));
+  ) => setGameInfo((prev) => ({ ...prev, gender_type: value }));
 
   const validatePage = (page: number): boolean => {
     switch (page) {
@@ -96,7 +96,7 @@ export default function EditGame({ loaderData }: Route.ComponentProps) {
         } else {
           setError((prev) => ({ ...prev, date: "" }));
         }
-        if (!gameInfo.startTime) {
+        if (!gameInfo.start_time) {
           setError((prev) => ({
             ...prev,
             startTime: "시작 시간을 선택해주세요.",
@@ -104,7 +104,7 @@ export default function EditGame({ loaderData }: Route.ComponentProps) {
         } else {
           setError((prev) => ({ ...prev, startTime: "" }));
         }
-        if (!gameInfo.endTime) {
+        if (!gameInfo.end_time) {
           setError((prev) => ({
             ...prev,
             endTime: "종료 시간을 선택해주세요.",
@@ -112,7 +112,7 @@ export default function EditGame({ loaderData }: Route.ComponentProps) {
         } else {
           setError((prev) => ({ ...prev, endTime: "" }));
         }
-        return !!gameInfo.date && !!gameInfo.startTime && !!gameInfo.endTime;
+        return !!gameInfo.date && !!gameInfo.start_time && !!gameInfo.end_time;
       case 3:
         if (!gameInfo.sido) {
           setError((prev) => ({ ...prev, sido: "시/도를 선택해주세요." }));
@@ -293,9 +293,9 @@ export default function EditGame({ loaderData }: Route.ComponentProps) {
             ) : (
               <span></span>
             )}
-            <Button onClick={() => handlePage("next")}>
-              {currentPage !== PAGE_SIZE ? "다음" : "수정"}
-            </Button>
+            {currentPage !== PAGE_SIZE && (
+              <Button onClick={() => handlePage("next")}>다음</Button>
+            )}
           </div>
           <Button
             className="w-full"
@@ -305,7 +305,9 @@ export default function EditGame({ loaderData }: Route.ComponentProps) {
             수정
           </Button>
           <Button variant="secondary" className="w-full" asChild>
-            <Link to={`/basketball/games/${game.basketballGameId}`}>취소</Link>
+            <Link to={`/basketball/games/${game.basketball_game_id}`}>
+              취소
+            </Link>
           </Button>
         </CardFooter>
       </Card>
