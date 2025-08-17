@@ -22,18 +22,27 @@ import {
 } from "~/core/components/ui/card";
 import { Input } from "~/core/components/ui/input";
 import { Label } from "~/core/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "~/core/components/ui/select";
 
 import PostionCheckbox from "./position-checkbox";
 
 export default function EditProfileForm({
   name,
   birth,
+  sex,
   height,
   position,
   avatarUrl,
 }: {
   name: string;
   birth: string;
+  sex: string | null;
   height: number | null;
   position: string[] | null;
   avatarUrl: string | null;
@@ -133,6 +142,34 @@ export default function EditProfileForm({
               "fieldErrors" in fetcher.data &&
               fetcher.data.fieldErrors?.birth ? (
                 <FormErrors errors={fetcher.data?.fieldErrors?.birth} />
+              ) : null}
+            </div>
+            <div className="flex flex-col items-start space-y-2">
+              <Label htmlFor="sex" className="flex flex-col items-start gap-1">
+                성별
+              </Label>
+              <Select name="sex" defaultValue={sex || undefined}>
+                <SelectTrigger
+                  size="sm"
+                  className="w-full focus-visible:ring-0"
+                >
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {["남성", "여성"].map((value) => (
+                    <SelectItem
+                      key={value}
+                      value={value === "남성" ? "male" : "female"}
+                    >
+                      {value}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              {fetcher.data &&
+              "fieldErrors" in fetcher.data &&
+              fetcher.data.fieldErrors?.position ? (
+                <FormErrors errors={fetcher.data?.fieldErrors?.position} />
               ) : null}
             </div>
             <div className="flex flex-col items-start space-y-2">

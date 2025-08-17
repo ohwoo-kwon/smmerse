@@ -4,7 +4,7 @@ import type { Route } from "./+types/edit-game";
 
 import { Trash2Icon } from "lucide-react";
 import { type ChangeEvent, useEffect, useState } from "react";
-import { Link, useFetcher, useNavigate } from "react-router";
+import { Link, redirect, useFetcher, useNavigate } from "react-router";
 
 import { Button } from "~/core/components/ui/button";
 import {
@@ -42,7 +42,13 @@ export async function loader({ request, params }: Route.LoaderArgs) {
     throw new Response("Not Found", { status: 404 });
   }
   const [client] = makeServerClient(request);
+  const {
+    data: { user },
+  } = await client.auth.getUser();
   const game = await getBasketballGameById(client, Number(params.id));
+
+  if (user!.id !== game.profile_id)
+    return redirect(`/basketball/games/${game.basketball_game_id}`);
   return { game };
 }
 

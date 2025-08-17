@@ -155,3 +155,17 @@ export const getMyBasketballGames = async (
   if (error) throw error;
   return data;
 };
+
+export const getBasketballGameParticipants = async (
+  client: SupabaseClient<Database>,
+  basketballGameId: number,
+) => {
+  const { data, error } = await client
+    .from("basketball_game_participants")
+    .select("*, profile:profile_id(*)")
+    .eq("basketball_game_id", basketballGameId)
+    .order("created_at", { ascending: true });
+
+  if (error) throw error;
+  return data;
+};

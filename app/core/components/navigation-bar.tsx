@@ -35,7 +35,7 @@ function UserMenu({
       <DropdownMenuTrigger asChild>
         <Avatar className="size-8 cursor-pointer">
           <AvatarImage src={avatarUrl ?? undefined} />
-          <AvatarFallback>{name.slice(0, 2)}</AvatarFallback>
+          <AvatarFallback>{name.charAt(0)}</AvatarFallback>
         </Avatar>
       </DropdownMenuTrigger>
 

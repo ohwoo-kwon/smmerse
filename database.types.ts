@@ -62,7 +62,6 @@ export type Database = {
           basketball_game_id: number
           city: string
           created_at: string
-          current_participants: number
           date: string
           description: string | null
           end_time: string
@@ -83,7 +82,6 @@ export type Database = {
           basketball_game_id?: never
           city: string
           created_at?: string
-          current_participants?: number
           date: string
           description?: string | null
           end_time: string
@@ -104,7 +102,6 @@ export type Database = {
           basketball_game_id?: never
           city?: string
           created_at?: string
-          current_participants?: number
           date?: string
           description?: string | null
           end_time?: string
@@ -226,6 +223,7 @@ export type Database = {
           name: string
           position: string[] | null
           profile_id: string
+          sex: string | null
           updated_at: string
         }
         Insert: {
@@ -236,6 +234,7 @@ export type Database = {
           name: string
           position?: string[] | null
           profile_id: string
+          sex?: string | null
           updated_at?: string
         }
         Update: {
@@ -246,6 +245,7 @@ export type Database = {
           name?: string
           position?: string[] | null
           profile_id?: string
+          sex?: string | null
           updated_at?: string
         }
         Relationships: []

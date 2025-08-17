@@ -26,6 +26,7 @@ const schema = z.object({
         year <= new Date().getFullYear()
       );
     }, "올바른 날짜를 입력해주세요"),
+  sex: z.enum(["male", "female", ""]),
   height: z.coerce.number().positive("키를 올바르게 입력해주세요"),
   PG: z.coerce.boolean(),
   SG: z.coerce.boolean(),
@@ -131,6 +132,7 @@ export async function action({ request }: Route.ActionArgs) {
       name: validData.name,
       birth: validData.birth,
       height: validData.height,
+      sex: validData.sex || undefined,
       position,
       avatar_url: avatarUrl,
     })

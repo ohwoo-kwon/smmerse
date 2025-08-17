@@ -27,6 +27,9 @@ export const profiles = pgTable(
     height: integer(),
     position: text().array(),
     avatar_url: text(),
+    sex: text("sex", {
+      enum: ["male", "female"],
+    }),
     ...timestamps,
   },
   (table) => [

@@ -85,6 +85,13 @@
       "when": 1755255399125,
       "tag": "0011_chilly_lightspeed",
       "breakpoints": true
+    },
+    {
+      "idx": 12,
+      "version": "7",
+      "when": 1755407434833,
+      "tag": "0012_far_jackpot",
+      "breakpoints": true
     }
   ]
 }

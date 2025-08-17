@@ -4,13 +4,6 @@ import { DateTime } from "luxon";
 import { Suspense } from "react";
 import { Await } from "react-router";
 
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "~/core/components/ui/card";
 import makeServerClient from "~/core/lib/supa-client.server";
 
 import EditProfileForm from "../components/edit-profile-form";
@@ -65,6 +58,7 @@ export default function Profile({ loaderData }: Route.ComponentProps) {
                       )
                     : ""
                 }
+                sex={profile.sex}
                 height={profile.height}
                 position={profile.position}
                 avatarUrl={profile.avatar_url}
