@@ -6,7 +6,6 @@ import z from "zod";
 
 import AdsenseBanner from "~/core/components/adsense-banner";
 import CustomPagination from "~/core/components/custom-pagination";
-import KakaoAdfit from "~/core/components/kakao-ad-fit";
 import { Button } from "~/core/components/ui/button";
 import makeServerClient from "~/core/lib/supa-client.server";
 
@@ -108,8 +107,8 @@ export default function BasketballGames({ loaderData }: Route.ComponentProps) {
             <Link to="/basketball/games/create">경기 만들기</Link>
           </Button>
         </div>
-        <AdsenseBanner adSlot="2973856464" />
       </div>
+      <AdsenseBanner adSlot="2973856464" />
 
       {/* 게임 카드 리스트 */}
       <div className="flex flex-col gap-4">

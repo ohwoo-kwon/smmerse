@@ -59,8 +59,6 @@ export const insertBasketballGame = async (
     link,
   });
   if (error) {
-    console.log(error);
-
     throw error;
   }
   return data;

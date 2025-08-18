@@ -15,6 +15,7 @@ import { useEffect } from "react";
 import { Link, data, redirect, useFetcher, useNavigate } from "react-router";
 import { z } from "zod";
 
+import AdsenseBanner from "~/core/components/adsense-banner";
 import FormErrors from "~/core/components/form-errors";
 import {
   Avatar,
@@ -241,6 +242,7 @@ export default function Game({ loaderData }: Route.ComponentProps) {
           )}
         </CardFooter>
       </Card>
+      <AdsenseBanner adSlot="2973856464" />
       {!isOwner && game.profiles && (
         <Card className="mx-auto max-w-4xl">
           <CardHeader>

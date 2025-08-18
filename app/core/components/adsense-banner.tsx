@@ -6,7 +6,7 @@ export default function AdsenseBanner({
   adFormat = "auto",
   fullWidthResponsive = true,
   style = { display: "block" },
-  className = "adsbygoogle",
+  className = "adsbygoogle mx-auto",
 }: {
   adClient?: string;
   adSlot: string;

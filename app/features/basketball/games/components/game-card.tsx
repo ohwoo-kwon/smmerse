@@ -2,7 +2,7 @@ import type { basketballSkillLevelEnum, genderTypeEnum } from "../schema";
 
 import { CalendarIcon, MapPinIcon, UsersIcon } from "lucide-react";
 import { DateTime } from "luxon";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 
 import { Badge } from "~/core/components/ui/badge";
 import { Button } from "~/core/components/ui/button";
@@ -41,6 +41,7 @@ export default function BasketballGameCard({
   link: string | null;
   isOwner?: boolean;
 }) {
+  const navigate = useNavigate();
   const formatedDate = DateTime.fromFormat(date, "yyyy-MM-dd").toFormat(
     "yy.MM.dd",
   );
@@ -51,11 +52,11 @@ export default function BasketballGameCard({
     "HH:mm",
   );
   return (
-    <Card className="gap-0 p-0">
-      <Link
-        to={`/basketball/games/${basketballGameId}`}
-        className="cursor-pointer"
-      >
+    <Link
+      to={`/basketball/games/${basketballGameId}`}
+      className="cursor-pointer"
+    >
+      <Card className="gap-0 p-0">
         <CardContent className="mb-2 flex flex-col gap-2 p-0">
           <div className="flex items-start justify-between gap-2 px-6 pt-3">
             <div className="flex flex-col overflow-auto break-words whitespace-normal">
@@ -88,28 +89,27 @@ export default function BasketballGameCard({
             </div>
           </div>
         </CardContent>
-      </Link>
-      <CardFooter className="bg-accent flex items-center justify-between px-6 py-2">
-        <div className="text-primary text-sm font-bold md:text-lg">
-          {fee.toLocaleString()}원
-        </div>
-        <div className="space-x-1">
-          {link && (
-            <Button asChild size="sm" variant="link">
-              <Link to={link} target="_blank">
-                링크
-              </Link>
-            </Button>
-          )}
-          {isOwner && (
-            <Button asChild size="sm">
-              <Link to={`/basketball/games/${basketballGameId}/participants`}>
+        <CardFooter className="bg-accent flex items-center justify-between px-6 py-2">
+          <div className="text-primary text-sm font-bold md:text-lg">
+            {fee.toLocaleString()}원
+          </div>
+          <div className="space-x-1">
+            {isOwner && (
+              <Button
+                size="sm"
+                onClick={(e) => {
+                  e.preventDefault();
+                  navigate(
+                    `/basketball/games/${basketballGameId}/participants`,
+                  );
+                }}
+              >
                 참가자 관리
-              </Link>
-            </Button>
-          )}
-        </div>
-      </CardFooter>
-    </Card>
+              </Button>
+            )}
+          </div>
+        </CardFooter>
+      </Card>
+    </Link>
   );
 }
