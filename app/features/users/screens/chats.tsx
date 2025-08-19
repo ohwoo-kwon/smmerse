@@ -66,9 +66,11 @@ export default function Chats({ loaderData }: Route.ComponentProps) {
                     <h3 className="text-sm font-semibold">{chatRoom.name}</h3>
                     {chatRoom.last_message_time && (
                       <p className="text-muted-foreground text-xs">
-                        {DateTime.fromISO(chatRoom.last_message_time).toFormat(
-                          "MM-dd HH:mm",
-                        )}
+                        {DateTime.fromISO(chatRoom.last_message_time, {
+                          zone: "utc",
+                        })
+                          .setZone("Asia/Seoul")
+                          .toFormat("MM-dd HH:mm")}
                       </p>
                     )}
                   </div>
