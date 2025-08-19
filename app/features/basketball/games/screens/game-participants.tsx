@@ -29,6 +29,7 @@ import {
 import makeServerClient from "~/core/lib/supa-client.server";
 import { calculateAge } from "~/core/lib/utils";
 
+import ParticipantBox from "../components/participant-box";
 import { updateApplication } from "../mutations";
 import {
   getBasketballGameById,
@@ -97,24 +98,6 @@ export const loader = async ({ request, params }: Route.LoaderArgs) => {
 };
 
 export default function GameParticipants({ loaderData }: Route.ComponentProps) {
-  const fetcher = useFetcher();
-  const isSubmitting = fetcher.state === "submitting";
-
-  const handleClick = (
-    participantId: number,
-    profileId: string,
-    status: "pending" | "approved" | "rejected",
-  ) => {
-    fetcher.submit({ participantId, profileId, status }, { method: "POST" });
-  };
-
-  const handleClickChat = (toUserId: string) => {
-    fetcher.submit(
-      { fromUserId: loaderData.userId, toUserId },
-      { method: "POST", action: "/api/users/chat-room" },
-    );
-  };
-
   return (
     <Card className="mx-4 min-h-[calc(100vh-96px)] border-none p-0 shadow-none">
       <CardHeader className="px-0">
@@ -151,94 +134,18 @@ export default function GameParticipants({ loaderData }: Route.ComponentProps) {
                       sex,
                     },
                   }) => (
-                    <div
+                    <ParticipantBox
                       key={`participant_${participant_id}`}
-                      className="space-y-4 rounded-lg border p-4 text-sm shadow md:text-base"
-                    >
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-2">
-                          <Avatar className="size-8 cursor-pointer">
-                            <AvatarImage src={avatar_url ?? undefined} />
-                            <AvatarFallback>{name.charAt(0)}</AvatarFallback>
-                          </Avatar>
-                          <span>{name}</span>
-                        </div>
-                        <div className="flex gap-1">
-                          <Button
-                            size="icon"
-                            className="cursor-pointer"
-                            onClick={() => handleClickChat(profile_id)}
-                          >
-                            <MessageSquareIcon />
-                          </Button>
-                        </div>
-                      </div>
-                      <div className="space-y-2">
-                        <div className="flex flex-wrap gap-1">
-                          {position?.map((p) => (
-                            <Badge
-                              key={`${p}_${participant_id}`}
-                              variant="outline"
-                            >
-                              {p}
-                            </Badge>
-                          ))}
-                        </div>
-                        <div className="flex gap-4">
-                          <div className="flex items-center gap-1">
-                            <CalendarIcon
-                              size={16}
-                              className="text-muted-foreground"
-                            />
-                            <span>{birth ? calculateAge(birth) : null} 세</span>
-                          </div>
-                          <div className="flex items-center gap-1">
-                            <RulerIcon
-                              size={16}
-                              className="text-muted-foreground"
-                            />
-                            <span>{height} cm</span>
-                          </div>
-                          <div className="flex items-center gap-1">
-                            <VenusAndMarsIcon
-                              size={16}
-                              className="text-muted-foreground"
-                            />
-                            <span>{sex === "female" ? "여성" : "남성"}</span>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="flex gap-4">
-                        <Button
-                          className="flex-1 cursor-pointer bg-green-500 hover:bg-green-600"
-                          size="sm"
-                          disabled={isSubmitting}
-                          onClick={() =>
-                            handleClick(participant_id, profile_id, "approved")
-                          }
-                        >
-                          {isSubmitting ? (
-                            <Loader2Icon className="size-4 animate-spin" />
-                          ) : (
-                            "승인"
-                          )}
-                        </Button>
-                        <Button
-                          className="flex-1 cursor-pointer bg-red-500 hover:bg-red-600"
-                          size="sm"
-                          disabled={isSubmitting}
-                          onClick={() =>
-                            handleClick(participant_id, profile_id, "rejected")
-                          }
-                        >
-                          {isSubmitting ? (
-                            <Loader2Icon className="size-4 animate-spin" />
-                          ) : (
-                            "거절"
-                          )}
-                        </Button>
-                      </div>
-                    </div>
+                      avatar_url={avatar_url || ""}
+                      name={name}
+                      profile_id={profile_id}
+                      userId={loaderData.userId}
+                      position={position || []}
+                      participant_id={participant_id}
+                      birth={birth || ""}
+                      height={height || 0}
+                      sex={sex || "male"}
+                    />
                   ),
                 )
               ) : (
