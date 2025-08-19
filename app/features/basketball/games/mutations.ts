@@ -249,12 +249,14 @@ export async function updateApplication(
         throw new Error("참가자 모집이 마감되었습니다.");
     }
 
-    const { error } = await client.from("basketball_game_participants").update({
-      participant_id: participantId,
-      profile_id: profileId,
-      basketball_game_id: basketballGameId,
-      status,
-    });
+    const { error } = await client
+      .from("basketball_game_participants")
+      .update({
+        profile_id: profileId,
+        basketball_game_id: basketballGameId,
+        status,
+      })
+      .eq("participant_id", participantId);
 
     if (error) throw error;
 
