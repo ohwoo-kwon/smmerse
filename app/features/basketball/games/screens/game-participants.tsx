@@ -8,8 +8,14 @@ import {
   VenusAndMarsIcon,
 } from "lucide-react";
 import { DateTime } from "luxon";
-import { Suspense } from "react";
-import { Await, data, redirect, useFetcher } from "react-router";
+import { Suspense, useEffect, useState } from "react";
+import {
+  Await,
+  data,
+  redirect,
+  useFetcher,
+  useSearchParams,
+} from "react-router";
 import { z } from "zod";
 
 import {
@@ -26,6 +32,7 @@ import {
   CardHeader,
   CardTitle,
 } from "~/core/components/ui/card";
+import { Tabs, TabsList, TabsTrigger } from "~/core/components/ui/tabs";
 import makeServerClient from "~/core/lib/supa-client.server";
 import { calculateAge } from "~/core/lib/utils";
 
@@ -98,6 +105,15 @@ export const loader = async ({ request, params }: Route.LoaderArgs) => {
 };
 
 export default function GameParticipants({ loaderData }: Route.ComponentProps) {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const status = searchParams.get("status") || "pending";
+
+  useEffect(() => {
+    if (!searchParams.get("status")) {
+      searchParams.set("status", "pending");
+      setSearchParams(searchParams);
+    }
+  }, []);
   return (
     <Card className="mx-4 min-h-[calc(100vh-96px)] border-none p-0 shadow-none">
       <CardHeader className="px-0">
@@ -106,6 +122,19 @@ export default function GameParticipants({ loaderData }: Route.ComponentProps) {
           참가 신청자들의 정보를 확인하고 승인 혹은 거절하세요.
         </CardDescription>
       </CardHeader>
+      <Tabs
+        value={status}
+        onValueChange={(v) => {
+          searchParams.set("status", v);
+          setSearchParams(searchParams);
+        }}
+      >
+        <TabsList className="w-full">
+          <TabsTrigger value="pending">대기</TabsTrigger>
+          <TabsTrigger value="approved">승인</TabsTrigger>
+          <TabsTrigger value="rejected">거절</TabsTrigger>
+        </TabsList>
+      </Tabs>
       <CardContent className="flex flex-col gap-2 px-0">
         <Suspense
           fallback={
@@ -120,7 +149,9 @@ export default function GameParticipants({ loaderData }: Route.ComponentProps) {
           <Await
             resolve={loaderData.participants}
             children={(participants) =>
-              participants.length > 0 ? (
+              participants.filter(
+                ({ status: participantStatus }) => status === participantStatus,
+              ).length > 0 ? (
                 participants.map(
                   ({
                     participant_id,
@@ -133,24 +164,27 @@ export default function GameParticipants({ loaderData }: Route.ComponentProps) {
                       position,
                       sex,
                     },
-                  }) => (
-                    <ParticipantBox
-                      key={`participant_${participant_id}`}
-                      avatar_url={avatar_url || ""}
-                      name={name}
-                      profile_id={profile_id}
-                      userId={loaderData.userId}
-                      position={position || []}
-                      participant_id={participant_id}
-                      birth={birth || ""}
-                      height={height || 0}
-                      sex={sex || "male"}
-                    />
-                  ),
+                    status: participantStatus,
+                  }) =>
+                    participantStatus === status && (
+                      <ParticipantBox
+                        key={`participant_${participant_id}`}
+                        status={status}
+                        avatar_url={avatar_url || ""}
+                        name={name}
+                        profile_id={profile_id}
+                        userId={loaderData.userId}
+                        position={position || []}
+                        participant_id={participant_id}
+                        birth={birth || ""}
+                        height={height || 0}
+                        sex={sex || "male"}
+                      />
+                    ),
                 )
               ) : (
-                <div className="flex flex-col items-center gap-2 text-center text-xl">
-                  아직 참가자가 없습니다...
+                <div className="flex flex-col items-center gap-2 text-center md:text-xl">
+                  해당되는 사용자가 없습니다.
                 </div>
               )
             }

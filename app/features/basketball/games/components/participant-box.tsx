@@ -17,6 +17,7 @@ import { Button } from "~/core/components/ui/button";
 import { calculateAge } from "~/core/lib/utils";
 
 export default function ParticipantBox({
+  status,
   avatar_url,
   name,
   profile_id,
@@ -27,6 +28,7 @@ export default function ParticipantBox({
   height,
   sex,
 }: {
+  status: string;
   avatar_url: string;
   name: string;
   profile_id: string;
@@ -99,30 +101,49 @@ export default function ParticipantBox({
         </div>
       </div>
       <div className="flex gap-4">
-        <Button
-          className="flex-1 cursor-pointer bg-green-500 hover:bg-green-600"
-          size="sm"
-          disabled={isSubmitting}
-          onClick={() => handleClick(participant_id, profile_id, "approved")}
-        >
-          {isSubmitting ? (
-            <Loader2Icon className="size-4 animate-spin" />
-          ) : (
-            "승인"
-          )}
-        </Button>
-        <Button
-          className="flex-1 cursor-pointer bg-red-500 hover:bg-red-600"
-          size="sm"
-          disabled={isSubmitting}
-          onClick={() => handleClick(participant_id, profile_id, "rejected")}
-        >
-          {isSubmitting ? (
-            <Loader2Icon className="size-4 animate-spin" />
-          ) : (
-            "거절"
-          )}
-        </Button>
+        {status !== "rejected" && (
+          <Button
+            className="flex-1 cursor-pointer bg-red-500 hover:bg-red-600"
+            size="sm"
+            disabled={isSubmitting}
+            onClick={() => handleClick(participant_id, profile_id, "rejected")}
+          >
+            {isSubmitting ? (
+              <Loader2Icon className="size-4 animate-spin" />
+            ) : (
+              "거절"
+            )}
+          </Button>
+        )}
+        {status !== "pending" && (
+          <Button
+            className="flex-1 cursor-pointer"
+            size="sm"
+            variant="secondary"
+            disabled={isSubmitting}
+            onClick={() => handleClick(participant_id, profile_id, "pending")}
+          >
+            {isSubmitting ? (
+              <Loader2Icon className="size-4 animate-spin" />
+            ) : (
+              "대기"
+            )}
+          </Button>
+        )}
+        {status !== "approved" && (
+          <Button
+            className="flex-1 cursor-pointer bg-green-500 hover:bg-green-600"
+            size="sm"
+            disabled={isSubmitting}
+            onClick={() => handleClick(participant_id, profile_id, "approved")}
+          >
+            {isSubmitting ? (
+              <Loader2Icon className="size-4 animate-spin" />
+            ) : (
+              "승인"
+            )}
+          </Button>
+        )}
       </div>
     </div>
   );
