@@ -69,7 +69,7 @@ export default function Chats({ loaderData }: Route.ComponentProps) {
                         {DateTime.fromISO(chatRoom.last_message_time, {
                           zone: "utc",
                         })
-                          .setZone("Asia/Seoul")
+                          .setZone(DateTime.local().zone)
                           .toFormat("MM-dd HH:mm")}
                       </p>
                     )}
