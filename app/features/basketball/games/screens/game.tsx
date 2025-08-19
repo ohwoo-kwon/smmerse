@@ -144,6 +144,7 @@ export default function Game({ loaderData }: Route.ComponentProps) {
 
   return (
     <div className="space-y-8 p-4">
+      <AdsenseBanner adSlot="2973856464" />
       <Card className="border-t-primary mx-auto max-w-4xl border-t-8">
         <CardHeader>
           <CardTitle className="overflow-x-auto overflow-y-hidden break-words whitespace-normal">
@@ -242,7 +243,6 @@ export default function Game({ loaderData }: Route.ComponentProps) {
           )}
         </CardFooter>
       </Card>
-      <AdsenseBanner adSlot="2973856464" />
       {!isOwner && game.profiles && (
         <Card className="mx-auto max-w-4xl">
           <CardHeader>

@@ -4,7 +4,7 @@ import { Suspense } from "react";
 import { Await, Link } from "react-router";
 import z from "zod";
 
-import AdsenseBanner from "~/core/components/adsense-banner";
+import AdsenseInfeed from "~/core/components/adsense-infeed";
 import CustomPagination from "~/core/components/custom-pagination";
 import { Button } from "~/core/components/ui/button";
 import makeServerClient from "~/core/lib/supa-client.server";
@@ -108,7 +108,9 @@ export default function BasketballGames({ loaderData }: Route.ComponentProps) {
           </Button>
         </div>
       </div>
-      <AdsenseBanner adSlot="2973856464" />
+
+      {/* AdSense 광고 */}
+      <AdsenseInfeed />
 
       {/* 게임 카드 리스트 */}
       <div className="flex flex-col gap-4">
