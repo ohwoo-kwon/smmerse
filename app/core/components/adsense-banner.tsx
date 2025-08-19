@@ -1,12 +1,14 @@
 import { useEffect } from "react";
 
+import { cn } from "../lib/utils";
+
 export default function AdsenseBanner({
   adClient = import.meta.env.VITE_GOOGLE_ADSENSE_CLIENT,
   adSlot,
   adFormat = "auto",
   fullWidthResponsive = true,
   style = { display: "block" },
-  className = "adsbygoogle mx-auto w-fit",
+  className,
 }: {
   adClient?: string;
   adSlot: string;
@@ -24,13 +26,15 @@ export default function AdsenseBanner({
     }
   }, []);
   return (
-    <ins
-      className={className}
-      style={style}
-      data-ad-client={adClient}
-      data-ad-slot={adSlot}
-      data-ad-format={adFormat}
-      data-full-width-responsive={fullWidthResponsive}
-    />
+    <div className={cn("mx-auto max-w-screen-md", className)}>
+      <ins
+        className="adsbygoogle"
+        style={style}
+        data-ad-client={adClient}
+        data-ad-slot={adSlot}
+        data-ad-format={adFormat}
+        data-full-width-responsive={fullWidthResponsive}
+      />
+    </div>
   );
 }
