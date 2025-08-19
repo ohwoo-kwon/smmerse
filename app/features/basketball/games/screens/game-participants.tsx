@@ -156,24 +156,12 @@ export default function GameParticipants({ loaderData }: Route.ComponentProps) {
                       className="space-y-4 rounded-lg border p-4 text-sm shadow md:text-base"
                     >
                       <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-4">
-                          <div className="flex items-center gap-1">
-                            <Avatar className="size-8 cursor-pointer">
-                              <AvatarImage src={avatar_url ?? undefined} />
-                              <AvatarFallback>{name.charAt(0)}</AvatarFallback>
-                            </Avatar>
-                            <span>{name}</span>
-                          </div>
-                          <div className="space-x-1">
-                            {position?.map((p) => (
-                              <Badge
-                                key={`${p}_${participant_id}`}
-                                variant="outline"
-                              >
-                                {p}
-                              </Badge>
-                            ))}
-                          </div>
+                        <div className="flex items-center gap-2">
+                          <Avatar className="size-8 cursor-pointer">
+                            <AvatarImage src={avatar_url ?? undefined} />
+                            <AvatarFallback>{name.charAt(0)}</AvatarFallback>
+                          </Avatar>
+                          <span>{name}</span>
                         </div>
                         <div className="flex gap-1">
                           <Button
@@ -185,27 +173,39 @@ export default function GameParticipants({ loaderData }: Route.ComponentProps) {
                           </Button>
                         </div>
                       </div>
-                      <div className="flex gap-4">
-                        <div className="flex items-center gap-1">
-                          <CalendarIcon
-                            size={16}
-                            className="text-muted-foreground"
-                          />
-                          <span>{birth ? calculateAge(birth) : null} 세</span>
+                      <div className="space-y-2">
+                        <div className="flex flex-wrap gap-1">
+                          {position?.map((p) => (
+                            <Badge
+                              key={`${p}_${participant_id}`}
+                              variant="outline"
+                            >
+                              {p}
+                            </Badge>
+                          ))}
                         </div>
-                        <div className="flex items-center gap-1">
-                          <RulerIcon
-                            size={16}
-                            className="text-muted-foreground"
-                          />
-                          <span>{height} cm</span>
-                        </div>
-                        <div className="flex items-center gap-1">
-                          <VenusAndMarsIcon
-                            size={16}
-                            className="text-muted-foreground"
-                          />
-                          <span>{sex === "female" ? "여성" : "남성"}</span>
+                        <div className="flex gap-4">
+                          <div className="flex items-center gap-1">
+                            <CalendarIcon
+                              size={16}
+                              className="text-muted-foreground"
+                            />
+                            <span>{birth ? calculateAge(birth) : null} 세</span>
+                          </div>
+                          <div className="flex items-center gap-1">
+                            <RulerIcon
+                              size={16}
+                              className="text-muted-foreground"
+                            />
+                            <span>{height} cm</span>
+                          </div>
+                          <div className="flex items-center gap-1">
+                            <VenusAndMarsIcon
+                              size={16}
+                              className="text-muted-foreground"
+                            />
+                            <span>{sex === "female" ? "여성" : "남성"}</span>
+                          </div>
                         </div>
                       </div>
                       <div className="flex gap-4">
