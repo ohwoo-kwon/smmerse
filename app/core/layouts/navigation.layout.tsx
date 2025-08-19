@@ -1,9 +1,10 @@
 import type { Route } from "./+types/navigation.layout";
 
 import { Suspense } from "react";
-import { Await, Outlet } from "react-router";
+import { Await, Outlet, useNavigation } from "react-router";
 
 import Footer from "../components/footer";
+import LoadingPage from "../components/loading-page";
 import NavigationBar from "../components/navigation-bar";
 import makeServerClient from "../lib/supa-client.server";
 
@@ -14,6 +15,9 @@ export async function loader({ request }: Route.LoaderArgs) {
 }
 
 export default function NavigationLayout({ loaderData }: Route.ComponentProps) {
+  const navigation = useNavigation();
+  const isLoading = navigation.state !== "idle";
+
   return (
     <div className="min-h-screen">
       <Suspense fallback={<NavigationBar loading={true} />}>
@@ -33,7 +37,7 @@ export default function NavigationLayout({ loaderData }: Route.ComponentProps) {
         </Await>
       </Suspense>
       <div className="min-h-[calc(100vh-64px)] py-4 md:py-8">
-        <Outlet />
+        {isLoading ? <LoadingPage /> : <Outlet />}
       </div>
       <Footer />
     </div>
