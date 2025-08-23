@@ -17,6 +17,7 @@ import { z } from "zod";
 
 import AdsenseBanner from "~/core/components/adsense-banner";
 import FormErrors from "~/core/components/form-errors";
+import KakaoAdfit from "~/core/components/kakao-ad-fit";
 import {
   Avatar,
   AvatarFallback,
@@ -144,7 +145,8 @@ export default function Game({ loaderData }: Route.ComponentProps) {
 
   return (
     <div className="space-y-8 p-4">
-      <AdsenseBanner adSlot="2973856464" />
+      {/* <AdsenseBanner adSlot="2973856464" /> */}
+      <KakaoAdfit />
       <Card className="border-t-primary mx-auto max-w-4xl border-t-8">
         <CardHeader>
           <CardTitle className="overflow-x-auto overflow-y-hidden break-words whitespace-normal">
