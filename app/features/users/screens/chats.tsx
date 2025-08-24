@@ -45,7 +45,7 @@ export const loader = async ({ request }: Route.LoaderArgs) => {
 
 export default function Chats({ loaderData }: Route.ComponentProps) {
   return (
-    <Card className="mx-4 min-h-[calc(100vh-96px)]">
+    <Card className="mx-4 mx-auto min-h-[calc(100vh-96px)] max-w-screen-md">
       <CardHeader>
         <CardTitle>채팅 내역</CardTitle>
       </CardHeader>

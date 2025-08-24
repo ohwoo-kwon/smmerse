@@ -37,7 +37,7 @@ export const loader = async ({ request }: Route.LoaderArgs) => {
 export default function MyGames({ loaderData }: Route.ComponentProps) {
   const { games } = loaderData;
   return (
-    <div className="space-y-4 p-4">
+    <div className="mx-auto max-w-screen-md space-y-4 p-4">
       <div className="flex flex-col gap-4">
         <Button size="sm" asChild>
           <Link to="/basketball/games/create">경기 만들기</Link>

@@ -132,7 +132,7 @@ export default function Chat({ loaderData }: Route.ComponentProps) {
   }, []);
 
   return (
-    <div className="flex min-h-[calc(100vh-96px)] flex-col">
+    <div className="mx-auto flex min-h-[calc(100vh-96px)] max-w-screen-md flex-col">
       <div className="flex-1 overflow-y-auto px-4">
         <div
           ref={scrollRef}

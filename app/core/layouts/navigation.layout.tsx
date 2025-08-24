@@ -1,7 +1,7 @@
 import type { Route } from "./+types/navigation.layout";
 
 import { Suspense } from "react";
-import { Await, Outlet, useNavigation } from "react-router";
+import { Await, Outlet, useLocation, useNavigation } from "react-router";
 
 import Footer from "../components/footer";
 import LoadingPage from "../components/loading-page";
@@ -15,8 +15,12 @@ export async function loader({ request }: Route.LoaderArgs) {
 }
 
 export default function NavigationLayout({ loaderData }: Route.ComponentProps) {
+  const location = useLocation();
   const navigation = useNavigation();
   const isLoading = navigation.state !== "idle";
+  const isSamePage = navigation.location?.pathname === location.pathname;
+
+  const showLoading = isLoading && !isSamePage;
 
   return (
     <div className="min-h-screen">
@@ -37,7 +41,7 @@ export default function NavigationLayout({ loaderData }: Route.ComponentProps) {
         </Await>
       </Suspense>
       <div className="min-h-[calc(100vh-64px)] py-4 md:py-8">
-        {isLoading ? <LoadingPage /> : <Outlet />}
+        {showLoading ? <LoadingPage /> : <Outlet />}
       </div>
       <Footer />
     </div>

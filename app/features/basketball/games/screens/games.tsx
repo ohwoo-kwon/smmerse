@@ -94,7 +94,7 @@ export const loader = async ({ request }: Route.LoaderArgs) => {
 export default function BasketballGames({ loaderData }: Route.ComponentProps) {
   const { games, totalPages } = loaderData;
   return (
-    <div className="space-y-4 p-4">
+    <div className="mx-auto max-w-screen-md space-y-4 p-4">
       {/* Filter bar */}
       <div className="space-y-2">
         <DateFilter />

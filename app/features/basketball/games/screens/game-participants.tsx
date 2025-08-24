@@ -115,7 +115,7 @@ export default function GameParticipants({ loaderData }: Route.ComponentProps) {
     }
   }, []);
   return (
-    <Card className="mx-4 min-h-[calc(100vh-96px)] border-none p-0 shadow-none">
+    <Card className="mx-4 mx-auto min-h-[calc(100vh-96px)] max-w-screen-md border-none p-0 shadow-none">
       <CardHeader className="px-0">
         <CardTitle>참가자 관리</CardTitle>
         <CardDescription>
