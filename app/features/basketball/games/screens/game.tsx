@@ -75,16 +75,12 @@ export async function action({ request }: Route.ActionArgs) {
 
   if (!user) return redirect("/login");
 
-  try {
-    await applyForGame(client, {
-      basketballGameId: validData.basketballGameId,
-      profileId: user.id,
-    });
-  } catch (error) {
-    return { error };
-  }
+  const { success: applySuccess, message } = await applyForGame(client, {
+    basketballGameId: validData.basketballGameId,
+    profileId: user.id,
+  });
 
-  return { success: true };
+  return { success: applySuccess, message };
 }
 
 export async function loader({ request, params }: Route.LoaderArgs) {
@@ -240,9 +236,11 @@ export default function Game({ loaderData }: Route.ComponentProps) {
               )}
             </Button>
           )}
-          {fetcher.data && "error" in fetcher.data && fetcher.data.error && (
-            <FormErrors errors={[fetcher.data.error.message]} />
-          )}
+          {fetcher.data &&
+            "message" in fetcher.data &&
+            fetcher.data.message && (
+              <FormErrors errors={[fetcher.data.message]} />
+            )}
         </CardFooter>
       </Card>
       {!isOwner && game.profiles && (

@@ -151,7 +151,10 @@ export const applyForGame = async (
       .single();
 
     if (isApplied) {
-      throw new Error("이미 해당 게임에 참가 신청하셨습니다.");
+      return {
+        success: false,
+        message: "이미 해당 게임에 참가 신청하셨습니다.",
+      };
     }
 
     // 게임이 존재하는지 확인
@@ -162,7 +165,7 @@ export const applyForGame = async (
       .single();
 
     if (!gameData) {
-      throw new Error("존재하지 않는 게임입니다.");
+      return { success: false, message: "존재하지 않는 게임입니다." };
     }
 
     // 게임이 신청 가능한 상태인지 확인 (예: 시작 전, 정원 미달 등)
@@ -172,7 +175,10 @@ export const applyForGame = async (
         "yyyy-MM-dd HH:mm:ss",
       ) < DateTime.now()
     )
-      throw new Error("이미 시작된 게임에는 참가 신청할 수 없습니다.");
+      return {
+        success: false,
+        message: "이미 시작된 게임에는 참가 신청할 수 없습니다.",
+      };
 
     // 현재 참가자 수 확인
     const { count, error: countError } = await client
@@ -195,7 +201,10 @@ export const applyForGame = async (
       success: true,
     };
   } catch (error) {
-    throw error;
+    if (error instanceof Error) {
+      return { success: false, message: error.message };
+    }
+    return { success: false, message: "알 수 없는 오류가 발생했습니다." };
   }
 };
 
