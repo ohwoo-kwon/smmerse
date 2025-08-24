@@ -58,6 +58,24 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="google-adsense-account" content={adsenseClient} />
+        <meta
+          name="keywords"
+          content="농구, 농구 게스트, 게스트 모집, 농구 경기, 농구 매칭, 농구인 커뮤니티"
+        />
+        <meta property="og:type" content="website" />
+        <meta
+          property="og:title"
+          content={`농구 게스트 모집 플랫폼 | ${import.meta.env.VITE_APP_NAME}`}
+        />
+        <meta
+          property="og:description"
+          content="스멀스에서 연락처 공유 없이 게스트를 모집해보세요. 스멀스는 멈추지 않고 발전 중입니다."
+        />
+        <meta property="og:url" content="https://smmerse.com" />
+        <meta
+          property="og:image"
+          content="https://wujxmuluphdazgapgwrr.supabase.co/storage/v1/object/public/avatars/e421200d-88ca-4711-a667-b000290ef252"
+        />
         <Meta />
         <Links />
         <script
