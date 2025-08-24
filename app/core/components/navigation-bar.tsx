@@ -96,6 +96,15 @@ function MenuButtons() {
           나의 모집글
         </Link>
       </SheetClose>
+      <SheetClose asChild>
+        <Link
+          to="/basketball/games/participation"
+          viewTransition
+          className="hover:text-muted-foreground transition-colors"
+        >
+          참여 내역
+        </Link>
+      </SheetClose>
       {/* <SheetClose asChild disabled>
         <Link
           to="/basketball/games/my"

@@ -41,6 +41,10 @@ export default [
         [
           route("/create", "features/basketball/games/screens/create-game.tsx"),
           route("/my", "features/basketball/games/screens/my-games.tsx"),
+          route(
+            "/participation",
+            "features/basketball/games/screens/game-participation.tsx",
+          ),
           ...prefix("/:id", [
             index("features/basketball/games/screens/game.tsx"),
             route("/edit", "features/basketball/games/screens/edit-game.tsx"),

@@ -276,3 +276,19 @@ export async function updateApplication(
     throw error;
   }
 }
+
+export async function deleteApplication(
+  client: SupabaseClient<Database>,
+  {
+    participantId,
+  }: {
+    participantId: number;
+  },
+) {
+  const { error } = await client
+    .from("basketball_game_participants")
+    .delete()
+    .eq("participant_id", participantId);
+
+  if (error) throw error;
+}

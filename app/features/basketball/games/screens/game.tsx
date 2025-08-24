@@ -132,7 +132,7 @@ export default function Game({ loaderData }: Route.ComponentProps) {
 
   useEffect(() => {
     if (fetcher.data && "success" in fetcher.data && fetcher.data.success)
-      alert("참가 신청이 완료되었습니다.");
+      navigate("/basketball/games/participation");
   }, [fetcher.data]);
 
   if (!game) {
