@@ -113,6 +113,7 @@ export default function BasketballGames({ loaderData }: Route.ComponentProps) {
       {/* AdSense 광고 */}
       {/* <AdsenseInfeed /> */}
       <KakaoAdfit />
+      <AdsenseInfeed />
 
       {/* 게임 카드 리스트 */}
       <div className="flex flex-col gap-4">
