@@ -141,7 +141,7 @@ export default function Game({ loaderData }: Route.ComponentProps) {
 
   return (
     <div className="mx-auto max-w-screen-md space-y-8 p-4">
-      {/* <AdsenseBanner adSlot="2973856464" /> */}
+      <AdsenseBanner adSlot="2973856464" />
       <KakaoAdfit />
       <Card className="border-t-primary border-t-8">
         <CardHeader>

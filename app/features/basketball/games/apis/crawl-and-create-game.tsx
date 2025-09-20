@@ -361,6 +361,7 @@ export const loader = async ({ request }: Route.LoaderArgs) => {
         continue;
 
       await insertBasketballGame(adminClient, {
+        profile_id: "e421200d-88ca-4711-a667-b000290ef252",
         title: post.title,
         link: post.url,
         description: `📌 주의사항
