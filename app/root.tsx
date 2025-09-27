@@ -106,13 +106,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
 }
 
 export default function App() {
-  return (
-    <Sheet>
-      <Dialog>
-        <Outlet />
-      </Dialog>
-    </Sheet>
-  );
+  return <Outlet />;
 }
 
 export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {

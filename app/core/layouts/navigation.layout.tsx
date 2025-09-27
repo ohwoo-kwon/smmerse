@@ -1,11 +1,28 @@
 import type { Route } from "./+types/navigation.layout";
 
+import {
+  HandHelpingIcon,
+  HandshakeIcon,
+  MenuIcon,
+  UniversityIcon,
+  UserIcon,
+} from "lucide-react";
 import { Suspense } from "react";
-import { Await, Outlet, useLocation, useNavigation } from "react-router";
+import { Await, Link, Outlet, useLocation, useNavigation } from "react-router";
 
 import Footer from "../components/footer";
-import LoadingPage from "../components/loading-page";
 import NavigationBar from "../components/navigation-bar";
+import { Button } from "../components/ui/button";
+import {
+  Sheet,
+  SheetClose,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "../components/ui/sheet";
+import { Skeleton } from "../components/ui/skeleton";
 import makeServerClient from "../lib/supa-client.server";
 
 export async function loader({ request }: Route.LoaderArgs) {
@@ -14,34 +31,84 @@ export async function loader({ request }: Route.LoaderArgs) {
   return { userPromise };
 }
 
+function MenuButton() {
+  return (
+    <Sheet>
+      <SheetTrigger asChild>
+        <Button size="icon" variant="ghost">
+          <MenuIcon />
+        </Button>
+      </SheetTrigger>
+      <SheetContent className="gap-8 px-4 py-10">
+        <div>
+          <h3 className="text-xl font-semibold">픽업 게임</h3>
+        </div>
+        <div className="space-y-4">
+          <h3 className="text-xl font-semibold">매치</h3>
+          <div className="grid grid-cols-3">
+            <SheetClose asChild>
+              <Link to="/login" className="flex flex-col items-center gap-2">
+                <HandHelpingIcon />
+                <span className="text-sm">게스트</span>
+              </Link>
+            </SheetClose>
+            <SheetClose asChild>
+              <Link to="/" className="flex flex-col items-center gap-2">
+                <HandshakeIcon />
+                <span className="text-sm">팀 모집</span>
+              </Link>
+            </SheetClose>
+            <SheetClose asChild>
+              <Link to="/gym" className="flex flex-col items-center gap-2">
+                <UniversityIcon />
+                <span className="text-sm">체육관</span>
+              </Link>
+            </SheetClose>
+          </div>
+        </div>
+      </SheetContent>
+    </Sheet>
+  );
+}
+
 export default function NavigationLayout({ loaderData }: Route.ComponentProps) {
   const location = useLocation();
   const navigation = useNavigation();
   const isLoading = navigation.state !== "idle";
-  const isSamePage = navigation.location?.pathname === location.pathname;
-
-  const showLoading = isLoading && !isSamePage;
 
   return (
-    <div className="min-h-screen">
-      <Suspense fallback={<NavigationBar loading={true} />}>
-        <Await resolve={loaderData.userPromise}>
-          {({ data: { user } }) =>
-            user === null ? (
-              <NavigationBar loading={false} />
-            ) : (
-              <NavigationBar
-                name={user.user_metadata.name || "익명의 사용자"}
-                email={user.email}
-                avatarUrl={user.user_metadata.avatar_url}
-                loading={false}
-              />
-            )
+    <div>
+      <nav className="flex h-12 items-center justify-between border-b px-5 shadow-xs">
+        <Link to="/">
+          <h1 className="text-lg font-extrabold">
+            {import.meta.env.VITE_APP_NAME}
+          </h1>
+        </Link>
+        <Suspense
+          fallback={
+            <div className="flex gap-1">
+              <Skeleton className="size-8" />
+              <Skeleton className="size-8" />
+              <Skeleton className="size-8" />
+            </div>
           }
-        </Await>
-      </Suspense>
-      <div className="min-h-[calc(100vh-64px)] py-4 md:py-8">
-        {showLoading ? <LoadingPage /> : <Outlet />}
+        >
+          <Await resolve={loaderData.userPromise}>
+            {({ data: { user } }) => (
+              <div className="flex gap-1">
+                <MenuButton />
+                <Button size="icon" variant="ghost" asChild>
+                  <Link to={user ? "/my" : "/login"}>
+                    <UserIcon />
+                  </Link>
+                </Button>
+              </div>
+            )}
+          </Await>
+        </Suspense>
+      </nav>
+      <div className="min-h-[calc(100vh-48px)]">
+        <Outlet />
       </div>
       <Footer />
     </div>
