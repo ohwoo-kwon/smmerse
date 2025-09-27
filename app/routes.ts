@@ -35,6 +35,7 @@ export default [
     ]),
     ...prefix("/basketball/games", [
       index("features/basketball/games/screens/games.tsx"),
+      ...prefix("/:id", [index("features/basketball/games/screens/game.tsx")]),
       layout(
         "core/layouts/private.layout.tsx",
         { id: "private-basketball-game" },
@@ -46,7 +47,6 @@ export default [
             "features/basketball/games/screens/game-participation.tsx",
           ),
           ...prefix("/:id", [
-            index("features/basketball/games/screens/game.tsx"),
             route("/edit", "features/basketball/games/screens/edit-game.tsx"),
             route(
               "/participants",

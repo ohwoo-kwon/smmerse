@@ -93,7 +93,7 @@ export async function loader({ request, params }: Route.LoaderArgs) {
     data: { user },
   } = await client.auth.getUser();
 
-  if (!user) return redirect("/login");
+  if (!user) return { game, isOwner: false, profile: null };
 
   const isOwner = user.id === game.profile_id;
 
@@ -112,7 +112,7 @@ export default function Game({ loaderData }: Route.ComponentProps) {
   const isSubmitting = fetcher.state === "submitting";
 
   const handleSubmit = async () => {
-    if (!(profile.birth && profile.height && profile.position)) {
+    if (!(profile && profile.birth && profile.height && profile.position)) {
       alert("프로필 정보를 입력해주셔야 참가 신청이 가능합니다.");
       navigate("/profile");
     }
@@ -124,6 +124,10 @@ export default function Game({ loaderData }: Route.ComponentProps) {
   };
 
   const handleClickChat = () => {
+    if (!profile) {
+      navigate("/login");
+      return;
+    }
     fetcher.submit(
       { fromUserId: profile.profile_id, toUserId: game.profile_id },
       { method: "POST", action: "/api/users/chat-room" },
