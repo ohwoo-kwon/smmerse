@@ -214,6 +214,83 @@ export type Database = {
           },
         ]
       }
+      gym_photos: {
+        Row: {
+          created_at: string
+          gym_id: string
+          gym_photo_id: number
+          url: string
+        }
+        Insert: {
+          created_at?: string
+          gym_id: string
+          gym_photo_id?: number
+          url: string
+        }
+        Update: {
+          created_at?: string
+          gym_id?: string
+          gym_photo_id?: number
+          url?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "gym_photos_gym_id_gyms_gym_id_fk"
+            columns: ["gym_id"]
+            isOneToOne: false
+            referencedRelation: "gyms"
+            referencedColumns: ["gym_id"]
+          },
+        ]
+      }
+      gyms: {
+        Row: {
+          city: Database["public"]["Enums"]["city"]
+          created_at: string
+          description: string | null
+          district: string
+          full_address: string
+          gym_id: string
+          has_heating_cooling: boolean
+          has_shower: boolean
+          has_water_dispenser: boolean
+          name: string
+          parking_info: string | null
+          updated_at: string
+          usage_rules: string | null
+        }
+        Insert: {
+          city: Database["public"]["Enums"]["city"]
+          created_at?: string
+          description?: string | null
+          district: string
+          full_address: string
+          gym_id?: string
+          has_heating_cooling?: boolean
+          has_shower?: boolean
+          has_water_dispenser?: boolean
+          name: string
+          parking_info?: string | null
+          updated_at?: string
+          usage_rules?: string | null
+        }
+        Update: {
+          city?: Database["public"]["Enums"]["city"]
+          created_at?: string
+          description?: string | null
+          district?: string
+          full_address?: string
+          gym_id?: string
+          has_heating_cooling?: boolean
+          has_shower?: boolean
+          has_water_dispenser?: boolean
+          name?: string
+          parking_info?: string | null
+          updated_at?: string
+          usage_rules?: string | null
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           avatar_url: string | null
@@ -304,6 +381,24 @@ export type Database = {
         | "level_3"
         | "level_4"
         | "level_5"
+      city:
+        | "서울"
+        | "경기"
+        | "인천"
+        | "강원"
+        | "부산"
+        | "대구"
+        | "광주"
+        | "대전"
+        | "세종"
+        | "울산"
+        | "충북"
+        | "충남"
+        | "전북"
+        | "전남"
+        | "경북"
+        | "경남"
+        | "제주"
       gender_type: "male" | "female" | "mixed"
     }
     CompositeTypes: {
@@ -439,6 +534,25 @@ export const Constants = {
         "level_3",
         "level_4",
         "level_5",
+      ],
+      city: [
+        "서울",
+        "경기",
+        "인천",
+        "강원",
+        "부산",
+        "대구",
+        "광주",
+        "대전",
+        "세종",
+        "울산",
+        "충북",
+        "충남",
+        "전북",
+        "전남",
+        "경북",
+        "경남",
+        "제주",
       ],
       gender_type: ["male", "female", "mixed"],
     },

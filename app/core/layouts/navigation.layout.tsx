@@ -59,7 +59,7 @@ function MenuButton() {
               </Link>
             </SheetClose>
             <SheetClose asChild>
-              <Link to="/gym" className="flex flex-col items-center gap-2">
+              <Link to="/gyms" className="flex flex-col items-center gap-2">
                 <UniversityIcon />
                 <span className="text-sm">체육관</span>
               </Link>

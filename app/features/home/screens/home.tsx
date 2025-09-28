@@ -2,7 +2,8 @@ import type { Route } from "./+types/home";
 
 import { OctagonXIcon } from "lucide-react";
 import { DateTime } from "luxon";
-import { Fragment, useState } from "react";
+import { Fragment } from "react";
+import { useSearchParams } from "react-router";
 
 import { Badge } from "~/core/components/ui/badge";
 import { Button } from "~/core/components/ui/button";
@@ -24,6 +25,7 @@ import {
 import { ScrollArea } from "~/core/components/ui/scroll-area";
 import { Separator } from "~/core/components/ui/separator";
 import { cn } from "~/core/lib/utils";
+import { cityEnum } from "~/features/gyms/schema";
 
 export const meta: Route.MetaFunction = () => {
   return [
@@ -32,31 +34,24 @@ export const meta: Route.MetaFunction = () => {
   ];
 };
 
-const SIDO = [
-  "서울",
-  "경기",
-  "인천",
-  "강원",
-  "부산",
-  "대구",
-  "광주",
-  "대전",
-  "세종",
-  "울산",
-  "충북",
-  "충남",
-  "전북",
-  "전남",
-  "경북",
-  "경남",
-  "제주",
-];
-
 export default function Home() {
   const today = DateTime.now();
 
-  const [clickedDate, setClickedDate] = useState(today);
-  const [sido, setSido] = useState("");
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const sido = searchParams.get("sido");
+  const clickedDate = searchParams.get("clickedDate");
+  const clikedDateTime = clickedDate
+    ? DateTime.fromFormat(clickedDate, "yyyyMMdd")
+    : today;
+
+  const handleFilterChange = (key: string, value: string | boolean) => {
+    const newParams = new URLSearchParams(searchParams);
+    if (value === "" || value === false) newParams.delete(key);
+    else newParams.set(key, value.toString());
+
+    setSearchParams(newParams);
+  };
 
   return (
     <div className="mx-auto max-w-screen-lg space-y-4 p-4">
@@ -75,12 +70,14 @@ export default function Home() {
                     "flex basis-1/7 cursor-pointer flex-col items-center gap-1 rounded-md px-0 py-2 transition-all",
                     isHoliday ? "text-red-500" : "",
                     isSat ? "text-blue-500" : "",
-                    clickedDate.day === date.day
+                    clikedDateTime.day === date.day
                       ? "bg-primary text-primary-foreground"
                       : "",
                   )}
                   key={`date_${i}`}
-                  onClick={() => setClickedDate(date)}
+                  onClick={() =>
+                    handleFilterChange("clickedDate", date.toFormat("yyyyMMdd"))
+                  }
                 >
                   <span>{date.day}</span>
                   <span>{date.weekdayShort}</span>
@@ -96,10 +93,10 @@ export default function Home() {
             <DrawerTrigger asChild>
               <Button
                 variant={sido ? "default" : "outline"}
-                className="rounded-full"
+                className={cn("rounded-full", sido ? "" : "text-neutral-400")}
                 size="sm"
               >
-                {sido || "지역"}
+                {sido || "전국"}
               </Button>
             </DrawerTrigger>
             <DrawerContent>
@@ -109,13 +106,15 @@ export default function Home() {
               </DrawerHeader>
               <ScrollArea className="h-70">
                 <div className="flex flex-col gap-2">
-                  <DrawerClose onClick={() => setSido("")}>
-                    모든 지역
+                  <DrawerClose onClick={() => handleFilterChange("sido", "")}>
+                    전국
                   </DrawerClose>
-                  {SIDO.map((value) => (
+                  {cityEnum.enumValues.map((value) => (
                     <Fragment key={value}>
                       <Separator className="mx-4" />
-                      <DrawerClose onClick={() => setSido(value)}>
+                      <DrawerClose
+                        onClick={() => handleFilterChange("sido", value)}
+                      >
                         {value}
                       </DrawerClose>
                     </Fragment>
@@ -149,10 +148,14 @@ export default function Home() {
             <div className="font-bold">5,000 원</div>
           </div>
         ))}
-        {/* <div className="flex flex-col items-center justify-center gap-4">
-          <OctagonXIcon size={80} strokeWidth={1} />
+        <div className="flex flex-col items-center justify-center gap-4">
+          <OctagonXIcon
+            size={80}
+            strokeWidth={1}
+            className="text-muted-foreground"
+          />
           <p className="text-lg font-semibold">아직 등록된 경기가 없어요</p>
-        </div> */}
+        </div>
       </div>
     </div>
   );

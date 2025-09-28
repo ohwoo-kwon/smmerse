@@ -1,0 +1,5 @@
+ALTER TABLE "gyms" ENABLE ROW LEVEL SECURITY;--> statement-breakpoint
+CREATE POLICY "edit-gym-policy" ON "gyms" AS PERMISSIVE FOR UPDATE TO "authenticated" USING ((select auth.uid()) IN ('e421200d-88ca-4711-a667-b000290ef252'::uuid)) WITH CHECK ((select auth.uid()) IN ('e421200d-88ca-4711-a667-b000290ef252'::uuid));--> statement-breakpoint
+CREATE POLICY "delete-gym-policy" ON "gyms" AS PERMISSIVE FOR DELETE TO "authenticated" USING ((select auth.uid()) IN ('e421200d-88ca-4711-a667-b000290ef252'::uuid));--> statement-breakpoint
+CREATE POLICY "select-gym-policy" ON "gyms" AS PERMISSIVE FOR SELECT TO public USING (true);--> statement-breakpoint
+CREATE POLICY "insert-gym-policy" ON "gyms" AS PERMISSIVE FOR INSERT TO "authenticated" WITH CHECK ((select auth.uid()) IN ('e421200d-88ca-4711-a667-b000290ef252'::uuid));

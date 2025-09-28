@@ -9,7 +9,13 @@ import {
 export default [
   layout("core/layouts/navigation.layout.tsx", [
     index("features/home/screens/home.tsx"),
-    // route("/error", "core/screens/error.tsx"),
+    route("/error", "core/screens/error.tsx"),
+    ...prefix("/gyms", [
+      index("features/gyms/screens/gyms.tsx"),
+      route("/create", "features/gyms/screens/gym-create.tsx"),
+      route("/update", "features/gyms/screens/gym-update.tsx"),
+      route("/:gymId", "features/gyms/screens/gym.tsx"),
+    ]),
     layout("core/layouts/public.layout.tsx", [
       route("/login", "features/auth/screens/login.tsx"),
       //   route("/join", "features/auth/screens/join.tsx"),
@@ -27,7 +33,7 @@ export default [
     // layout("core/layouts/private.layout.tsx", { id: "private-auth" }, [
     //   route("/profile", "features/users/screens/profile.tsx"),
     //   route("/my", "features/users/screens/my.tsx"),
-    //   route("/logout", "features/auth/screens/logout.tsx"),
+    route("/logout", "features/auth/screens/logout.tsx"),
     //   ...prefix("/chats", [
     //     index("features/users/screens/chats.tsx"),
     //     route("/:chatRoomId", "features/users/screens/chat.tsx"),

@@ -92,6 +92,34 @@
       "when": 1755407434833,
       "tag": "0012_far_jackpot",
       "breakpoints": true
+    },
+    {
+      "idx": 13,
+      "version": "7",
+      "when": 1759013220640,
+      "tag": "0013_nifty_meteorite",
+      "breakpoints": true
+    },
+    {
+      "idx": 14,
+      "version": "7",
+      "when": 1759014188161,
+      "tag": "0014_small_timeslip",
+      "breakpoints": true
+    },
+    {
+      "idx": 15,
+      "version": "7",
+      "when": 1759032728767,
+      "tag": "0015_lovely_tomorrow_man",
+      "breakpoints": true
+    },
+    {
+      "idx": 16,
+      "version": "7",
+      "when": 1759034445998,
+      "tag": "0016_yummy_guardian",
+      "breakpoints": true
     }
   ]
 }
