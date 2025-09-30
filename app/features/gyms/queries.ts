@@ -21,7 +21,8 @@ export const getGymsShort = async (
     .from("gyms")
     .select(
       "gym_id,name,full_address,has_water_dispenser,has_heating_cooling,has_shower",
-    );
+    )
+    .order("created_at");
 
   if (sido) baseQuery.eq("city", sido);
   if (has_water_dispenser) baseQuery.eq("has_water_dispenser", true);
@@ -44,6 +45,20 @@ export const getGym = async (
     .select("*, photos:gym_photos(url)")
     .eq("gym_id", gym_id)
     .single();
+
+  if (error) throw new Error(error.message);
+
+  return data;
+};
+
+export const getGymByName = async (
+  client: SupabaseClient<Database>,
+  name: string,
+) => {
+  const { data, error } = await client
+    .from("gyms")
+    .select("gym_id, name, full_address")
+    .like("name", `%${name}%`);
 
   if (error) throw new Error(error.message);
 

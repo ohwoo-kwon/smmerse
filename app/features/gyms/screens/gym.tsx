@@ -5,10 +5,12 @@ import {
   CircleSmallIcon,
   CopyIcon,
   GlassWaterIcon,
+  LinkIcon,
   MapPinIcon,
   ShowerHeadIcon,
 } from "lucide-react";
 import { useEffect, useState } from "react";
+import { Link } from "react-router";
 import { Toaster, toast } from "sonner";
 
 import { Button } from "~/core/components/ui/button";
@@ -23,6 +25,46 @@ import makeServerClient from "~/core/lib/supa-client.server";
 import { cn, copyToClipboard, openKakaoMap } from "~/core/lib/utils";
 
 import { getGym } from "../queries";
+
+export const meta: Route.MetaFunction = ({ data }) => {
+  if (!data?.gym) {
+    return [
+      { title: "체육관 정보 | smmerse" },
+      { name: "description", content: "농구 체육관 상세 정보를 확인하세요." },
+    ];
+  }
+
+  const { gym } = data;
+  const title = `${gym.name} | ${gym.city} ${gym.district} 농구 체육관`;
+  const description = `${gym.name} (${gym.full_address}) 체육관 정보. ${
+    gym.has_water_dispenser ? "정수기 · " : ""
+  }${gym.has_heating_cooling ? "냉난방 · " : ""}${
+    gym.has_shower ? "샤워실 · " : ""
+  }주차/이용 규칙 확인 가능.`;
+
+  const url = `https://smmerse.com/gyms/${gym.gym_id}`;
+  const image =
+    gym.photos?.[0]?.url ||
+    "https://wujxmuluphdazgapgwrr.supabase.co/storage/v1/object/public/avatars/e421200d-88ca-4711-a667-b000290ef252";
+
+  return [
+    { title },
+    { name: "description", content: description },
+    {
+      name: "keywords",
+      content: `${gym.name}, ${gym.city} 농구장, ${gym.district} 체육관, 농구 체육관, 농구장 대관`,
+    },
+    { property: "og:title", content: title },
+    { property: "og:description", content: description },
+    { property: "og:type", content: "website" },
+    { property: "og:url", content: url },
+    { property: "og:image", content: image },
+    { name: "twitter:card", content: "summary_large_image" },
+    { name: "twitter:title", content: title },
+    { name: "twitter:description", content: description },
+    { name: "twitter:image", content: image },
+  ];
+};
 
 export const loader = async ({ request, params }: Route.LoaderArgs) => {
   const [client] = makeServerClient(request);
@@ -96,15 +138,30 @@ export default function Gym({ loaderData }: Route.ComponentProps) {
           <h3>
             {gym.city} {gym.district}
           </h3>
-          <h1 className="text-xl font-bold">{gym.name}</h1>
+          <div className="flex items-center gap-2">
+            <h1 className="text-xl font-bold">{gym.name}</h1>
+            {gym.url && (
+              <Button size="icon" className="size-7" variant="outline">
+                <Link to={gym.url} target="_blank">
+                  <LinkIcon />
+                </Link>
+              </Button>
+            )}
+          </div>
           <div className="flex items-center gap-4">
             <p className="text-muted-foreground text-sm">{gym.full_address}</p>
             <div className="flex items-center gap-1">
-              <Button size="icon" variant="outline" onClick={onClickCopy}>
+              <Button
+                size="icon"
+                className="size-7"
+                variant="outline"
+                onClick={onClickCopy}
+              >
                 <CopyIcon />
               </Button>
               <Button
                 size="icon"
+                className="size-7"
                 variant="outline"
                 onClick={() => openKakaoMap(gym.full_address)}
               >

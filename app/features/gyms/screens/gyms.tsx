@@ -28,6 +28,38 @@ import { cn } from "~/core/lib/utils";
 import { getGymsShort } from "../queries";
 import { cityEnum } from "../schema";
 
+export const meta: Route.MetaFunction = () => {
+  const title = `${import.meta.env.VITE_APP_NAME} | 농구 체육관 찾기`;
+  const description =
+    "전국 농구 체육관을 지역별로 검색하고, 정수기·냉난방·샤워실 등 편의시설 조건에 맞는 체육관을 쉽게 확인하세요.";
+  const url = "https://smmerse.com/gyms";
+
+  return [
+    { title },
+    { name: "description", content: description },
+    {
+      name: "keywords",
+      content:
+        "농구 체육관, 농구장, 농구장 대관, 농구장 검색, 농구 시설, 농구 샤워실, 농구 냉난방, 농구 정수기",
+    },
+    { property: "og:title", content: title },
+    { property: "og:description", content: description },
+    { property: "og:type", content: "website" },
+    { property: "og:url", content: url },
+    {
+      property: "og:image",
+      content: `https://wujxmuluphdazgapgwrr.supabase.co/storage/v1/object/public/avatars/e421200d-88ca-4711-a667-b000290ef252`,
+    },
+    { name: "twitter:card", content: "summary_large_image" },
+    { name: "twitter:title", content: title },
+    { name: "twitter:description", content: description },
+    {
+      name: "twitter:image",
+      content: `https://wujxmuluphdazgapgwrr.supabase.co/storage/v1/object/public/avatars/e421200d-88ca-4711-a667-b000290ef252`,
+    },
+  ];
+};
+
 export const loader = async ({ request }: Route.LoaderArgs) => {
   const [client] = makeServerClient(request);
   const { searchParams } = new URL(request.url);

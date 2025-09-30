@@ -214,6 +214,81 @@ export type Database = {
           },
         ]
       }
+      games: {
+        Row: {
+          center: boolean | null
+          created_at: string
+          description: string | null
+          fee: number
+          forward: boolean | null
+          game_gender_type: Database["public"]["Enums"]["game_gender_type"]
+          game_id: number
+          game_time: Database["public"]["Enums"]["game_time_type"]
+          game_type: Database["public"]["Enums"]["game_type"]
+          guard: boolean | null
+          gym_id: string | null
+          max_participants: number
+          min_participants: number
+          profile_id: string | null
+          start_date: string
+          start_time: string
+          updated_at: string
+        }
+        Insert: {
+          center?: boolean | null
+          created_at?: string
+          description?: string | null
+          fee: number
+          forward?: boolean | null
+          game_gender_type: Database["public"]["Enums"]["game_gender_type"]
+          game_id?: never
+          game_time: Database["public"]["Enums"]["game_time_type"]
+          game_type: Database["public"]["Enums"]["game_type"]
+          guard?: boolean | null
+          gym_id?: string | null
+          max_participants: number
+          min_participants: number
+          profile_id?: string | null
+          start_date: string
+          start_time: string
+          updated_at?: string
+        }
+        Update: {
+          center?: boolean | null
+          created_at?: string
+          description?: string | null
+          fee?: number
+          forward?: boolean | null
+          game_gender_type?: Database["public"]["Enums"]["game_gender_type"]
+          game_id?: never
+          game_time?: Database["public"]["Enums"]["game_time_type"]
+          game_type?: Database["public"]["Enums"]["game_type"]
+          guard?: boolean | null
+          gym_id?: string | null
+          max_participants?: number
+          min_participants?: number
+          profile_id?: string | null
+          start_date?: string
+          start_time?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "games_gym_id_gyms_gym_id_fk"
+            columns: ["gym_id"]
+            isOneToOne: false
+            referencedRelation: "gyms"
+            referencedColumns: ["gym_id"]
+          },
+          {
+            foreignKeyName: "games_profile_id_profiles_profile_id_fk"
+            columns: ["profile_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["profile_id"]
+          },
+        ]
+      }
       gym_photos: {
         Row: {
           created_at: string
@@ -257,6 +332,7 @@ export type Database = {
           name: string
           parking_info: string | null
           updated_at: string
+          url: string | null
           usage_rules: string | null
         }
         Insert: {
@@ -272,6 +348,7 @@ export type Database = {
           name: string
           parking_info?: string | null
           updated_at?: string
+          url?: string | null
           usage_rules?: string | null
         }
         Update: {
@@ -287,6 +364,7 @@ export type Database = {
           name?: string
           parking_info?: string | null
           updated_at?: string
+          url?: string | null
           usage_rules?: string | null
         }
         Relationships: []
@@ -399,6 +477,15 @@ export type Database = {
         | "경북"
         | "경남"
         | "제주"
+      game_gender_type: "상관없음" | "남자" | "여자"
+      game_time_type:
+        | "1시간"
+        | "1시간 30분"
+        | "2시간"
+        | "2시간 30분"
+        | "3시간"
+        | "3시간 30분 이상"
+      game_type: "1on1" | "3on3" | "5on5" | "기타"
       gender_type: "male" | "female" | "mixed"
     }
     CompositeTypes: {
@@ -554,6 +641,16 @@ export const Constants = {
         "경남",
         "제주",
       ],
+      game_gender_type: ["상관없음", "남자", "여자"],
+      game_time_type: [
+        "1시간",
+        "1시간 30분",
+        "2시간",
+        "2시간 30분",
+        "3시간",
+        "3시간 30분 이상",
+      ],
+      game_type: ["1on1", "3on3", "5on5", "기타"],
       gender_type: ["male", "female", "mixed"],
     },
   },

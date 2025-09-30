@@ -48,6 +48,7 @@ export const gyms = pgTable(
     has_shower: boolean().default(false).notNull(),
     parking_info: text(),
     usage_rules: text(),
+    url: text(),
     ...timestamps,
   },
   (table) => [

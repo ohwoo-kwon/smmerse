@@ -16,6 +16,10 @@ export default [
       route("/update", "features/gyms/screens/gym-update.tsx"),
       route("/:gymId", "features/gyms/screens/gym.tsx"),
     ]),
+    ...prefix("/games", [
+      route("/create", "features/games/screens/game-create.tsx"),
+      route("/:gameId", "features/games/screens/game.tsx"),
+    ]),
     layout("core/layouts/public.layout.tsx", [
       route("/login", "features/auth/screens/login.tsx"),
       //   route("/join", "features/auth/screens/join.tsx"),

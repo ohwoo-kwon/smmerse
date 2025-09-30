@@ -39,7 +39,11 @@ function MenuButton() {
           <MenuIcon />
         </Button>
       </SheetTrigger>
-      <SheetContent className="gap-8 px-4 py-10">
+      <SheetContent className="gap-8 px-4">
+        <SheetHeader>
+          <SheetTitle></SheetTitle>
+          <SheetDescription></SheetDescription>
+        </SheetHeader>
         <div>
           <h3 className="text-xl font-semibold">픽업 게임</h3>
         </div>

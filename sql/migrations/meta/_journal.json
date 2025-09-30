@@ -120,6 +120,34 @@
       "when": 1759034445998,
       "tag": "0016_yummy_guardian",
       "breakpoints": true
+    },
+    {
+      "idx": 17,
+      "version": "7",
+      "when": 1759053490764,
+      "tag": "0017_condemned_doomsday",
+      "breakpoints": true
+    },
+    {
+      "idx": 18,
+      "version": "7",
+      "when": 1759056162802,
+      "tag": "0018_cooing_toxin",
+      "breakpoints": true
+    },
+    {
+      "idx": 19,
+      "version": "7",
+      "when": 1759059559334,
+      "tag": "0019_overconfident_butterfly",
+      "breakpoints": true
+    },
+    {
+      "idx": 20,
+      "version": "7",
+      "when": 1759061049496,
+      "tag": "0020_nebulous_masque",
+      "breakpoints": true
     }
   ]
 }
