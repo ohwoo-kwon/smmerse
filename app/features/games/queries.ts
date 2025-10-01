@@ -49,3 +49,22 @@ export const getGamesShort = async (
 
   return data;
 };
+
+export const getGameById = async (
+  client: SupabaseClient<Database>,
+  gameId: number,
+) => {
+  const { data, error } = await client
+    .from("games")
+    .select(
+      `*,
+      profile:profiles(*),
+      gym:gyms!inner(*, photos:gym_photos(url))`,
+    )
+    .eq("game_id", gameId)
+    .single();
+
+  if (error) throw new Error(error.message);
+
+  return data;
+};

@@ -83,7 +83,10 @@ export default function Gym({ loaderData }: Route.ComponentProps) {
   const [count, setCount] = useState(0);
 
   const onClickCopy = async () => {
-    const message = await copyToClipboard(gym.full_address);
+    const message = await copyToClipboard(
+      gym.full_address,
+      "주소가 복사되었습니다",
+    );
     toast(message, {
       action: {
         label: "확인",
@@ -139,7 +142,7 @@ export default function Gym({ loaderData }: Route.ComponentProps) {
             {gym.city} {gym.district}
           </h3>
           <div className="flex items-center gap-2">
-            <h1 className="text-xl font-bold">{gym.name}</h1>
+            <h1 className="text-xl font-medium">{gym.name}</h1>
             {gym.url && (
               <Button size="icon" className="size-7" variant="outline">
                 <Link to={gym.url} target="_blank">
@@ -172,7 +175,7 @@ export default function Gym({ loaderData }: Route.ComponentProps) {
         </div>
 
         {/* 시설 */}
-        <div className="flex gap-8">
+        <div className="flex items-center justify-around gap-4">
           <div className="flex flex-col items-center gap-1">
             <div
               className={cn(

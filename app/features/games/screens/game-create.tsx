@@ -500,7 +500,7 @@ export default function GameCreate() {
                 ) : null}
               </div>
               <div className="space-y-1">
-                <Label htmlFor="description">설명</Label>
+                <Label htmlFor="description">경기 소개</Label>
                 <Textarea
                   id="description"
                   className="h-60 resize-none"
