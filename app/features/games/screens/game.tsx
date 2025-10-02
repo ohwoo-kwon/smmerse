@@ -14,10 +14,9 @@ import {
 } from "lucide-react";
 import { DateTime } from "luxon";
 import { useEffect, useState } from "react";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { Toaster, toast } from "sonner";
 
-import { Avatar, AvatarImage } from "~/core/components/ui/avatar";
 import { Button } from "~/core/components/ui/button";
 import { Card } from "~/core/components/ui/card";
 import {
@@ -28,9 +27,11 @@ import {
 } from "~/core/components/ui/carousel";
 import { Separator } from "~/core/components/ui/separator";
 import { Textarea } from "~/core/components/ui/textarea";
+import { browserClient } from "~/core/db/client.broswer";
 import makeServerClient from "~/core/lib/supa-client.server";
 import { cn, copyToClipboard, openKakaoMap } from "~/core/lib/utils";
 
+import { createParticipantAndSendMessage } from "../mutations";
 import { getGameById } from "../queries";
 
 export const loader = async ({ request, params }: Route.LoaderArgs) => {
@@ -49,6 +50,8 @@ export default function Game({ loaderData }: Route.ComponentProps) {
     "yyyy-MM-ddhh:mm:ss",
   );
 
+  const navigate = useNavigate();
+
   const [api, setApi] = useState<CarouselApi>();
   const [current, setCurrent] = useState(0);
   const [count, setCount] = useState(0);
@@ -61,6 +64,23 @@ export default function Game({ loaderData }: Route.ComponentProps) {
         onClick: () => {},
       },
     });
+  };
+
+  const onClickRegister = async () => {
+    const {
+      data: { user },
+    } = await browserClient.auth.getUser();
+    if (!user) {
+      alert("로그인 후 참가 가능합니다.");
+      navigate("/login");
+    } else {
+      const chatRoomId = await createParticipantAndSendMessage(browserClient, {
+        from_user_id: user.id,
+        to_user_id: game.profile_id,
+        game_id: game.game_id,
+      });
+      navigate(`/chats/${chatRoomId}`);
+    }
   };
 
   useEffect(() => {
@@ -222,9 +242,8 @@ export default function Game({ loaderData }: Route.ComponentProps) {
               <Textarea
                 readOnly
                 className="cursor-default resize-none border-none shadow-none focus-visible:ring-0"
-              >
-                {game.description}
-              </Textarea>
+                defaultValue={game.description}
+              />
             </div>
           </>
         )}
@@ -306,9 +325,8 @@ export default function Game({ loaderData }: Route.ComponentProps) {
               <Textarea
                 readOnly
                 className="cursor-default resize-none border-none shadow-none focus-visible:ring-0"
-              >
-                {game.gym.description}
-              </Textarea>
+                defaultValue={game.gym.description}
+              />
             </div>
           </>
         )}
@@ -320,9 +338,8 @@ export default function Game({ loaderData }: Route.ComponentProps) {
               <Textarea
                 readOnly
                 className="cursor-default resize-none border-none shadow-none focus-visible:ring-0"
-              >
-                {game.gym.parking_info}
-              </Textarea>
+                defaultValue={game.gym.parking_info}
+              />
             </div>
           </>
         )}
@@ -334,12 +351,16 @@ export default function Game({ loaderData }: Route.ComponentProps) {
               <Textarea
                 readOnly
                 className="cursor-default resize-none border-none shadow-none focus-visible:ring-0"
-              >
-                {game.gym.usage_rules}
-              </Textarea>
+                defaultValue={game.gym.usage_rules}
+              />
             </div>
           </>
         )}
+      </div>
+      <div className="bg-background fixed bottom-0 left-0 w-screen border-t-1 px-4 py-5">
+        <Button className="w-full" onClick={onClickRegister}>
+          참가 신청
+        </Button>
       </div>
     </div>
   );

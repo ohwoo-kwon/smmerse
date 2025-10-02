@@ -56,12 +56,12 @@ function MenuButton() {
                 <span className="text-sm">게스트</span>
               </Link>
             </SheetClose>
-            <SheetClose asChild>
+            {/* <SheetClose asChild>
               <Link to="/" className="flex flex-col items-center gap-2">
                 <HandshakeIcon />
                 <span className="text-sm">팀 모집</span>
               </Link>
-            </SheetClose>
+            </SheetClose> */}
             <SheetClose asChild>
               <Link to="/gyms" className="flex flex-col items-center gap-2">
                 <UniversityIcon />
@@ -102,7 +102,7 @@ export default function NavigationLayout({ loaderData }: Route.ComponentProps) {
               <div className="flex gap-1">
                 <MenuButton />
                 <Button size="icon" variant="ghost" asChild>
-                  <Link to={user ? "/my" : "/login"}>
+                  <Link to={user ? "/profile" : "/login"}>
                     <UserIcon />
                   </Link>
                 </Button>

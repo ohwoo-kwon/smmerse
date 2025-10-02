@@ -3,6 +3,8 @@ import type { Database } from "database.types";
 
 import type { gameGenderTypeEnum, gameTimeEnum, gameTypeEnum } from "./schema";
 
+import { getOrCreateChatRoom, sendMessage } from "../users/mutations";
+
 export const insertGame = async (
   client: SupabaseClient<Database>,
   {
@@ -37,26 +39,57 @@ export const insertGame = async (
     center: boolean;
   },
 ) => {
-  const { data, error } = await client
-    .from("games")
-    .insert({
-      profile_id,
-      gym_id,
-      game_type,
-      game_gender_type,
-      description,
-      start_date,
-      start_time,
-      game_time,
-      min_participants,
-      max_participants,
-      fee,
-      guard,
-      forward,
-      center,
-    });
+  const { data, error } = await client.from("games").insert({
+    profile_id,
+    gym_id,
+    game_type,
+    game_gender_type,
+    description,
+    start_date,
+    start_time,
+    game_time,
+    min_participants,
+    max_participants,
+    fee,
+    guard,
+    forward,
+    center,
+  });
 
   if (error) throw new Error(error.message);
 
   return data;
+};
+
+export const createParticipantAndSendMessage = async (
+  client: SupabaseClient<Database>,
+  {
+    from_user_id,
+    to_user_id,
+    game_id,
+  }: {
+    from_user_id: string;
+    to_user_id: string;
+    game_id: number;
+  },
+) => {
+  const { data, error } = await client.from("game_participants").insert({
+    profile_id: from_user_id,
+    game_id,
+  });
+
+  if (error) throw new Error(error.message);
+
+  const chatRoomId = await getOrCreateChatRoom(client, {
+    fromUserId: from_user_id,
+    toUserId: to_user_id,
+  });
+
+  await sendMessage(client, {
+    chatRoomId,
+    senderId: from_user_id,
+    content: `${import.meta.env.VITE_SITE_URL}/games/${game_id}, 참가신청 합니다.`,
+  });
+
+  return chatRoomId;
 };

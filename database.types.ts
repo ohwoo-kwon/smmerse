@@ -214,6 +214,48 @@ export type Database = {
           },
         ]
       }
+      game_participants: {
+        Row: {
+          created_at: string
+          game_id: number
+          participant_id: number
+          profile_id: string
+          status: Database["public"]["Enums"]["participant_status"]
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          game_id: number
+          participant_id?: number
+          profile_id: string
+          status?: Database["public"]["Enums"]["participant_status"]
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          game_id?: number
+          participant_id?: number
+          profile_id?: string
+          status?: Database["public"]["Enums"]["participant_status"]
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "game_participants_game_id_games_game_id_fk"
+            columns: ["game_id"]
+            isOneToOne: false
+            referencedRelation: "games"
+            referencedColumns: ["game_id"]
+          },
+          {
+            foreignKeyName: "game_participants_profile_id_profiles_profile_id_fk"
+            columns: ["profile_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["profile_id"]
+          },
+        ]
+      }
       games: {
         Row: {
           center: boolean | null
@@ -226,10 +268,10 @@ export type Database = {
           game_time: Database["public"]["Enums"]["game_time_type"]
           game_type: Database["public"]["Enums"]["game_type"]
           guard: boolean | null
-          gym_id: string | null
+          gym_id: string
           max_participants: number
           min_participants: number
-          profile_id: string | null
+          profile_id: string
           start_date: string
           start_time: string
           updated_at: string
@@ -245,10 +287,10 @@ export type Database = {
           game_time: Database["public"]["Enums"]["game_time_type"]
           game_type: Database["public"]["Enums"]["game_type"]
           guard?: boolean | null
-          gym_id?: string | null
+          gym_id: string
           max_participants: number
           min_participants: number
-          profile_id?: string | null
+          profile_id: string
           start_date: string
           start_time: string
           updated_at?: string
@@ -264,10 +306,10 @@ export type Database = {
           game_time?: Database["public"]["Enums"]["game_time_type"]
           game_type?: Database["public"]["Enums"]["game_type"]
           guard?: boolean | null
-          gym_id?: string | null
+          gym_id?: string
           max_participants?: number
           min_participants?: number
-          profile_id?: string | null
+          profile_id?: string
           start_date?: string
           start_time?: string
           updated_at?: string
@@ -487,6 +529,7 @@ export type Database = {
         | "3시간 30분 이상"
       game_type: "1on1" | "3on3" | "5on5" | "기타"
       gender_type: "male" | "female" | "mixed"
+      participant_status: "대기" | "입금 요청" | "입금 완료" | "참가 확정"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -652,6 +695,7 @@ export const Constants = {
       ],
       game_type: ["1on1", "3on3", "5on5", "기타"],
       gender_type: ["male", "female", "mixed"],
+      participant_status: ["대기", "입금 요청", "입금 완료", "참가 확정"],
     },
   },
 } as const
