@@ -4,6 +4,7 @@ import {
   HandHelpingIcon,
   HandshakeIcon,
   MenuIcon,
+  MessageSquareMoreIcon,
   UniversityIcon,
   UserIcon,
 } from "lucide-react";
@@ -66,6 +67,12 @@ function MenuButton() {
               <Link to="/gyms" className="flex flex-col items-center gap-2">
                 <UniversityIcon />
                 <span className="text-sm">체육관</span>
+              </Link>
+            </SheetClose>
+            <SheetClose asChild>
+              <Link to="/chats" className="flex flex-col items-center gap-2">
+                <MessageSquareMoreIcon />
+                <span className="text-sm">채팅</span>
               </Link>
             </SheetClose>
           </div>

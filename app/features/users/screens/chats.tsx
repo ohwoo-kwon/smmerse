@@ -1,5 +1,6 @@
 import type { Route } from "./+types/chats";
 
+import { OctagonXIcon } from "lucide-react";
 import { DateTime } from "luxon";
 import { Link } from "react-router";
 
@@ -8,12 +9,6 @@ import {
   AvatarFallback,
   AvatarImage,
 } from "~/core/components/ui/avatar";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "~/core/components/ui/card";
 import makeServerClient from "~/core/lib/supa-client.server";
 
 import { getChats } from "../queries";
@@ -45,46 +40,58 @@ export const loader = async ({ request }: Route.LoaderArgs) => {
 
 export default function Chats({ loaderData }: Route.ComponentProps) {
   return (
-    <Card className="mx-4 mx-auto min-h-[calc(100vh-96px)] max-w-screen-md">
-      <CardHeader>
-        <CardTitle>채팅 내역</CardTitle>
-      </CardHeader>
-      <CardContent className="flex flex-col gap-2">
-        {loaderData && loaderData.chatRooms.length > 0 ? (
-          loaderData.chatRooms.map((chatRoom) => (
-            <Link
-              key={chatRoom.chat_room_id}
-              to={`/chats/${chatRoom.chat_room_id}`}
-            >
-              <div className="flex cursor-pointer items-center gap-4 rounded-lg border p-2 hover:bg-gray-100">
-                <Avatar>
-                  <AvatarImage src={chatRoom.avatar_url || ""} />
-                  <AvatarFallback>{chatRoom.name?.charAt(0)}</AvatarFallback>
-                </Avatar>
-                <div className="flex-1">
-                  <div className="flex items-center justify-between">
-                    <h3 className="text-sm font-semibold">{chatRoom.name}</h3>
-                    {chatRoom.last_message_time && (
-                      <p className="text-muted-foreground text-xs">
-                        {DateTime.fromISO(chatRoom.last_message_time, {
-                          zone: "utc",
-                        })
-                          .setZone(DateTime.local().zone)
-                          .toFormat("MM-dd HH:mm")}
-                      </p>
-                    )}
+    <div className="mx-auto max-w-screen-lg space-y-4 p-4">
+      <h1 className="text-3xl font-bold">채팅방</h1>
+
+      <div>
+        {loaderData!.chatRooms.length > 0 ? (
+          loaderData?.chatRooms.map(
+            ({
+              avatar_url,
+              name,
+              chat_room_id,
+              last_message,
+              last_message_time,
+              last_sender_name,
+            }) => (
+              <Link
+                key={chat_room_id}
+                to={`/chats/${chat_room_id}`}
+                className="flex justify-between gap-2 border-b py-4 last:border-0"
+              >
+                <div className="flex items-center gap-2">
+                  <Avatar>
+                    <AvatarImage src={avatar_url || ""} />
+                    <AvatarFallback>{name?.charAt(0)}</AvatarFallback>
+                  </Avatar>
+                  <div>
+                    <p>{name}</p>
+                    <p className="text-muted-foreground w-[calc(100vw-128px)] overflow-hidden text-xs text-ellipsis whitespace-nowrap">
+                      {last_sender_name}:{last_message}
+                    </p>
                   </div>
-                  <p className="text-muted-foreground max-w-50 truncate text-sm sm:max-w-60 md:max-w-full">
-                    {chatRoom.last_sender_name}: {chatRoom.last_message}
-                  </p>
                 </div>
-              </div>
-            </Link>
-          ))
+                <span className="text-muted-foreground items w-12 text-right text-xs">
+                  {DateTime.fromISO(last_message_time!).toFormat("MM-dd")}
+                </span>
+              </Link>
+            ),
+          )
         ) : (
-          <div className="text-center text-xl">참가 중인 채팅이 없습니다.</div>
+          <div className="flex flex-col items-center justify-center gap-4">
+            <OctagonXIcon
+              size={80}
+              strokeWidth={1}
+              className="text-muted-foreground"
+            />
+            <p className="text-lg font-semibold">
+              게스트를 참가하거나 게스트 모집을 통해 다른 플레이어와 소통을
+              시작해보세요
+            </p>
+            {/* <Button>체육관 등록 요청</Button> */}
+          </div>
         )}
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   );
 }
