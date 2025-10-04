@@ -169,6 +169,13 @@
       "when": 1759565704974,
       "tag": "0023_natural_cable",
       "breakpoints": true
+    },
+    {
+      "idx": 24,
+      "version": "7",
+      "when": 1759569239963,
+      "tag": "0024_cultured_mantis",
+      "breakpoints": true
     }
   ]
 }

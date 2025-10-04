@@ -14,119 +14,6 @@ export type Database = {
   }
   public: {
     Tables: {
-      basketball_game_participants: {
-        Row: {
-          basketball_game_id: number
-          created_at: string
-          participant_id: number
-          profile_id: string
-          status: string
-          updated_at: string
-        }
-        Insert: {
-          basketball_game_id: number
-          created_at?: string
-          participant_id?: number
-          profile_id: string
-          status?: string
-          updated_at?: string
-        }
-        Update: {
-          basketball_game_id?: number
-          created_at?: string
-          participant_id?: number
-          profile_id?: string
-          status?: string
-          updated_at?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "basketball_game_participants_basketball_game_id_basketball_game"
-            columns: ["basketball_game_id"]
-            isOneToOne: false
-            referencedRelation: "basketball_games"
-            referencedColumns: ["basketball_game_id"]
-          },
-          {
-            foreignKeyName: "basketball_game_participants_profile_id_profiles_profile_id_fk"
-            columns: ["profile_id"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["profile_id"]
-          },
-        ]
-      }
-      basketball_games: {
-        Row: {
-          address: string
-          basketball_game_id: number
-          city: string
-          created_at: string
-          date: string
-          description: string | null
-          end_time: string
-          fee: number
-          gender_type: Database["public"]["Enums"]["gender_type"]
-          link: string | null
-          max_participants: number
-          min_participants: number
-          profile_id: string | null
-          sido: string
-          skill_level: Database["public"]["Enums"]["basketball_skill_level"]
-          start_time: string
-          title: string
-          updated_at: string
-        }
-        Insert: {
-          address: string
-          basketball_game_id?: never
-          city: string
-          created_at?: string
-          date: string
-          description?: string | null
-          end_time: string
-          fee: number
-          gender_type?: Database["public"]["Enums"]["gender_type"]
-          link?: string | null
-          max_participants: number
-          min_participants?: number
-          profile_id?: string | null
-          sido: string
-          skill_level: Database["public"]["Enums"]["basketball_skill_level"]
-          start_time: string
-          title: string
-          updated_at?: string
-        }
-        Update: {
-          address?: string
-          basketball_game_id?: never
-          city?: string
-          created_at?: string
-          date?: string
-          description?: string | null
-          end_time?: string
-          fee?: number
-          gender_type?: Database["public"]["Enums"]["gender_type"]
-          link?: string | null
-          max_participants?: number
-          min_participants?: number
-          profile_id?: string | null
-          sido?: string
-          skill_level?: Database["public"]["Enums"]["basketball_skill_level"]
-          start_time?: string
-          title?: string
-          updated_at?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "basketball_games_profile_id_profiles_profile_id_fk"
-            columns: ["profile_id"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["profile_id"]
-          },
-        ]
-      }
       chat_room_members: {
         Row: {
           chat_room_id: number
@@ -497,13 +384,6 @@ export type Database = {
       }
     }
     Enums: {
-      basketball_skill_level:
-        | "level_0"
-        | "level_1"
-        | "level_2"
-        | "level_3"
-        | "level_4"
-        | "level_5"
       city:
         | "서울"
         | "경기"
@@ -531,7 +411,6 @@ export type Database = {
         | "3시간"
         | "3시간 30분 이상"
       game_type: "1on1" | "3on3" | "5on5" | "기타"
-      gender_type: "male" | "female" | "mixed"
       participant_status: "대기" | "입금 요청" | "입금 완료" | "참가 확정"
     }
     CompositeTypes: {
@@ -660,14 +539,6 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
-      basketball_skill_level: [
-        "level_0",
-        "level_1",
-        "level_2",
-        "level_3",
-        "level_4",
-        "level_5",
-      ],
       city: [
         "서울",
         "경기",
@@ -697,7 +568,6 @@ export const Constants = {
         "3시간 30분 이상",
       ],
       game_type: ["1on1", "3on3", "5on5", "기타"],
-      gender_type: ["male", "female", "mixed"],
       participant_status: ["대기", "입금 요청", "입금 완료", "참가 확정"],
     },
   },
