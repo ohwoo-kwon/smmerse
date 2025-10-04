@@ -181,6 +181,7 @@ export type Database = {
           chat_room_id: number
           content: string
           createdAt: string
+          is_checked: boolean
           sender_id: string
         }
         Insert: {
@@ -188,6 +189,7 @@ export type Database = {
           chat_room_id: number
           content: string
           createdAt?: string
+          is_checked?: boolean
           sender_id: string
         }
         Update: {
@@ -195,6 +197,7 @@ export type Database = {
           chat_room_id?: number
           content?: string
           createdAt?: string
+          is_checked?: boolean
           sender_id?: string
         }
         Relationships: [

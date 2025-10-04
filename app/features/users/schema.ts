@@ -1,6 +1,7 @@
 import { sql } from "drizzle-orm";
 import {
   bigint,
+  boolean,
   date,
   integer,
   pgPolicy,
@@ -88,13 +89,14 @@ export const chatRooms = pgTable(
 export const chatRoomMembers = pgTable(
   "chat_room_members",
   {
-    chat_room_id: bigint({ mode: "number" }).references(
-      () => chatRooms.chat_room_id,
-      { onDelete: "cascade" },
-    ),
-    profile_id: uuid().references(() => profiles.profile_id, {
-      onDelete: "cascade",
-    }),
+    chat_room_id: bigint({ mode: "number" })
+      .references(() => chatRooms.chat_room_id, { onDelete: "cascade" })
+      .notNull(),
+    profile_id: uuid()
+      .references(() => profiles.profile_id, {
+        onDelete: "cascade",
+      })
+      .notNull(),
     createdAt: timestamp().notNull().defaultNow(),
   },
   (table) => [
@@ -142,6 +144,7 @@ export const chats = pgTable(
       })
       .notNull(),
     content: text().notNull(),
+    is_checked: boolean().default(false).notNull(),
     createdAt: timestamp().notNull().defaultNow(),
   },
   (table) => [
