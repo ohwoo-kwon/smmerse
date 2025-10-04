@@ -41,7 +41,7 @@ const formSchema = z.object({
   full_address: z
     .string()
     .min(1, "상세주소를 입력해주세요")
-    .max(30, "상세주소는 30자 이하로 입력해주세요"),
+    .max(50, "상세주소는 50자 이하로 입력해주세요"),
   has_water_dispenser: z.coerce.boolean(),
   has_heating_cooling: z.coerce.boolean(),
   has_shower: z.coerce.boolean(),
