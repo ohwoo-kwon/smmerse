@@ -116,7 +116,12 @@ export default function Chat({ loaderData }: Route.ComponentProps) {
       .channel(`room:${chatRoomId}-${userId}`)
       .on(
         "postgres_changes",
-        { event: "INSERT", schema: "public", table: "chats" },
+        {
+          event: "INSERT",
+          schema: "public",
+          table: "chats",
+          filter: `room_id:eq.${chatRoomId}`,
+        },
         (payload) => {
           setMessages((prev) => [
             ...prev,
@@ -133,7 +138,7 @@ export default function Chat({ loaderData }: Route.ComponentProps) {
 
   return (
     <div className="mx-auto flex min-h-[calc(100vh-96px)] max-w-screen-md flex-col">
-      <div className="flex-1 overflow-y-auto px-4">
+      <div className="flex-1 overflow-y-auto p-4">
         <div
           ref={scrollRef}
           className="flex h-[calc(100vh-148px)] flex-col gap-y-4 overflow-y-auto last:pb-4"
