@@ -149,8 +149,10 @@ export type Database = {
       games: {
         Row: {
           center: boolean | null
+          city: Database["public"]["Enums"]["city"] | null
           created_at: string
           description: string | null
+          district: string | null
           fee: number
           forward: boolean | null
           game_gender_type: Database["public"]["Enums"]["game_gender_type"]
@@ -159,6 +161,7 @@ export type Database = {
           game_type: Database["public"]["Enums"]["game_type"]
           guard: boolean | null
           gym_id: string
+          link: string | null
           max_participants: number
           min_participants: number
           profile_id: string
@@ -168,8 +171,10 @@ export type Database = {
         }
         Insert: {
           center?: boolean | null
+          city?: Database["public"]["Enums"]["city"] | null
           created_at?: string
           description?: string | null
+          district?: string | null
           fee: number
           forward?: boolean | null
           game_gender_type: Database["public"]["Enums"]["game_gender_type"]
@@ -178,6 +183,7 @@ export type Database = {
           game_type: Database["public"]["Enums"]["game_type"]
           guard?: boolean | null
           gym_id: string
+          link?: string | null
           max_participants: number
           min_participants: number
           profile_id: string
@@ -187,8 +193,10 @@ export type Database = {
         }
         Update: {
           center?: boolean | null
+          city?: Database["public"]["Enums"]["city"] | null
           created_at?: string
           description?: string | null
+          district?: string | null
           fee?: number
           forward?: boolean | null
           game_gender_type?: Database["public"]["Enums"]["game_gender_type"]
@@ -197,6 +205,7 @@ export type Database = {
           game_type?: Database["public"]["Enums"]["game_type"]
           guard?: boolean | null
           gym_id?: string
+          link?: string | null
           max_participants?: number
           min_participants?: number
           profile_id?: string

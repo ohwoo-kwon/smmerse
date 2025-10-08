@@ -15,7 +15,7 @@ import {
 import { authUid, authenticatedRole } from "drizzle-orm/supabase";
 
 import { timestamps } from "~/core/db/timestamp";
-import { gyms } from "~/features/gyms/schema";
+import { cityEnum, gyms } from "~/features/gyms/schema";
 import { profiles } from "~/features/users/schema";
 
 export const gameTypeEnum = pgEnum("game_type", [
@@ -68,6 +68,9 @@ export const games = pgTable(
     min_participants: integer().notNull(),
     max_participants: integer().notNull(),
     fee: integer().notNull(),
+    city: cityEnum(),
+    district: text(),
+    link: text(),
     ...timestamps,
   },
   (table) => [

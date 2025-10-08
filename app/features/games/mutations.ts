@@ -1,6 +1,7 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { Database } from "database.types";
 
+import type { cityEnum } from "../gyms/schema";
 import type { gameGenderTypeEnum, gameTimeEnum, gameTypeEnum } from "./schema";
 
 import { getOrCreateChatRoom, sendMessage } from "../users/mutations";
@@ -22,6 +23,9 @@ export const insertGame = async (
     guard,
     forward,
     center,
+    city,
+    district,
+    link,
   }: {
     profile_id: string;
     gym_id: string;
@@ -37,6 +41,9 @@ export const insertGame = async (
     guard: boolean;
     forward: boolean;
     center: boolean;
+    city?: (typeof cityEnum.enumValues)[number];
+    district?: string;
+    link?: string;
   },
 ) => {
   const { data, error } = await client.from("games").insert({
@@ -54,6 +61,9 @@ export const insertGame = async (
     guard,
     forward,
     center,
+    city,
+    district,
+    link,
   });
 
   if (error) throw new Error(error.message);

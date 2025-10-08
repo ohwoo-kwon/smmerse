@@ -78,12 +78,9 @@ export default [
         route("/message/:userId", "features/users/apis/send-message.tsx"),
       ]),
     ]),
-    //   ...prefix("/crawl", [
-    //     route(
-    //       "/daum",
-    //       "features/basketball/games/apis/crawl-and-create-game.tsx",
-    //     ),
-    //   ]),
+    ...prefix("/crawl", [
+      route("/daum", "features/games/apis/crawl-from-daum.tsx"),
+    ]),
     //   layout(
     //     "core/layouts/private.layout.tsx",
     //     { id: "private-basketball-game-api" },
