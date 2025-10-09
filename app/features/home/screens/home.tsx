@@ -3,7 +3,7 @@ import type { Route } from "./+types/home";
 import { DotIcon, OctagonXIcon, PlusIcon } from "lucide-react";
 import { DateTime } from "luxon";
 import { Fragment } from "react";
-import { Link, useSearchParams } from "react-router";
+import { Link, redirect, useSearchParams } from "react-router";
 
 import AdsenseInfeed from "~/core/components/adsense-infeed";
 import KakaoAdfit from "~/core/components/kakao-ad-fit";
@@ -70,6 +70,7 @@ export const loader = async ({ request }: Route.LoaderArgs) => {
   const { searchParams } = new URL(request.url);
 
   const date = searchParams.get("date");
+  if (!date) return redirect(`/?date=${DateTime.now().toFormat("yyyyMMdd")}`);
   const sido = searchParams.get("sido") as
     | (typeof cityEnum.enumValues)[number]
     | null;
@@ -94,8 +95,8 @@ export default function Home({ loaderData }: Route.ComponentProps) {
   const [searchParams, setSearchParams] = useSearchParams();
 
   const sido = searchParams.get("sido");
-  const date = searchParams.get("date");
-  const clikedDateTime = date ? DateTime.fromFormat(date, "yyyyMMdd") : today;
+  const date = searchParams.get("date")!;
+  const clikedDateTime = DateTime.fromFormat(date, "yyyyMMdd");
 
   const handleFilterChange = (key: string, value: string | boolean) => {
     const newParams = new URLSearchParams(searchParams);
