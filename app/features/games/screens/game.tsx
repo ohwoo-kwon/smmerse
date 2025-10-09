@@ -138,102 +138,109 @@ export default function Game({ loaderData }: Route.ComponentProps) {
 
       {/* 정보 */}
       <div className="space-y-8 px-4">
-        <div>
-          <h3 className="mb-1 font-bold">
-            {gameStartDate.month}월 {gameStartDate.day}일{" "}
-            {gameStartDate.weekdayLong}{" "}
-            {gameStartDate.hour.toString().padStart(2, "0")}:
-            {gameStartDate.minute.toString().padStart(2, "0")}
-          </h3>
-          <h1 className="text-xl font-medium underline">
-            <Link
-              to={`${import.meta.env.VITE_SITE_URL}/gyms/${game.gym.gym_id}`}
-            >
-              {game.gym.name}
-            </Link>
-          </h1>
-          <div className="flex items-center gap-4">
-            <p className="text-muted-foreground text-sm">
-              {game.gym.full_address}
-            </p>
-            <div className="flex items-center gap-1">
-              <Button
-                size="icon"
-                className="size-7"
-                variant="outline"
-                onClick={() =>
-                  onClickCopy(game.gym.full_address, "주소가 복사되었습니다")
-                }
-              >
-                <CopyIcon />
-              </Button>
-              <Button
-                size="icon"
-                className="size-7"
-                variant="outline"
-                onClick={() => openKakaoMap(game.gym.full_address)}
-              >
-                <MapPinIcon />
-              </Button>
+        {!game.link && (
+          <>
+            <div>
+              <h3 className="mb-1 font-bold">
+                {gameStartDate.month}월 {gameStartDate.day}일{" "}
+                {gameStartDate.weekdayLong}{" "}
+                {gameStartDate.hour.toString().padStart(2, "0")}:
+                {gameStartDate.minute.toString().padStart(2, "0")}
+              </h3>
+              <h1 className="text-xl font-medium underline">
+                <Link
+                  to={`${import.meta.env.VITE_SITE_URL}/gyms/${game.gym.gym_id}`}
+                >
+                  {game.gym.name}
+                </Link>
+              </h1>
+              <div className="flex items-center gap-4">
+                <p className="text-muted-foreground text-sm">
+                  {game.gym.full_address}
+                </p>
+                <div className="flex items-center gap-1">
+                  <Button
+                    size="icon"
+                    className="size-7"
+                    variant="outline"
+                    onClick={() =>
+                      onClickCopy(
+                        game.gym.full_address,
+                        "주소가 복사되었습니다",
+                      )
+                    }
+                  >
+                    <CopyIcon />
+                  </Button>
+                  <Button
+                    size="icon"
+                    className="size-7"
+                    variant="outline"
+                    onClick={() => openKakaoMap(game.gym.full_address)}
+                  >
+                    <MapPinIcon />
+                  </Button>
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
-        <div className="flex items-center justify-between gap-4">
-          <Card className="flex w-full flex-col items-center gap-2 border-violet-300 bg-violet-100 py-2">
-            <p className="text-sm text-violet-400">참가비</p>
-            <p className="text-lg font-semibold text-violet-700">
-              {game.fee.toLocaleString()} 원
-            </p>
-          </Card>
-          <Card className="flex w-full flex-col items-center gap-2 border-pink-300 bg-pink-100 py-2">
-            <p className="text-sm text-pink-400">플레이 시간</p>
-            <p className="text-lg font-semibold text-pink-700">
-              {game.game_time}
-            </p>
-          </Card>
-        </div>
-        <div className="grid grid-cols-2 gap-4 font-light">
-          <div className="flex items-center justify-center gap-2">
-            <VenusAndMarsIcon strokeWidth={1} size={20} />
-            <span>{game.game_gender_type}</span>
-          </div>
-          <div className="flex items-center justify-center gap-2">
-            <SwordsIcon strokeWidth={1} size={20} />
-            <span>{game.game_type}</span>
-          </div>
-          <div className="flex items-center justify-center gap-2">
-            <UsersIcon strokeWidth={1} size={20} />
-            <span>
-              {game.min_participants}명 ~ {game.max_participants}명
-            </span>
-          </div>
-        </div>
-        <div className="space-y-1">
-          <h5 className="font-semibold">모집 포지션</h5>
-          <div className="flex items-center justify-between gap-4">
-            <Button
-              className="flex-1"
-              variant={game.guard ? "default" : "secondary"}
-              disabled={!game.guard}
-            >
-              가드
-            </Button>
-            <Button
-              className="flex-1"
-              variant={game.forward ? "default" : "secondary"}
-              disabled={!game.forward}
-            >
-              포워드
-            </Button>
-            <Button
-              className="flex-1"
-              variant={game.center ? "default" : "secondary"}
-              disabled={!game.center}
-            >
-              센터
-            </Button>
-          </div>
-        </div>
+            <div className="flex items-center justify-between gap-4">
+              <Card className="flex w-full flex-col items-center gap-2 border-violet-300 bg-violet-100 py-2">
+                <p className="text-sm text-violet-400">참가비</p>
+                <p className="text-lg font-semibold text-violet-700">
+                  {game.fee.toLocaleString()} 원
+                </p>
+              </Card>
+              <Card className="flex w-full flex-col items-center gap-2 border-pink-300 bg-pink-100 py-2">
+                <p className="text-sm text-pink-400">플레이 시간</p>
+                <p className="text-lg font-semibold text-pink-700">
+                  {game.game_time}
+                </p>
+              </Card>
+            </div>
+            <div className="grid grid-cols-2 gap-4 font-light">
+              <div className="flex items-center justify-center gap-2">
+                <VenusAndMarsIcon strokeWidth={1} size={20} />
+                <span>{game.game_gender_type}</span>
+              </div>
+              <div className="flex items-center justify-center gap-2">
+                <SwordsIcon strokeWidth={1} size={20} />
+                <span>{game.game_type}</span>
+              </div>
+              <div className="flex items-center justify-center gap-2">
+                <UsersIcon strokeWidth={1} size={20} />
+                <span>
+                  {game.min_participants}명 ~ {game.max_participants}명
+                </span>
+              </div>
+            </div>
+            <div className="space-y-1">
+              <h5 className="font-semibold">모집 포지션</h5>
+              <div className="flex items-center justify-between gap-4">
+                <Button
+                  className="flex-1"
+                  variant={game.guard ? "default" : "secondary"}
+                  disabled={!game.guard}
+                >
+                  가드
+                </Button>
+                <Button
+                  className="flex-1"
+                  variant={game.forward ? "default" : "secondary"}
+                  disabled={!game.forward}
+                >
+                  포워드
+                </Button>
+                <Button
+                  className="flex-1"
+                  variant={game.center ? "default" : "secondary"}
+                  disabled={!game.center}
+                >
+                  센터
+                </Button>
+              </div>
+            </div>
+          </>
+        )}
         {game.description && (
           <>
             <Separator />
@@ -247,117 +254,128 @@ export default function Game({ loaderData }: Route.ComponentProps) {
             </div>
           </>
         )}
-        <Separator />
-        <div className="space-y-1">
-          <h5 className="font-semibold">체육관 시설</h5>
-          <div className="flex items-center justify-around gap-4">
-            <div className="flex flex-col items-center gap-1">
-              <div
-                className={cn(
-                  "text-muted-foreground flex size-14 items-center justify-center rounded-full border p-2",
-                  game.gym.has_water_dispenser
-                    ? "bg-blue-200 bg-blue-300 text-blue-800"
-                    : "",
-                )}
-              >
-                <GlassWaterIcon />
-              </div>
-              <span
-                className={cn(
-                  "text-muted-foreground text-xs",
-                  game.gym.has_water_dispenser
-                    ? "text-blue-800"
-                    : "line-through",
-                )}
-              >
-                정수기
-              </span>
-            </div>
-            <div className="flex flex-col items-center gap-1">
-              <div
-                className={cn(
-                  "text-muted-foreground flex size-14 items-center justify-center rounded-full border p-2",
-                  game.gym.has_heating_cooling
-                    ? "bg-green-200 bg-green-300 text-green-800"
-                    : "",
-                )}
-              >
-                <AirVentIcon />
-              </div>
-              <span
-                className={cn(
-                  "text-muted-foreground text-xs",
-                  game.gym.has_heating_cooling
-                    ? "text-green-800"
-                    : "line-through",
-                )}
-              >
-                냉난방
-              </span>
-            </div>
-            <div className="flex flex-col items-center gap-1">
-              <div
-                className={cn(
-                  "text-muted-foreground flex size-14 items-center justify-center rounded-full border p-2",
-                  game.gym.has_shower
-                    ? "bg-purple-200 bg-purple-300 text-purple-800"
-                    : "",
-                )}
-              >
-                <ShowerHeadIcon />
-              </div>
-              <span
-                className={cn(
-                  "text-muted-foreground text-xs",
-                  game.gym.has_shower ? "text-purple-800" : "line-through",
-                )}
-              >
-                샤워 가능
-              </span>
-            </div>
-          </div>
-        </div>
-        {game.gym.description && (
+        {!game.link && (
           <>
             <Separator />
             <div className="space-y-1">
-              <h5 className="font-semibold">체육관 소개</h5>
-              <Textarea
-                readOnly
-                className="cursor-default resize-none border-none shadow-none focus-visible:ring-0"
-                defaultValue={game.gym.description}
-              />
+              <h5 className="font-semibold">체육관 시설</h5>
+              <div className="flex items-center justify-around gap-4">
+                <div className="flex flex-col items-center gap-1">
+                  <div
+                    className={cn(
+                      "text-muted-foreground flex size-14 items-center justify-center rounded-full border p-2",
+                      game.gym.has_water_dispenser
+                        ? "bg-blue-200 bg-blue-300 text-blue-800"
+                        : "",
+                    )}
+                  >
+                    <GlassWaterIcon />
+                  </div>
+                  <span
+                    className={cn(
+                      "text-muted-foreground text-xs",
+                      game.gym.has_water_dispenser
+                        ? "text-blue-800"
+                        : "line-through",
+                    )}
+                  >
+                    정수기
+                  </span>
+                </div>
+                <div className="flex flex-col items-center gap-1">
+                  <div
+                    className={cn(
+                      "text-muted-foreground flex size-14 items-center justify-center rounded-full border p-2",
+                      game.gym.has_heating_cooling
+                        ? "bg-green-200 bg-green-300 text-green-800"
+                        : "",
+                    )}
+                  >
+                    <AirVentIcon />
+                  </div>
+                  <span
+                    className={cn(
+                      "text-muted-foreground text-xs",
+                      game.gym.has_heating_cooling
+                        ? "text-green-800"
+                        : "line-through",
+                    )}
+                  >
+                    냉난방
+                  </span>
+                </div>
+                <div className="flex flex-col items-center gap-1">
+                  <div
+                    className={cn(
+                      "text-muted-foreground flex size-14 items-center justify-center rounded-full border p-2",
+                      game.gym.has_shower
+                        ? "bg-purple-200 bg-purple-300 text-purple-800"
+                        : "",
+                    )}
+                  >
+                    <ShowerHeadIcon />
+                  </div>
+                  <span
+                    className={cn(
+                      "text-muted-foreground text-xs",
+                      game.gym.has_shower ? "text-purple-800" : "line-through",
+                    )}
+                  >
+                    샤워 가능
+                  </span>
+                </div>
+              </div>
             </div>
-          </>
-        )}
-        {game.gym.parking_info && (
-          <>
-            <Separator />
-            <div className="space-y-1">
-              <h5 className="font-semibold">주차 정보</h5>
-              <Textarea
-                readOnly
-                className="cursor-default resize-none border-none shadow-none focus-visible:ring-0"
-                defaultValue={game.gym.parking_info}
-              />
-            </div>
-          </>
-        )}
-        {game.gym.usage_rules && (
-          <>
-            <Separator />
-            <div className="space-y-1">
-              <h5 className="font-semibold">이용 규칙</h5>
-              <Textarea
-                readOnly
-                className="cursor-default resize-none border-none shadow-none focus-visible:ring-0"
-                defaultValue={game.gym.usage_rules}
-              />
-            </div>
+            {game.gym.description && (
+              <>
+                <Separator />
+                <div className="space-y-1">
+                  <h5 className="font-semibold">체육관 소개</h5>
+                  <Textarea
+                    readOnly
+                    className="cursor-default resize-none border-none shadow-none focus-visible:ring-0"
+                    defaultValue={game.gym.description}
+                  />
+                </div>
+              </>
+            )}
+            {game.gym.parking_info && (
+              <>
+                <Separator />
+                <div className="space-y-1">
+                  <h5 className="font-semibold">주차 정보</h5>
+                  <Textarea
+                    readOnly
+                    className="cursor-default resize-none border-none shadow-none focus-visible:ring-0"
+                    defaultValue={game.gym.parking_info}
+                  />
+                </div>
+              </>
+            )}
+            {game.gym.usage_rules && (
+              <>
+                <Separator />
+                <div className="space-y-1">
+                  <h5 className="font-semibold">이용 규칙</h5>
+                  <Textarea
+                    readOnly
+                    className="cursor-default resize-none border-none shadow-none focus-visible:ring-0"
+                    defaultValue={game.gym.usage_rules}
+                  />
+                </div>
+              </>
+            )}
           </>
         )}
       </div>
-      <div className="bg-background fixed bottom-0 left-0 w-screen border-t-1 px-4 py-5">
+      <div className="bg-background fixed bottom-0 left-0 w-screen space-y-2 border-t-1 px-4 py-5">
+        {game.link && (
+          <Button className="w-full" variant="secondary" asChild>
+            <Link to={game.link} target="_blank">
+              링크
+            </Link>
+          </Button>
+        )}
         <Button className="w-full" onClick={onClickRegister}>
           참가 신청
         </Button>

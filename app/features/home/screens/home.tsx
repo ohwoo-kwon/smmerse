@@ -5,7 +5,6 @@ import { DateTime } from "luxon";
 import { Fragment } from "react";
 import { Link, useSearchParams } from "react-router";
 
-import { Badge } from "~/core/components/ui/badge";
 import { Button } from "~/core/components/ui/button";
 import {
   Carousel,
@@ -33,7 +32,7 @@ export const meta: Route.MetaFunction = () => {
   const title = `${import.meta.env.VITE_APP_NAME} | 농구 게스트 & 픽업 게임 모집 플랫폼`;
   const description =
     "전국 농구 게스트 참가와 픽업 게임을 쉽게 찾고 모집하세요. 날짜, 지역, 시설 조건(정수기, 냉난방, 샤워실) 필터로 원하는 경기를 빠르게 확인할 수 있습니다.";
-  const url = "https://smmerse.com"; // 실제 배포 도메인으로 교체
+  const url = "https://smmerse.com";
 
   return [
     { title },
@@ -191,6 +190,8 @@ export default function Home({ loaderData }: Route.ComponentProps) {
               game_time,
               max_participants,
               fee,
+              city,
+              district,
             }) => (
               <Link
                 to={`/games/${game_id}`}
@@ -204,7 +205,7 @@ export default function Home({ loaderData }: Route.ComponentProps) {
                   <div className="text-lg font-semibold">{gym.name}</div>
                   <div className="text-muted-foreground flex flex-wrap items-center text-xs">
                     <span>
-                      {gym.city} {gym.district}
+                      {city || gym.city} {district || gym.district}
                     </span>
                     <span className="-mx-1">
                       <DotIcon strokeWidth={1} />

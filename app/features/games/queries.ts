@@ -31,6 +31,8 @@ export const getGamesShort = async (
       game_time,
       max_participants,
       fee,
+      city,
+      district,
       gym:gyms!inner(
         name,
         city,
@@ -41,7 +43,7 @@ export const getGamesShort = async (
     .gte("start_date", DateTime.now().toFormat("yyyyMMdd"));
 
   if (start_date) baseQuery.eq("start_date", start_date);
-  if (sido) baseQuery.like("gyms.city", sido);
+  if (sido) baseQuery.eq("city", sido);
   if (has_water_dispenser) baseQuery.eq("gyms.has_water_dispenser", true);
   if (has_heating_cooling) baseQuery.eq("gyms.has_heating_cooling", true);
   if (has_shower) baseQuery.eq("gyms.has_shower", true);

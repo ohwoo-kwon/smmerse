@@ -57,7 +57,7 @@ export const getGymByName = async (
 ) => {
   const { data, error } = await client
     .from("gyms")
-    .select("gym_id, name, full_address")
+    .select("gym_id, name, full_address, city, district")
     .like("name", `%${name}%`);
 
   if (error) throw new Error(error.message);

@@ -32,6 +32,7 @@ import { browserClient } from "~/core/db/client.broswer";
 import makeServerClient from "~/core/lib/supa-client.server";
 import { cn } from "~/core/lib/utils";
 import { getGymByName } from "~/features/gyms/queries";
+import { cityEnum } from "~/features/gyms/schema";
 
 import { insertGame } from "../mutations";
 import { gameGenderTypeEnum, gameTimeEnum, gameTypeEnum } from "../schema";
@@ -56,6 +57,8 @@ const formSchema = z.object({
   min_participants: z.coerce.number({ message: "최소 인원을 작성해주세요" }),
   max_participants: z.coerce.number({ message: "최대 인원을 작성해주세요" }),
   fee: z.coerce.number({ message: "참가비를 작성해주세요" }),
+  city: z.enum(cityEnum.enumValues),
+  district: z.string(),
 });
 
 export const action = async ({ request }: Route.ActionArgs) => {
@@ -112,10 +115,18 @@ export default function GameCreate() {
     min_participants: 0,
     max_participants: 10,
     fee: 5000,
+    city: "서울",
+    district: "강남구",
   });
   const [gymText, setGymText] = useState("");
   const [gyms, setGyms] = useState<
-    { gym_id: string; name: string; full_address: string }[]
+    {
+      gym_id: string;
+      name: string;
+      full_address: string;
+      city: string;
+      district: string;
+    }[]
   >([]);
 
   const onClickNext = () => {
@@ -142,6 +153,8 @@ export default function GameCreate() {
         guard: game.guard ? true : "",
         forward: game.forward ? true : "",
         center: game.center ? true : "",
+        city: game.city,
+        district: game.district,
       },
       {
         method: "POST",
@@ -159,8 +172,19 @@ export default function GameCreate() {
   const onChangeDate = (date: string) =>
     setGame((prev) => ({ ...prev, start_date: date }));
 
-  const onChangeGym = (gymId: string, gymName: string) =>
-    setGame((prev) => ({ ...prev, gym_id: gymId, gym_name: gymName }));
+  const onChangeGym = (
+    gymId: string,
+    gymName: string,
+    city: string,
+    district: string,
+  ) =>
+    setGame((prev) => ({
+      ...prev,
+      gym_id: gymId,
+      gym_name: gymName,
+      city,
+      district,
+    }));
 
   const onChangeGymText = (e: ChangeEvent<HTMLInputElement>) => {
     setGymText(e.target.value);
@@ -306,18 +330,22 @@ export default function GameCreate() {
                     </DrawerHeader>
                     <ScrollArea className="h-70 px-4">
                       <div className="flex flex-col gap-2">
-                        {gyms.map(({ gym_id, name, full_address }) => (
-                          <DrawerClose
-                            key={`gym_${gym_id}`}
-                            className="text-left"
-                            onClick={() => onChangeGym(gym_id, name)}
-                          >
-                            <p className="font-semibold">{name}</p>
-                            <p className="text-muted-foreground text-sm">
-                              {full_address}
-                            </p>
-                          </DrawerClose>
-                        ))}
+                        {gyms.map(
+                          ({ gym_id, name, full_address, city, district }) => (
+                            <DrawerClose
+                              key={`gym_${gym_id}`}
+                              className="text-left"
+                              onClick={() =>
+                                onChangeGym(gym_id, name, city, district)
+                              }
+                            >
+                              <p className="font-semibold">{name}</p>
+                              <p className="text-muted-foreground text-sm">
+                                {full_address}
+                              </p>
+                            </DrawerClose>
+                          ),
+                        )}
                       </div>
                     </ScrollArea>
                     <DrawerFooter></DrawerFooter>
