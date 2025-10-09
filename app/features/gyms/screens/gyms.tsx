@@ -9,6 +9,8 @@ import {
 import { Fragment } from "react";
 import { Link, useSearchParams } from "react-router";
 
+import AdsenseInfeed from "~/core/components/adsense-infeed";
+import KakaoAdfit from "~/core/components/kakao-ad-fit";
 import { Button } from "~/core/components/ui/button";
 import {
   Drawer,
@@ -183,6 +185,11 @@ export default function Gyms({ loaderData }: Route.ComponentProps) {
         >
           샤워실
         </Button>
+      </div>
+
+      <div className="space-y-2">
+        <AdsenseInfeed />
+        <KakaoAdfit />
       </div>
 
       {/* 경기 목록 */}

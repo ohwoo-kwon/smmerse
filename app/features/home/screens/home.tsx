@@ -6,6 +6,7 @@ import { Fragment } from "react";
 import { Link, useSearchParams } from "react-router";
 
 import AdsenseInfeed from "~/core/components/adsense-infeed";
+import KakaoAdfit from "~/core/components/kakao-ad-fit";
 import { Button } from "~/core/components/ui/button";
 import {
   Carousel,
@@ -179,7 +180,10 @@ export default function Home({ loaderData }: Route.ComponentProps) {
       </div>
 
       {/* 광고 */}
-      <AdsenseInfeed />
+      <div className="space-y-2">
+        <AdsenseInfeed />
+        <KakaoAdfit />
+      </div>
 
       {/* 경기 목록 */}
       <div>

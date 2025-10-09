@@ -17,6 +17,8 @@ import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router";
 import { Toaster, toast } from "sonner";
 
+import AdsenseInfeed from "~/core/components/adsense-infeed";
+import KakaoAdfit from "~/core/components/kakao-ad-fit";
 import { Button } from "~/core/components/ui/button";
 import { Card } from "~/core/components/ui/card";
 import {
@@ -95,7 +97,7 @@ export default function Game({ loaderData }: Route.ComponentProps) {
   }, [api]);
 
   return (
-    <div className="mx-auto mb-8 max-w-screen-lg space-y-8">
+    <div className="mx-auto mb-16 max-w-screen-lg space-y-8">
       <div className="relative">
         <Toaster position="bottom-right" />
         <Carousel
@@ -136,17 +138,22 @@ export default function Game({ loaderData }: Route.ComponentProps) {
         </Button>
       </div>
 
+      <div className="space-y-2">
+        <AdsenseInfeed />
+        <KakaoAdfit />
+      </div>
+
       {/* 정보 */}
       <div className="space-y-8 px-4">
-        {!game.link && (
-          <>
-            <div>
-              <h3 className="mb-1 font-bold">
-                {gameStartDate.month}월 {gameStartDate.day}일{" "}
-                {gameStartDate.weekdayLong}{" "}
-                {gameStartDate.hour.toString().padStart(2, "0")}:
-                {gameStartDate.minute.toString().padStart(2, "0")}
-              </h3>
+        <div>
+          <h3 className="mb-1 font-bold">
+            {gameStartDate.month}월 {gameStartDate.day}일{" "}
+            {gameStartDate.weekdayLong}{" "}
+            {gameStartDate.hour.toString().padStart(2, "0")}:
+            {gameStartDate.minute.toString().padStart(2, "0")}
+          </h3>
+          {!game.link ? (
+            <>
               <h1 className="text-xl font-medium underline">
                 <Link
                   to={`${import.meta.env.VITE_SITE_URL}/gyms/${game.gym.gym_id}`}
@@ -182,7 +189,15 @@ export default function Game({ loaderData }: Route.ComponentProps) {
                   </Button>
                 </div>
               </div>
-            </div>
+            </>
+          ) : (
+            <h1 className="text-xl font-medium">
+              {game.city} {game.district}
+            </h1>
+          )}
+        </div>
+        {!game.link && (
+          <>
             <div className="flex items-center justify-between gap-4">
               <Card className="flex w-full flex-col items-center gap-2 border-violet-300 bg-violet-100 py-2">
                 <p className="text-sm text-violet-400">참가비</p>
