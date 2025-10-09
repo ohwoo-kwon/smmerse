@@ -5,6 +5,7 @@ import { DateTime } from "luxon";
 import { Fragment } from "react";
 import { Link, useSearchParams } from "react-router";
 
+import AdsenseInfeed from "~/core/components/adsense-infeed";
 import { Button } from "~/core/components/ui/button";
 import {
   Carousel,
@@ -177,6 +178,9 @@ export default function Home({ loaderData }: Route.ComponentProps) {
         </div>
       </div>
 
+      {/* 광고 */}
+      <AdsenseInfeed />
+
       {/* 경기 목록 */}
       <div>
         {loaderData.games.length > 0 ? (
@@ -244,10 +248,7 @@ export default function Home({ loaderData }: Route.ComponentProps) {
           </div>
         )}
       </div>
-      <Button
-        className="absolute right-6 bottom-6 size-12 rounded-full"
-        asChild
-      >
+      <Button className="fixed right-6 bottom-6 size-12 rounded-full" asChild>
         <Link to="/games/create">
           <PlusIcon className="size-6" />
         </Link>
