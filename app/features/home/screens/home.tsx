@@ -70,7 +70,10 @@ export const loader = async ({ request }: Route.LoaderArgs) => {
   const { searchParams } = new URL(request.url);
 
   const date = searchParams.get("date");
-  if (!date) return redirect(`/?date=${DateTime.now().toFormat("yyyyMMdd")}`);
+  if (!date)
+    return redirect(
+      `/?date=${DateTime.now().setZone("Asia/Seoul").toFormat("yyyyMMdd")}`,
+    );
   const sido = searchParams.get("sido") as
     | (typeof cityEnum.enumValues)[number]
     | null;
