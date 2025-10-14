@@ -14,6 +14,7 @@ import {
 } from "~/core/components/ui/avatar";
 import { Button } from "~/core/components/ui/button";
 import { Input } from "~/core/components/ui/input";
+import { Textarea } from "~/core/components/ui/textarea";
 import { browserClient } from "~/core/db/client.broswer";
 import makeServerClient from "~/core/lib/supa-client.server";
 
@@ -120,7 +121,7 @@ export default function Chat({ loaderData }: Route.ComponentProps) {
           event: "INSERT",
           schema: "public",
           table: "chats",
-          filter: `room_id:eq.${chatRoomId}`,
+          filter: `chat_room_id:eq.${chatRoomId}`,
         },
         (payload) => {
           setMessages((prev) => [
@@ -146,7 +147,7 @@ export default function Chat({ loaderData }: Route.ComponentProps) {
           {messages.map((message) => (
             <div
               key={`chat_${message.chat_id}`}
-              className={`flex items-center gap-2 ${userId === message.sender_id ? "justify-end" : ""}`}
+              className={`flex items-start gap-2 ${userId === message.sender_id ? "justify-end" : ""}`}
             >
               {userId !== message.sender_id && (
                 <Avatar className="h-8 w-8">
@@ -156,11 +157,11 @@ export default function Chat({ loaderData }: Route.ComponentProps) {
                   </AvatarFallback>
                 </Avatar>
               )}
-              <div
-                className={`max-w-3/4 rounded-lg px-4 py-2 ${userId === message.sender_id ? "bg-primary text-primary-foreground" : "bg-muted"}`}
-              >
-                <p className="text-sm wrap-break-word">{message.content}</p>
-              </div>
+              <Textarea
+                className={`h-fit max-w-3/4 cursor-default resize-none rounded-lg border-none px-4 py-2 text-sm wrap-break-word shadow-none focus-visible:ring-0 ${userId === message.sender_id ? "bg-primary text-primary-foreground rounded-tr-none" : "bg-muted rounded-tl-none"}`}
+                readOnly
+                defaultValue={message.content}
+              />
             </div>
           ))}
         </div>
