@@ -108,7 +108,7 @@ export default function Game({ loaderData }: Route.ComponentProps) {
           <CarouselContent>
             {game.gym.photos.map(({ url }) => (
               <CarouselItem key={url}>
-                <img src={url} className="w-full" />
+                <img src={url} className="aspect-video w-full object-cover" />
               </CarouselItem>
             ))}
           </CarouselContent>
@@ -136,11 +136,6 @@ export default function Game({ loaderData }: Route.ComponentProps) {
         >
           <Share2Icon />
         </Button>
-      </div>
-
-      <div className="space-y-2">
-        <AdsenseInfeed />
-        <KakaoAdfit />
       </div>
 
       {/* 정보 */}

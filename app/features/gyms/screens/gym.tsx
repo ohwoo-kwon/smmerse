@@ -118,7 +118,7 @@ export default function Gym({ loaderData }: Route.ComponentProps) {
           <CarouselContent>
             {gym.photos.map(({ url }) => (
               <CarouselItem key={url}>
-                <img src={url} className="w-full" />
+                <img src={url} className="aspect-video w-full object-cover" />
               </CarouselItem>
             ))}
           </CarouselContent>
