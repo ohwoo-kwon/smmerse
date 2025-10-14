@@ -17,8 +17,6 @@ import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router";
 import { Toaster, toast } from "sonner";
 
-import AdsenseInfeed from "~/core/components/adsense-infeed";
-import KakaoAdfit from "~/core/components/kakao-ad-fit";
 import { Button } from "~/core/components/ui/button";
 import { Card } from "~/core/components/ui/card";
 import {
@@ -35,6 +33,7 @@ import { cn, copyToClipboard, openKakaoMap } from "~/core/lib/utils";
 
 import { createParticipantAndSendMessage } from "../mutations";
 import { getGameById } from "../queries";
+import { makeCafeCOntent } from "../utils";
 
 export const loader = async ({ request, params }: Route.LoaderArgs) => {
   const [client] = makeServerClient(request);
@@ -42,11 +41,14 @@ export const loader = async ({ request, params }: Route.LoaderArgs) => {
 
   const game = await getGameById(client, gameId);
 
-  return { game };
+  const isOwner =
+    game.profile_id === (await client.auth.getUser()).data.user?.id;
+
+  return { game, isOwner };
 };
 
 export default function Game({ loaderData }: Route.ComponentProps) {
-  const { game } = loaderData;
+  const { game, isOwner } = loaderData;
   const gameStartDate = DateTime.fromFormat(
     game.start_date + game.start_time,
     "yyyy-MM-ddhh:mm:ss",
@@ -59,8 +61,8 @@ export default function Game({ loaderData }: Route.ComponentProps) {
   const [count, setCount] = useState(0);
 
   const onClickCopy = async (copyText: string, text: string) => {
-    const message = await copyToClipboard(copyText, text);
-    toast(message, {
+    const errMessage = await copyToClipboard(copyText);
+    toast(errMessage || text, {
       action: {
         label: "확인",
         onClick: () => {},
@@ -83,6 +85,38 @@ export default function Game({ loaderData }: Route.ComponentProps) {
       });
       navigate(`/chats/${chatRoomId}`);
     }
+  };
+
+  const onClickCafe = async () => {
+    const cafeContent = makeCafeCOntent({
+      gameId: game.game_id,
+      gameType: game.game_type,
+      description: game.description,
+      startDate: DateTime.fromFormat(game.start_date, "yyyy-MM-dd").toFormat(
+        "MM월 dd일",
+      ),
+      startTime: DateTime.fromFormat(game.start_time, "HH:mm:ss").toFormat(
+        "HH시 mm분",
+      ),
+      minParticipants: game.min_participants,
+      maxParticipants: game.max_participants,
+      fee: game.fee,
+      gameTime: game.game_time,
+      city: game.gym.city,
+      district: game.gym.district,
+      gymName: game.gym.name,
+    });
+
+    const errorMessage = await copyToClipboard(cafeContent);
+
+    toast(errorMessage || "글이 복사되었습니다. 카페에 글을 작성해보세요.", {
+      action: {
+        label: "이동",
+        onClick: () => {
+          window.open("https://m.cafe.daum.net/dongarry/Dilr/new", "_blank");
+        },
+      },
+    });
   };
 
   useEffect(() => {
@@ -386,9 +420,15 @@ export default function Game({ loaderData }: Route.ComponentProps) {
             </Link>
           </Button>
         )}
-        <Button className="w-full" onClick={onClickRegister}>
-          참가 신청
-        </Button>
+        {isOwner ? (
+          <Button className="w-full" onClick={onClickCafe}>
+            카페 글 작성
+          </Button>
+        ) : (
+          <Button className="w-full" onClick={onClickRegister}>
+            참가 신청
+          </Button>
+        )}
       </div>
     </div>
   );

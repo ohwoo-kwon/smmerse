@@ -83,11 +83,8 @@ export default function Gym({ loaderData }: Route.ComponentProps) {
   const [count, setCount] = useState(0);
 
   const onClickCopy = async () => {
-    const message = await copyToClipboard(
-      gym.full_address,
-      "주소가 복사되었습니다",
-    );
-    toast(message, {
+    const message = await copyToClipboard(gym.full_address);
+    toast(message || "주소가 복사되었습니다", {
       action: {
         label: "확인",
         onClick: () => {},

@@ -16,10 +16,9 @@ export function calculateAge(birth: string): number {
   return Math.floor(diff);
 }
 
-export const copyToClipboard = async (copyText: string, text: string) => {
+export const copyToClipboard = async (copyText: string) => {
   try {
     await navigator.clipboard.writeText(copyText);
-    return text;
   } catch (err) {
     console.error("클립보드 복사 실패:", err);
     return "복사에 실패했습니다";
