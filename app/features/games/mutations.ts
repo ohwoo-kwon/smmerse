@@ -4,7 +4,10 @@ import type { Database } from "database.types";
 import type { cityEnum } from "../gyms/schema";
 import type { gameGenderTypeEnum, gameTimeEnum, gameTypeEnum } from "./schema";
 
+import { calculateAge } from "~/core/lib/utils";
+
 import { getOrCreateChatRoom, sendMessage } from "../users/mutations";
+import { getUserProfile } from "../users/queries";
 
 export const insertGame = async (
   client: SupabaseClient<Database>,
@@ -95,10 +98,20 @@ export const createParticipantAndSendMessage = async (
     toUserId: to_user_id,
   });
 
+  const profile = await getUserProfile(client, { userId: from_user_id });
+
   await sendMessage(client, {
     chatRoomId,
     senderId: from_user_id,
-    content: `${import.meta.env.VITE_SITE_URL}/games/${game_id}, 참가신청 합니다.`,
+    content: `${import.meta.env.VITE_SITE_URL}/games/${game_id}
+
+    이름: ${profile?.name}
+    나이: ${calculateAge(profile!.birth!)}살
+    성별: ${profile?.sex === "female" ? "여" : "남"}
+    키: ${profile?.height} cm
+    포지션: ${profile?.position?.join(", ")}
+
+    참가신청 합니다.`,
   });
 
   return chatRoomId;
