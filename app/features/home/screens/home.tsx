@@ -111,7 +111,7 @@ export default function Home({ loaderData }: Route.ComponentProps) {
 
   return (
     <div className="mx-auto max-w-screen-lg space-y-4 p-4">
-      <div className="bg-background sticky top-0 space-y-2 py-2">
+      <div className="bg-background sticky top-0 z-1 space-y-2 py-2">
         {/* 날짜 */}
         <Carousel opts={{ align: "start" }}>
           <CarouselContent className="m-0">
