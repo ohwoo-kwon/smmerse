@@ -66,11 +66,12 @@ export const meta: Route.MetaFunction = () => {
 
 export const loader = async ({ request }: Route.LoaderArgs) => {
   const [client] = makeServerClient(request);
+  const today = DateTime.now().toFormat("yyyyMMdd");
 
   const { searchParams } = new URL(request.url);
 
   const date = searchParams.get("date");
-  if (!date)
+  if (!date || date < today)
     return redirect(
       `/?date=${DateTime.now().setZone("Asia/Seoul").toFormat("yyyyMMdd")}`,
     );
