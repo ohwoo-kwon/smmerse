@@ -121,7 +121,7 @@ export default function Chat({ loaderData }: Route.ComponentProps) {
           event: "INSERT",
           schema: "public",
           table: "chats",
-          filter: `chat_room_id:eq.${chatRoomId}`,
+          filter: `chat_room_id=eq.${chatRoomId}`,
         },
         (payload) => {
           setMessages((prev) => [
@@ -135,7 +135,7 @@ export default function Chat({ loaderData }: Route.ComponentProps) {
     return () => {
       changes.unsubscribe();
     };
-  }, []);
+  }, [chatRoomId, userId]);
 
   return (
     <div className="mx-auto flex min-h-[calc(100vh-96px)] max-w-screen-md flex-col">
@@ -157,11 +157,11 @@ export default function Chat({ loaderData }: Route.ComponentProps) {
                   </AvatarFallback>
                 </Avatar>
               )}
-              <Textarea
-                className={`h-fit max-w-3/4 cursor-default resize-none rounded-lg border-none px-4 py-2 text-sm wrap-break-word shadow-none focus-visible:ring-0 ${userId === message.sender_id ? "bg-primary text-primary-foreground rounded-tr-none" : "bg-muted rounded-tl-none"}`}
-                readOnly
-                defaultValue={message.content}
-              />
+              <div
+                className={`max-w-3/4 rounded-lg border-none px-4 py-2 text-sm wrap-break-word whitespace-pre-wrap ${userId === message.sender_id ? "bg-primary text-primary-foreground rounded-tr-none" : "bg-muted rounded-tl-none"}`}
+              >
+                {message.content}
+              </div>
             </div>
           ))}
         </div>

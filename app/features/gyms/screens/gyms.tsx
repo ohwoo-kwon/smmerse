@@ -188,7 +188,6 @@ export default function Gyms({ loaderData }: Route.ComponentProps) {
       </div>
 
       <div className="space-y-2">
-        <AdsenseInfeed />
         <KakaoAdfit />
       </div>
 
