@@ -26,10 +26,12 @@ import {
   CarouselItem,
 } from "~/core/components/ui/carousel";
 import { Separator } from "~/core/components/ui/separator";
+import { Spinner } from "~/core/components/ui/spinner";
 import { Textarea } from "~/core/components/ui/textarea";
 import { browserClient } from "~/core/db/client.broswer";
 import makeServerClient from "~/core/lib/supa-client.server";
 import { cn, copyToClipboard, openKakaoMap } from "~/core/lib/utils";
+import { getUserProfile } from "~/features/users/queries";
 
 import { createParticipantAndSendMessage } from "../mutations";
 import { getGameById } from "../queries";
@@ -41,14 +43,17 @@ export const loader = async ({ request, params }: Route.LoaderArgs) => {
 
   const game = await getGameById(client, gameId);
 
-  const isOwner =
-    game.profile_id === (await client.auth.getUser()).data.user?.id;
+  const userId = (await client.auth.getUser()).data.user?.id || null;
 
-  return { game, isOwner };
+  const isOwner = game.profile_id === userId;
+
+  const profile = await getUserProfile(client, { userId });
+
+  return { game, isOwner, profile };
 };
 
 export default function Game({ loaderData }: Route.ComponentProps) {
-  const { game, isOwner } = loaderData;
+  const { game, isOwner, profile } = loaderData;
   const gameStartDate = DateTime.fromFormat(
     game.start_date + game.start_time,
     "yyyy-MM-ddhh:mm:ss",
@@ -59,6 +64,7 @@ export default function Game({ loaderData }: Route.ComponentProps) {
   const [api, setApi] = useState<CarouselApi>();
   const [current, setCurrent] = useState(0);
   const [count, setCount] = useState(0);
+  const [isRegistering, setIsRegistering] = useState(false);
 
   const onClickCopy = async (copyText: string, text: string) => {
     const errMessage = await copyToClipboard(copyText);
@@ -71,20 +77,35 @@ export default function Game({ loaderData }: Route.ComponentProps) {
   };
 
   const onClickRegister = async () => {
-    const {
-      data: { user },
-    } = await browserClient.auth.getUser();
-    if (!user) {
+    setIsRegistering(true);
+
+    if (!profile) {
       alert("로그인 후 참가 가능합니다.");
       navigate("/login");
+    } else if (
+      !profile.sex ||
+      !profile.height ||
+      !profile.position ||
+      !profile.birth
+    ) {
+      alert("생년월일, 성별, 신장, 포지션 정보를 입력해주세요.");
+      navigate("/profile");
     } else {
-      const chatRoomId = await createParticipantAndSendMessage(browserClient, {
-        from_user_id: user.id,
-        to_user_id: game.profile_id,
-        game_id: game.game_id,
-      });
-      navigate(`/chats/${chatRoomId}`);
+      try {
+        const chatRoomId = await createParticipantAndSendMessage(
+          browserClient,
+          {
+            from_user_id: profile.profile_id,
+            to_user_id: game.profile_id,
+            game_id: game.game_id,
+          },
+        );
+        navigate(`/chats/${chatRoomId}`);
+      } catch (error) {
+        alert(error);
+      }
     }
+    setIsRegistering(false);
   };
 
   const onClickCafe = async () => {
@@ -425,8 +446,12 @@ export default function Game({ loaderData }: Route.ComponentProps) {
             카페 글 작성
           </Button>
         ) : (
-          <Button className="w-full" onClick={onClickRegister}>
-            참가 신청
+          <Button
+            className="w-full"
+            onClick={onClickRegister}
+            disabled={isRegistering}
+          >
+            {isRegistering ? <Spinner /> : "참가 신청"}
           </Button>
         )}
       </div>

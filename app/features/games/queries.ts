@@ -73,3 +73,19 @@ export const getGameById = async (
 
   return data;
 };
+
+export const checkAlreadyRegister = async (
+  client: SupabaseClient<Database>,
+  { gameId, profileId }: { gameId: number; profileId: string },
+) => {
+  const { data, error } = await client
+    .from("game_participants")
+    .select("*")
+    .eq("game_id", gameId)
+    .eq("profile_id", profileId)
+    .single();
+
+  if (error) throw new Error(error.message);
+
+  return data;
+};

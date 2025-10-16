@@ -8,6 +8,7 @@ import { calculateAge } from "~/core/lib/utils";
 
 import { getOrCreateChatRoom, sendMessage } from "../users/mutations";
 import { getUserProfile } from "../users/queries";
+import { checkAlreadyRegister } from "./queries";
 
 export const insertGame = async (
   client: SupabaseClient<Database>,
@@ -86,7 +87,12 @@ export const createParticipantAndSendMessage = async (
     game_id: number;
   },
 ) => {
-  const { data, error } = await client.from("game_participants").insert({
+  const isAlreadyRegister = await checkAlreadyRegister(client, {
+    gameId: game_id,
+    profileId: from_user_id,
+  });
+  if (isAlreadyRegister) throw new Error("이미 참가 신청한 경기입니다.");
+  const { error } = await client.from("game_participants").insert({
     profile_id: from_user_id,
     game_id,
   });
