@@ -19,6 +19,7 @@ import {
   SheetClose,
   SheetContent,
   SheetDescription,
+  SheetFooter,
   SheetHeader,
   SheetTitle,
   SheetTrigger,
@@ -32,7 +33,7 @@ export async function loader({ request }: Route.LoaderArgs) {
   return { userPromise };
 }
 
-function MenuButton() {
+function MenuButton({ isLogin }: { isLogin: boolean }) {
   return (
     <Sheet>
       <SheetTrigger asChild>
@@ -77,6 +78,15 @@ function MenuButton() {
             </SheetClose>
           </div>
         </div>
+        {isLogin && (
+          <SheetFooter>
+            <Button variant="secondary" asChild>
+              <SheetClose asChild>
+                <Link to="/logout">로그아웃</Link>
+              </SheetClose>
+            </Button>
+          </SheetFooter>
+        )}
       </SheetContent>
     </Sheet>
   );
@@ -107,7 +117,7 @@ export default function NavigationLayout({ loaderData }: Route.ComponentProps) {
           <Await resolve={loaderData.userPromise}>
             {({ data: { user } }) => (
               <div className="flex gap-1">
-                <MenuButton />
+                <MenuButton isLogin={!!user} />
                 <Button size="icon" variant="ghost" asChild>
                   <Link to={user ? "/profile" : "/login"}>
                     <UserIcon />
