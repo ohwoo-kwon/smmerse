@@ -83,9 +83,9 @@ export const checkAlreadyRegister = async (
     .select("*")
     .eq("game_id", gameId)
     .eq("profile_id", profileId)
-    .single();
+    .maybeSingle();
 
   if (error) throw new Error(error.message);
 
-  return data;
+  return !!data;
 };

@@ -358,6 +358,7 @@ export type Database = {
           name: string | null
           other_profile_id: string | null
           profile_id: string | null
+          un_checked_count: number | null
         }
         Relationships: [
           {

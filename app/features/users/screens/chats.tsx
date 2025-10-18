@@ -53,27 +53,35 @@ export default function Chats({ loaderData }: Route.ComponentProps) {
               last_message,
               last_message_time,
               last_sender_name,
+              un_checked_count,
             }) => (
               <Link
                 key={chat_room_id}
                 to={`/chats/${chat_room_id}`}
-                className="flex justify-between gap-2 border-b py-4 last:border-0"
+                className="flex items-center gap-2 border-b py-4 last:border-0"
               >
-                <div className="flex items-center gap-2">
-                  <Avatar>
-                    <AvatarImage src={avatar_url || ""} />
-                    <AvatarFallback>{name?.charAt(0)}</AvatarFallback>
-                  </Avatar>
-                  <div>
+                <Avatar>
+                  <AvatarImage src={avatar_url || ""} />
+                  <AvatarFallback>{name?.charAt(0)}</AvatarFallback>
+                </Avatar>
+                <div className="flex-1">
+                  <div className="flex justify-between">
                     <p>{name}</p>
+                    <span className="text-muted-foreground text-xs">
+                      {DateTime.fromISO(last_message_time!).toFormat("MM-dd")}
+                    </span>
+                  </div>
+                  <div className="flex justify-between">
                     <p className="text-muted-foreground w-[calc(100vw-128px)] overflow-hidden text-xs text-ellipsis whitespace-nowrap">
-                      {last_sender_name}:{last_message}
+                      {last_sender_name}: {last_message}
                     </p>
+                    {un_checked_count !== 0 && (
+                      <span className="size-4 rounded-full bg-red-600 text-center text-xs text-white">
+                        {un_checked_count}
+                      </span>
+                    )}
                   </div>
                 </div>
-                <span className="text-muted-foreground items w-12 text-right text-xs">
-                  {DateTime.fromISO(last_message_time!).toFormat("MM-dd")}
-                </span>
               </Link>
             ),
           )
