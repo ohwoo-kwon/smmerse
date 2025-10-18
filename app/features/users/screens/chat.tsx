@@ -3,7 +3,8 @@ import type { Database } from "database.types";
 import type { Route } from "./+types/chat";
 
 import { Loader2Icon, SendHorizonalIcon } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { DateTime } from "luxon";
+import { Fragment, useEffect, useRef, useState } from "react";
 import { redirect, useFetcher } from "react-router";
 import { z } from "zod";
 
@@ -17,8 +18,9 @@ import { Input } from "~/core/components/ui/input";
 import { Textarea } from "~/core/components/ui/textarea";
 import { browserClient } from "~/core/db/client.broswer";
 import makeServerClient from "~/core/lib/supa-client.server";
+import { cn } from "~/core/lib/utils";
 
-import { createMessage } from "../mutations";
+import { createMessage, updateChecked } from "../mutations";
 import { getMessages, getRoomsParticipant } from "../queries";
 
 export const meta: Route.MetaFunction = () => {
@@ -74,6 +76,10 @@ export const loader = async ({ request, params }: Route.LoaderArgs) => {
   } = await client.auth.getUser();
   if (!user) return redirect("/login");
 
+  await updateChecked(client, {
+    chatRoomId: paramsData.chatRoomId,
+    profileId: user.id,
+  });
   const messages = await getMessages(client, user.id, paramsData.chatRoomId);
 
   const participant = await getRoomsParticipant(client, {
@@ -118,16 +124,23 @@ export default function Chat({ loaderData }: Route.ComponentProps) {
       .on(
         "postgres_changes",
         {
-          event: "INSERT",
+          event: "*",
           schema: "public",
           table: "chats",
           filter: `chat_room_id=eq.${chatRoomId}`,
         },
-        (payload) => {
-          setMessages((prev) => [
-            ...prev,
-            payload.new as Database["public"]["Tables"]["chats"]["Row"],
-          ]);
+        async (payload) => {
+          const newMessage =
+            payload.new as Database["public"]["Tables"]["chats"]["Row"];
+
+          if (newMessage.sender_id !== userId) {
+            await browserClient
+              .from("chats")
+              .update({ is_checked: true })
+              .eq("chat_id", newMessage.chat_id);
+          }
+
+          setMessages((prev) => [...prev, newMessage]);
         },
       )
       .subscribe();
@@ -144,26 +157,79 @@ export default function Chat({ loaderData }: Route.ComponentProps) {
           ref={scrollRef}
           className="flex h-[calc(100vh-148px)] flex-col gap-y-4 overflow-y-auto last:pb-4"
         >
-          {messages.map((message) => (
-            <div
-              key={`chat_${message.chat_id}`}
-              className={`flex items-start gap-2 ${userId === message.sender_id ? "justify-end" : ""}`}
-            >
-              {userId !== message.sender_id && (
-                <Avatar className="h-8 w-8">
-                  <AvatarImage src={participant.profile.avatar_url || ""} />
-                  <AvatarFallback>
-                    {participant.profile.name.charAt(0)}
-                  </AvatarFallback>
-                </Avatar>
-              )}
-              <div
-                className={`max-w-3/4 rounded-lg border-none px-4 py-2 text-sm wrap-break-word whitespace-pre-wrap ${userId === message.sender_id ? "bg-primary text-primary-foreground rounded-tr-none" : "bg-muted rounded-tl-none"}`}
-              >
-                {message.content}
-              </div>
-            </div>
-          ))}
+          <div className="text-muted-foreground text-center text-xs">
+            채팅은 최대 30일 동안 보관됩니다.
+          </div>
+          {messages.map((message, index) => {
+            const messageDate = DateTime.fromISO(
+              message.createdAt.replace(" ", "T"),
+              { zone: "utc" },
+            )
+              .toLocal()
+              .toFormat("yyyy-MM-dd");
+            const prevMessage = messages[index - 1];
+            const prevDate = prevMessage
+              ? DateTime.fromISO(prevMessage.createdAt)
+                  .toLocal()
+                  .toFormat("yyyy-MM-dd")
+              : null;
+
+            const showDateDivider = messageDate !== prevDate;
+            return (
+              <Fragment key={`chat_${message.chat_id}`}>
+                {showDateDivider && (
+                  <div className="mx-8 my-2 flex items-center justify-center">
+                    <div className="flex-1 border-t"></div>
+                    <span className="text-muted-foreground mx-3 text-xs">
+                      {DateTime.fromISO(message.createdAt.replace(" ", "T"), {
+                        zone: "utc",
+                      })
+                        .toLocal()
+                        .toFormat("yyyy년 MM월 dd일")}
+                    </span>
+                    <div className="flex-1 border-t"></div>
+                  </div>
+                )}
+
+                <div
+                  className={`flex items-start gap-2 ${userId === message.sender_id ? "flex-row-reverse" : ""}`}
+                >
+                  {userId !== message.sender_id && (
+                    <Avatar className="h-8 w-8">
+                      <AvatarImage src={participant.profile.avatar_url || ""} />
+                      <AvatarFallback>
+                        {participant.profile.name.charAt(0)}
+                      </AvatarFallback>
+                    </Avatar>
+                  )}
+                  <div
+                    className={`max-w-3/4 rounded-lg border-none px-4 py-2 text-sm wrap-break-word whitespace-pre-wrap ${userId === message.sender_id ? "bg-primary text-primary-foreground rounded-tr-none" : "bg-muted rounded-tl-none"}`}
+                  >
+                    {message.content}
+                  </div>
+                  <div className="flex flex-col items-end self-end">
+                    {!message.is_checked && (
+                      <span
+                        className={cn(
+                          "text-primary text-center text-xs",
+                          userId === message.sender_id ? "" : "self-start",
+                        )}
+                      >
+                        1
+                      </span>
+                    )}
+                    <span className="text-muted-foreground text-xs">
+                      {DateTime.fromISO(message.createdAt.replace(" ", "T"), {
+                        zone: "utc",
+                      })
+                        .toLocal()
+                        .toFormat("HH:mm")}
+                    </span>
+                  </div>
+                </div>
+              </Fragment>
+            );
+          })}
         </div>
       </div>
       <div className="border-t p-4 pb-0">

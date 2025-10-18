@@ -75,3 +75,23 @@ export const createMessage = async (
   });
   if (error) throw error;
 };
+
+export const updateChecked = async (
+  client: SupabaseClient<Database>,
+  {
+    chatRoomId,
+    profileId,
+  }: {
+    chatRoomId: number;
+    profileId: string;
+  },
+) => {
+  await client
+    .from("chats")
+    .update({
+      is_checked: true,
+    })
+    .eq("chat_room_id", chatRoomId)
+    .neq("sender_id", profileId)
+    .eq("is_checked", false);
+};

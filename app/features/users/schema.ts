@@ -152,8 +152,8 @@ export const chats = pgTable(
       for: "update",
       to: authenticatedRole,
       as: "permissive",
-      withCheck: sql`${authUid} = ${table.sender_id}`,
-      using: sql`${authUid} = ${table.sender_id}`,
+      withCheck: sql`EXISTS (SELECT 1 FROM public.chat_room_members WHERE chat_room_id = ${table.chat_room_id} and profile_id = ${authUid})`,
+      using: sql`EXISTS (SELECT 1 FROM public.chat_room_members WHERE chat_room_id = ${table.chat_room_id} and profile_id = ${authUid})`,
     }),
     pgPolicy("insert-chats-policy", {
       for: "insert",

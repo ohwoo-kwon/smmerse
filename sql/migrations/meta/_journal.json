@@ -183,6 +183,13 @@
       "when": 1759928844746,
       "tag": "0025_worried_mattie_franklin",
       "breakpoints": true
+    },
+    {
+      "idx": 26,
+      "version": "7",
+      "when": 1760777012302,
+      "tag": "0026_silly_doctor_faustus",
+      "breakpoints": true
     }
   ]
 }

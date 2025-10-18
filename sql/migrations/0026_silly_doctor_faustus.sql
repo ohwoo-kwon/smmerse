@@ -1,0 +1,1 @@
+ALTER POLICY "edit-chats-policy" ON "chats" TO authenticated USING (EXISTS (SELECT 1 FROM public.chat_room_members WHERE chat_room_id = "chats"."chat_room_id" and profile_id = (select auth.uid()))) WITH CHECK (EXISTS (SELECT 1 FROM public.chat_room_members WHERE chat_room_id = "chats"."chat_room_id" and profile_id = (select auth.uid())));
