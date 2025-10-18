@@ -51,6 +51,7 @@ export const getChats = async (
     .select("*")
     .eq("profile_id", userId)
     .neq("other_profile_id", userId)
+    .neq("last_message", null)
     .order("last_message_time", { ascending: false });
 
   if (error) throw error;
