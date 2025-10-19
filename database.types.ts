@@ -278,6 +278,7 @@ export type Database = {
           has_water_dispenser: boolean
           name: string
           parking_info: string | null
+          profile_id: string
           updated_at: string
           url: string | null
           usage_rules: string | null
@@ -294,6 +295,7 @@ export type Database = {
           has_water_dispenser?: boolean
           name: string
           parking_info?: string | null
+          profile_id: string
           updated_at?: string
           url?: string | null
           usage_rules?: string | null
@@ -310,11 +312,20 @@ export type Database = {
           has_water_dispenser?: boolean
           name?: string
           parking_info?: string | null
+          profile_id?: string
           updated_at?: string
           url?: string | null
           usage_rules?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "gyms_profile_id_profiles_profile_id_fk"
+            columns: ["profile_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["profile_id"]
+          },
+        ]
       }
       profiles: {
         Row: {

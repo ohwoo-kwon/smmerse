@@ -7,6 +7,7 @@ import {
   ShowerHeadIcon,
 } from "lucide-react";
 import { DateTime } from "luxon";
+import { useState } from "react";
 import { Form, redirect, useNavigation } from "react-router";
 import { z } from "zod";
 
@@ -22,6 +23,7 @@ import {
   SelectValue,
 } from "~/core/components/ui/select";
 import { Textarea } from "~/core/components/ui/textarea";
+import { sidoObject } from "~/core/lib/address";
 import makeServerClient from "~/core/lib/supa-client.server";
 
 import { createGym, createGymPhoto } from "../mutations";
@@ -59,6 +61,12 @@ export const action = async ({ request }: Route.ActionArgs) => {
   const [client] = makeServerClient(request);
   const formData = await request.formData();
 
+  const {
+    data: { user },
+  } = await client.auth.getUser();
+
+  if (!user) return redirect("/login");
+
   const formValidation = formSchema.safeParse(Object.fromEntries(formData));
   const images = formData.getAll("images") as File[];
 
@@ -83,6 +91,7 @@ export const action = async ({ request }: Route.ActionArgs) => {
 
   try {
     const gymId = await createGym(client, {
+      profile_id: user.id,
       name,
       description,
       city,
@@ -118,6 +127,8 @@ export const action = async ({ request }: Route.ActionArgs) => {
         await createGymPhoto(client, { gym_id: gymId, url });
       }),
     );
+
+    return redirect("/gyms");
   } catch (error) {
     if (error instanceof Error)
       return { fieldErrors: undefined, error: error.message };
@@ -142,6 +153,8 @@ export const loader = async ({ request }: Route.LoaderArgs) => {
 export default function GymCreate({ actionData }: Route.ComponentProps) {
   const navigation = useNavigation();
   const isLoading = navigation.state === "submitting";
+
+  const [selectedCity, setSelectedCity] = useState("서울");
 
   return (
     <div className="mx-auto max-w-screen-lg space-y-8 p-4">
@@ -184,9 +197,13 @@ export default function GymCreate({ actionData }: Route.ComponentProps) {
         </div>
         <div className="space-y-1">
           <Label htmlFor="city">시/도</Label>
-          <Select name="city">
+          <Select
+            name="city"
+            value={selectedCity}
+            onValueChange={(value) => setSelectedCity(value)}
+          >
             <SelectTrigger id="city" className="w-full">
-              <SelectValue placeholder="도시를 선택해주세요" />
+              <SelectValue placeholder="시/도를 선택해주세요" />
             </SelectTrigger>
             <SelectContent>
               {cityEnum.enumValues.map((city) => (
@@ -204,7 +221,20 @@ export default function GymCreate({ actionData }: Route.ComponentProps) {
         </div>
         <div className="space-y-1">
           <Label htmlFor="district">구/군</Label>
-          <Input id="district" name="district" placeholder="강남구" />
+          <Select name="district">
+            <SelectTrigger id="district" className="w-full">
+              <SelectValue placeholder="구/군을 선택해주세요" />
+            </SelectTrigger>
+            <SelectContent>
+              {sidoObject
+                .find(({ name }) => name === selectedCity)
+                ?.cities.map(({ code, name }) => (
+                  <SelectItem key={`district_${code}`} value={name}>
+                    {name}
+                  </SelectItem>
+                ))}
+            </SelectContent>
+          </Select>
           {actionData &&
           "fieldErrors" in actionData &&
           actionData.fieldErrors?.district ? (

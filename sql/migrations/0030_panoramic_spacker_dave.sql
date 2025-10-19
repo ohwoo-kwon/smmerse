@@ -1,0 +1,1 @@
+ALTER TABLE "gyms" ALTER COLUMN "profile_id" DROP DEFAULT;

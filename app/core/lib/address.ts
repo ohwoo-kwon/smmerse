@@ -170,7 +170,11 @@ export const sidoObject = [
       { code: "3171000000", name: "울주군" },
     ],
   },
-  { code: "3611000000", name: "세종", cities: [] },
+  {
+    code: "3611000000",
+    name: "세종",
+    cities: [{ code: "3611000001", name: "세종" }],
+  },
   {
     code: "4300000000",
     name: "충북",

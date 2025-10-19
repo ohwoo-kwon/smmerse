@@ -1,0 +1,8 @@
+ALTER TABLE "gyms" ADD COLUMN "profile_id" uuid DEFAULT 'e421200d-88ca-4711-a667-b000290ef252' NOT NULL;--> statement-breakpoint
+ALTER TABLE "gyms" ADD CONSTRAINT "gyms_profile_id_profiles_profile_id_fk" FOREIGN KEY ("profile_id") REFERENCES "public"."profiles"("profile_id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER POLICY "edit-gym-policy" ON "gym_photos" TO authenticated USING (EXISTS (SELECT 1 FROM public.gyms WHERE gym_id = "gym_photos"."gym_id" AND profile_id = (select auth.uid()))) WITH CHECK (EXISTS (SELECT 1 FROM public.gyms WHERE gym_id = "gym_photos"."gym_id" AND profile_id = (select auth.uid())));--> statement-breakpoint
+ALTER POLICY "delete-gym-policy" ON "gym_photos" TO authenticated USING (EXISTS (SELECT 1 FROM public.gyms WHERE gym_id = "gym_photos"."gym_id" AND profile_id = (select auth.uid())));--> statement-breakpoint
+ALTER POLICY "insert-gym-policy" ON "gym_photos" TO authenticated WITH CHECK (EXISTS (SELECT 1 FROM public.gyms WHERE gym_id = "gym_photos"."gym_id" AND profile_id = (select auth.uid())));--> statement-breakpoint
+ALTER POLICY "edit-gym-policy" ON "gyms" TO authenticated USING ((select auth.uid())="gyms"."profile_id") WITH CHECK ((select auth.uid())="gyms"."profile_id");--> statement-breakpoint
+ALTER POLICY "delete-gym-policy" ON "gyms" TO authenticated USING ((select auth.uid())="gyms"."profile_id");--> statement-breakpoint
+ALTER POLICY "insert-gym-policy" ON "gyms" TO authenticated WITH CHECK ((select auth.uid())="gyms"."profile_id");

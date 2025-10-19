@@ -14,6 +14,8 @@ import { authUid, authenticatedRole } from "drizzle-orm/supabase";
 
 import { timestamps } from "~/core/db/timestamp";
 
+import { profiles } from "../users/schema";
+
 export const cityEnum = pgEnum("city", [
   "서울",
   "경기",
@@ -38,6 +40,11 @@ export const gyms = pgTable(
   "gyms",
   {
     gym_id: uuid("gym_id").defaultRandom().primaryKey(),
+    profile_id: uuid()
+      .references(() => profiles.profile_id, {
+        onDelete: "cascade",
+      })
+      .notNull(),
     name: text().notNull(),
     description: text(),
     city: cityEnum().notNull(),
@@ -56,14 +63,14 @@ export const gyms = pgTable(
       for: "update",
       to: authenticatedRole,
       as: "permissive",
-      withCheck: sql`${authUid} IN ('e421200d-88ca-4711-a667-b000290ef252'::uuid)`,
-      using: sql`${authUid} IN ('e421200d-88ca-4711-a667-b000290ef252'::uuid)`,
+      withCheck: sql`${authUid}=${table.profile_id}`,
+      using: sql`${authUid}=${table.profile_id}`,
     }),
     pgPolicy("delete-gym-policy", {
       for: "delete",
       to: authenticatedRole,
       as: "permissive",
-      using: sql`${authUid} IN ('e421200d-88ca-4711-a667-b000290ef252'::uuid)`,
+      using: sql`${authUid}=${table.profile_id}`,
     }),
     pgPolicy("select-gym-policy", {
       for: "select",
@@ -75,7 +82,7 @@ export const gyms = pgTable(
       for: "insert",
       to: authenticatedRole,
       as: "permissive",
-      withCheck: sql`${authUid} IN ('e421200d-88ca-4711-a667-b000290ef252'::uuid)`,
+      withCheck: sql`${authUid}=${table.profile_id}`,
     }),
   ],
 );
@@ -95,14 +102,14 @@ export const gymPhotos = pgTable(
       for: "update",
       to: authenticatedRole,
       as: "permissive",
-      withCheck: sql`${authUid} IN ('e421200d-88ca-4711-a667-b000290ef252'::uuid)`,
-      using: sql`${authUid} IN ('e421200d-88ca-4711-a667-b000290ef252'::uuid)`,
+      withCheck: sql`EXISTS (SELECT 1 FROM public.gyms WHERE gym_id = ${table.gym_id} AND profile_id = ${authUid})`,
+      using: sql`EXISTS (SELECT 1 FROM public.gyms WHERE gym_id = ${table.gym_id} AND profile_id = ${authUid})`,
     }),
     pgPolicy("delete-gym-policy", {
       for: "delete",
       to: authenticatedRole,
       as: "permissive",
-      using: sql`${authUid} IN ('e421200d-88ca-4711-a667-b000290ef252'::uuid)`,
+      using: sql`EXISTS (SELECT 1 FROM public.gyms WHERE gym_id = ${table.gym_id} AND profile_id = ${authUid})`,
     }),
     pgPolicy("select-gym-policy", {
       for: "select",
@@ -114,7 +121,7 @@ export const gymPhotos = pgTable(
       for: "insert",
       to: authenticatedRole,
       as: "permissive",
-      withCheck: sql`${authUid} IN ('e421200d-88ca-4711-a667-b000290ef252'::uuid)`,
+      withCheck: sql`EXISTS (SELECT 1 FROM public.gyms WHERE gym_id = ${table.gym_id} AND profile_id = ${authUid})`,
     }),
   ],
 );

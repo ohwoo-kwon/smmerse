@@ -204,6 +204,20 @@
       "when": 1760869814606,
       "tag": "0028_oval_deathstrike",
       "breakpoints": true
+    },
+    {
+      "idx": 29,
+      "version": "7",
+      "when": 1760873263148,
+      "tag": "0029_unusual_sphinx",
+      "breakpoints": true
+    },
+    {
+      "idx": 30,
+      "version": "7",
+      "when": 1760873321157,
+      "tag": "0030_panoramic_spacker_dave",
+      "breakpoints": true
     }
   ]
 }

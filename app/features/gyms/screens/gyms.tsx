@@ -4,6 +4,7 @@ import {
   AirVentIcon,
   GlassWaterIcon,
   OctagonXIcon,
+  PlusIcon,
   ShowerHeadIcon,
 } from "lucide-react";
 import { Fragment } from "react";
@@ -259,6 +260,11 @@ export default function Gyms({ loaderData }: Route.ComponentProps) {
           </div>
         )}
       </div>
+      <Button className="fixed right-6 bottom-6 size-12 rounded-full" asChild>
+        <Link to="/gyms/create">
+          <PlusIcon className="size-6" />
+        </Link>
+      </Button>
     </div>
   );
 }

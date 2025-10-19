@@ -6,6 +6,7 @@ import type { cityEnum } from "./schema";
 export const createGym = async (
   client: SupabaseClient<Database>,
   {
+    profile_id,
     name,
     description,
     city,
@@ -17,6 +18,7 @@ export const createGym = async (
     parking_info,
     usage_rules,
   }: {
+    profile_id: string;
     name: string;
     description: string | null;
     city: (typeof cityEnum.enumValues)[number];
@@ -32,6 +34,7 @@ export const createGym = async (
   const { data, error } = await client
     .from("gyms")
     .insert({
+      profile_id,
       name,
       description,
       city,
