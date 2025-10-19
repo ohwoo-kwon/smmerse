@@ -202,7 +202,7 @@ export default function Game({ loaderData }: Route.ComponentProps) {
             {gameStartDate.hour.toString().padStart(2, "0")}:
             {gameStartDate.minute.toString().padStart(2, "0")}
           </h3>
-          {!game.link ? (
+          {!game.is_crawl ? (
             <>
               <h1 className="text-xl font-medium underline">
                 <Link
@@ -241,9 +241,12 @@ export default function Game({ loaderData }: Route.ComponentProps) {
               </div>
             </>
           ) : (
-            <h1 className="text-xl font-medium">
-              {game.city} {game.district}
-            </h1>
+            <div className="flex flex-col">
+              <h1 className="text-xl font-medium">{game.title}</h1>
+              <h3 className="text-muted-foreground text-sm">
+                {game.city} {game.district}
+              </h3>
+            </div>
           )}
         </div>
         {!game.link && (
