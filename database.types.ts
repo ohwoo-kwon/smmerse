@@ -161,12 +161,14 @@ export type Database = {
           game_type: Database["public"]["Enums"]["game_type"]
           guard: boolean | null
           gym_id: string
+          is_crawl: boolean
           link: string | null
           max_participants: number
           min_participants: number
           profile_id: string
           start_date: string
           start_time: string
+          title: string | null
           updated_at: string
         }
         Insert: {
@@ -183,12 +185,14 @@ export type Database = {
           game_type: Database["public"]["Enums"]["game_type"]
           guard?: boolean | null
           gym_id: string
+          is_crawl?: boolean
           link?: string | null
           max_participants: number
           min_participants: number
           profile_id: string
           start_date: string
           start_time: string
+          title?: string | null
           updated_at?: string
         }
         Update: {
@@ -205,12 +209,14 @@ export type Database = {
           game_type?: Database["public"]["Enums"]["game_type"]
           guard?: boolean | null
           gym_id?: string
+          is_crawl?: boolean
           link?: string | null
           max_participants?: number
           min_participants?: number
           profile_id?: string
           start_date?: string
           start_time?: string
+          title?: string | null
           updated_at?: string
         }
         Relationships: [

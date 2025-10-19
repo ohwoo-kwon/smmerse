@@ -68,6 +68,8 @@ export const games = pgTable(
     min_participants: integer().notNull(),
     max_participants: integer().notNull(),
     fee: integer().notNull(),
+    is_crawl: boolean().notNull().default(false),
+    title: text(),
     city: cityEnum(),
     district: text(),
     link: text(),

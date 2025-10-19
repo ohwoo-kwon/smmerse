@@ -1,0 +1,1072 @@
+{
+  "id": "b978d9cd-6bc1-4930-bcb8-e0bc39af695e",
+  "prevId": "a26eaa23-b7ea-4877-bcdd-bffbd4c60098",
+  "version": "7",
+  "dialect": "postgresql",
+  "tables": {
+    "public.game_participants": {
+      "name": "game_participants",
+      "schema": "",
+      "columns": {
+        "participant_id": {
+          "name": "participant_id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "game_id": {
+          "name": "game_id",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "profile_id": {
+          "name": "profile_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "status": {
+          "name": "status",
+          "type": "participant_status",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'대기'"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "game_participants_game_id_games_game_id_fk": {
+          "name": "game_participants_game_id_games_game_id_fk",
+          "tableFrom": "game_participants",
+          "tableTo": "games",
+          "columnsFrom": [
+            "game_id"
+          ],
+          "columnsTo": [
+            "game_id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "game_participants_profile_id_profiles_profile_id_fk": {
+          "name": "game_participants_profile_id_profiles_profile_id_fk",
+          "tableFrom": "game_participants",
+          "tableTo": "profiles",
+          "columnsFrom": [
+            "profile_id"
+          ],
+          "columnsTo": [
+            "profile_id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {
+        "participants_insert_policy": {
+          "name": "participants_insert_policy",
+          "as": "PERMISSIVE",
+          "for": "INSERT",
+          "to": [
+            "authenticated"
+          ],
+          "withCheck": "(select auth.uid()) = \"game_participants\".\"profile_id\""
+        },
+        "participants_select_policy": {
+          "name": "participants_select_policy",
+          "as": "PERMISSIVE",
+          "for": "SELECT",
+          "to": [
+            "authenticated"
+          ],
+          "using": "\n    (select auth.uid()) = \"game_participants\".\"profile_id\" OR\n    EXISTS (\n      SELECT 1 FROM public.games games \n      WHERE games.game_id = \"game_participants\".\"game_id\" \n      AND games.profile_id = (select auth.uid())\n    )\n  "
+        },
+        "participants_update_policy": {
+          "name": "participants_update_policy",
+          "as": "PERMISSIVE",
+          "for": "UPDATE",
+          "to": [
+            "authenticated"
+          ],
+          "using": "\n    (select auth.uid()) = \"game_participants\".\"profile_id\" OR\n    EXISTS (\n      SELECT 1 FROM public.games games \n      WHERE games.game_id = \"game_participants\".\"game_id\" \n      AND games.profile_id = (select auth.uid())\n    )\n  ",
+          "withCheck": "\n    (select auth.uid()) = \"game_participants\".\"profile_id\" OR\n    EXISTS (\n      SELECT 1 FROM public.games games \n      WHERE games.game_id = \"game_participants\".\"game_id\" \n      AND games.profile_id = (select auth.uid())\n    )\n  "
+        },
+        "participants_delete_policy": {
+          "name": "participants_delete_policy",
+          "as": "PERMISSIVE",
+          "for": "DELETE",
+          "to": [
+            "authenticated"
+          ],
+          "using": "(select auth.uid()) = \"game_participants\".\"profile_id\""
+        }
+      },
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.games": {
+      "name": "games",
+      "schema": "",
+      "columns": {
+        "game_id": {
+          "name": "game_id",
+          "type": "bigint",
+          "primaryKey": true,
+          "notNull": true,
+          "identity": {
+            "type": "always",
+            "name": "games_game_id_seq",
+            "schema": "public",
+            "increment": "1",
+            "startWith": "1",
+            "minValue": "1",
+            "maxValue": "9223372036854775807",
+            "cache": "1",
+            "cycle": false
+          }
+        },
+        "profile_id": {
+          "name": "profile_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "gym_id": {
+          "name": "gym_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "game_type": {
+          "name": "game_type",
+          "type": "game_type",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "game_gender_type": {
+          "name": "game_gender_type",
+          "type": "game_gender_type",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "description": {
+          "name": "description",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "start_date": {
+          "name": "start_date",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "start_time": {
+          "name": "start_time",
+          "type": "time",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "game_time": {
+          "name": "game_time",
+          "type": "game_time_type",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "guard": {
+          "name": "guard",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "forward": {
+          "name": "forward",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "center": {
+          "name": "center",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "min_participants": {
+          "name": "min_participants",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "max_participants": {
+          "name": "max_participants",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "fee": {
+          "name": "fee",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "is_crawl": {
+          "name": "is_crawl",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
+        "title": {
+          "name": "title",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "city": {
+          "name": "city",
+          "type": "city",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "district": {
+          "name": "district",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "link": {
+          "name": "link",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "games_profile_id_profiles_profile_id_fk": {
+          "name": "games_profile_id_profiles_profile_id_fk",
+          "tableFrom": "games",
+          "tableTo": "profiles",
+          "columnsFrom": [
+            "profile_id"
+          ],
+          "columnsTo": [
+            "profile_id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "games_gym_id_gyms_gym_id_fk": {
+          "name": "games_gym_id_gyms_gym_id_fk",
+          "tableFrom": "games",
+          "tableTo": "gyms",
+          "columnsFrom": [
+            "gym_id"
+          ],
+          "columnsTo": [
+            "gym_id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {
+        "edit-game-policy": {
+          "name": "edit-game-policy",
+          "as": "PERMISSIVE",
+          "for": "UPDATE",
+          "to": [
+            "authenticated"
+          ],
+          "using": "(select auth.uid()) = \"games\".\"profile_id\"",
+          "withCheck": "(select auth.uid()) = \"games\".\"profile_id\""
+        },
+        "delete-game-policy": {
+          "name": "delete-game-policy",
+          "as": "PERMISSIVE",
+          "for": "DELETE",
+          "to": [
+            "authenticated"
+          ],
+          "using": "(select auth.uid()) = \"games\".\"profile_id\""
+        },
+        "select-game-policy": {
+          "name": "select-game-policy",
+          "as": "PERMISSIVE",
+          "for": "SELECT",
+          "to": [
+            "public"
+          ],
+          "using": "true"
+        },
+        "insert-game-policy": {
+          "name": "insert-game-policy",
+          "as": "PERMISSIVE",
+          "for": "INSERT",
+          "to": [
+            "authenticated"
+          ],
+          "withCheck": "(select auth.uid()) = \"games\".\"profile_id\""
+        }
+      },
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.gym_photos": {
+      "name": "gym_photos",
+      "schema": "",
+      "columns": {
+        "gym_photo_id": {
+          "name": "gym_photo_id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "gym_id": {
+          "name": "gym_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "url": {
+          "name": "url",
+          "type": "varchar(500)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "gym_photos_gym_id_gyms_gym_id_fk": {
+          "name": "gym_photos_gym_id_gyms_gym_id_fk",
+          "tableFrom": "gym_photos",
+          "tableTo": "gyms",
+          "columnsFrom": [
+            "gym_id"
+          ],
+          "columnsTo": [
+            "gym_id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {
+        "edit-gym-policy": {
+          "name": "edit-gym-policy",
+          "as": "PERMISSIVE",
+          "for": "UPDATE",
+          "to": [
+            "authenticated"
+          ],
+          "using": "(select auth.uid()) IN ('e421200d-88ca-4711-a667-b000290ef252'::uuid)",
+          "withCheck": "(select auth.uid()) IN ('e421200d-88ca-4711-a667-b000290ef252'::uuid)"
+        },
+        "delete-gym-policy": {
+          "name": "delete-gym-policy",
+          "as": "PERMISSIVE",
+          "for": "DELETE",
+          "to": [
+            "authenticated"
+          ],
+          "using": "(select auth.uid()) IN ('e421200d-88ca-4711-a667-b000290ef252'::uuid)"
+        },
+        "select-gym-policy": {
+          "name": "select-gym-policy",
+          "as": "PERMISSIVE",
+          "for": "SELECT",
+          "to": [
+            "public"
+          ],
+          "using": "true"
+        },
+        "insert-gym-policy": {
+          "name": "insert-gym-policy",
+          "as": "PERMISSIVE",
+          "for": "INSERT",
+          "to": [
+            "authenticated"
+          ],
+          "withCheck": "(select auth.uid()) IN ('e421200d-88ca-4711-a667-b000290ef252'::uuid)"
+        }
+      },
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.gyms": {
+      "name": "gyms",
+      "schema": "",
+      "columns": {
+        "gym_id": {
+          "name": "gym_id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "description": {
+          "name": "description",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "city": {
+          "name": "city",
+          "type": "city",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "district": {
+          "name": "district",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "full_address": {
+          "name": "full_address",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "has_water_dispenser": {
+          "name": "has_water_dispenser",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
+        "has_heating_cooling": {
+          "name": "has_heating_cooling",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
+        "has_shower": {
+          "name": "has_shower",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
+        "parking_info": {
+          "name": "parking_info",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "usage_rules": {
+          "name": "usage_rules",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "url": {
+          "name": "url",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {
+        "edit-gym-policy": {
+          "name": "edit-gym-policy",
+          "as": "PERMISSIVE",
+          "for": "UPDATE",
+          "to": [
+            "authenticated"
+          ],
+          "using": "(select auth.uid()) IN ('e421200d-88ca-4711-a667-b000290ef252'::uuid)",
+          "withCheck": "(select auth.uid()) IN ('e421200d-88ca-4711-a667-b000290ef252'::uuid)"
+        },
+        "delete-gym-policy": {
+          "name": "delete-gym-policy",
+          "as": "PERMISSIVE",
+          "for": "DELETE",
+          "to": [
+            "authenticated"
+          ],
+          "using": "(select auth.uid()) IN ('e421200d-88ca-4711-a667-b000290ef252'::uuid)"
+        },
+        "select-gym-policy": {
+          "name": "select-gym-policy",
+          "as": "PERMISSIVE",
+          "for": "SELECT",
+          "to": [
+            "public"
+          ],
+          "using": "true"
+        },
+        "insert-gym-policy": {
+          "name": "insert-gym-policy",
+          "as": "PERMISSIVE",
+          "for": "INSERT",
+          "to": [
+            "authenticated"
+          ],
+          "withCheck": "(select auth.uid()) IN ('e421200d-88ca-4711-a667-b000290ef252'::uuid)"
+        }
+      },
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.chat_room_members": {
+      "name": "chat_room_members",
+      "schema": "",
+      "columns": {
+        "chat_room_id": {
+          "name": "chat_room_id",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "profile_id": {
+          "name": "profile_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "chat_room_members_chat_room_id_chat_rooms_chat_room_id_fk": {
+          "name": "chat_room_members_chat_room_id_chat_rooms_chat_room_id_fk",
+          "tableFrom": "chat_room_members",
+          "tableTo": "chat_rooms",
+          "columnsFrom": [
+            "chat_room_id"
+          ],
+          "columnsTo": [
+            "chat_room_id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "chat_room_members_profile_id_profiles_profile_id_fk": {
+          "name": "chat_room_members_profile_id_profiles_profile_id_fk",
+          "tableFrom": "chat_room_members",
+          "tableTo": "profiles",
+          "columnsFrom": [
+            "profile_id"
+          ],
+          "columnsTo": [
+            "profile_id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "chat_room_members_chat_room_id_profile_id_pk": {
+          "name": "chat_room_members_chat_room_id_profile_id_pk",
+          "columns": [
+            "chat_room_id",
+            "profile_id"
+          ]
+        }
+      },
+      "uniqueConstraints": {},
+      "policies": {
+        "edit-chat-room-member-policy": {
+          "name": "edit-chat-room-member-policy",
+          "as": "PERMISSIVE",
+          "for": "UPDATE",
+          "to": [
+            "authenticated"
+          ],
+          "using": "(select auth.uid()) = \"chat_room_members\".\"profile_id\"",
+          "withCheck": "(select auth.uid()) = \"chat_room_members\".\"profile_id\""
+        },
+        "insert-chat-room-member-policy": {
+          "name": "insert-chat-room-member-policy",
+          "as": "PERMISSIVE",
+          "for": "INSERT",
+          "to": [
+            "authenticated"
+          ],
+          "withCheck": "true"
+        },
+        "delete-chat-room-member-policy": {
+          "name": "delete-chat-room-member-policy",
+          "as": "PERMISSIVE",
+          "for": "DELETE",
+          "to": [
+            "authenticated"
+          ],
+          "using": "(select auth.uid()) = \"chat_room_members\".\"profile_id\""
+        },
+        "select-chat-room-member-policy": {
+          "name": "select-chat-room-member-policy",
+          "as": "PERMISSIVE",
+          "for": "SELECT",
+          "to": [
+            "authenticated"
+          ],
+          "using": "true"
+        }
+      },
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.chat_rooms": {
+      "name": "chat_rooms",
+      "schema": "",
+      "columns": {
+        "chat_room_id": {
+          "name": "chat_room_id",
+          "type": "bigint",
+          "primaryKey": true,
+          "notNull": true,
+          "identity": {
+            "type": "always",
+            "name": "chat_rooms_chat_room_id_seq",
+            "schema": "public",
+            "increment": "1",
+            "startWith": "1",
+            "minValue": "1",
+            "maxValue": "9223372036854775807",
+            "cache": "1",
+            "cycle": false
+          }
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {
+        "insert-chat-room-member-policy": {
+          "name": "insert-chat-room-member-policy",
+          "as": "PERMISSIVE",
+          "for": "INSERT",
+          "to": [
+            "authenticated"
+          ],
+          "withCheck": "true"
+        },
+        "delete-chat-room-member-policy": {
+          "name": "delete-chat-room-member-policy",
+          "as": "PERMISSIVE",
+          "for": "DELETE",
+          "to": [
+            "authenticated"
+          ],
+          "using": "EXISTS (SELECT 1 FROM public.chat_room_members AS sub WHERE sub.chat_room_id = \"chat_rooms\".\"chat_room_id\" AND sub.profile_id = (select auth.uid()))"
+        },
+        "select-chat-room-member-policy": {
+          "name": "select-chat-room-member-policy",
+          "as": "PERMISSIVE",
+          "for": "SELECT",
+          "to": [
+            "authenticated"
+          ],
+          "using": "true"
+        }
+      },
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.chats": {
+      "name": "chats",
+      "schema": "",
+      "columns": {
+        "chat_id": {
+          "name": "chat_id",
+          "type": "bigint",
+          "primaryKey": true,
+          "notNull": true,
+          "identity": {
+            "type": "always",
+            "name": "chats_chat_id_seq",
+            "schema": "public",
+            "increment": "1",
+            "startWith": "1",
+            "minValue": "1",
+            "maxValue": "9223372036854775807",
+            "cache": "1",
+            "cycle": false
+          }
+        },
+        "chat_room_id": {
+          "name": "chat_room_id",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "sender_id": {
+          "name": "sender_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "content": {
+          "name": "content",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "is_checked": {
+          "name": "is_checked",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "chats_chat_room_id_chat_rooms_chat_room_id_fk": {
+          "name": "chats_chat_room_id_chat_rooms_chat_room_id_fk",
+          "tableFrom": "chats",
+          "tableTo": "chat_rooms",
+          "columnsFrom": [
+            "chat_room_id"
+          ],
+          "columnsTo": [
+            "chat_room_id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "chats_sender_id_profiles_profile_id_fk": {
+          "name": "chats_sender_id_profiles_profile_id_fk",
+          "tableFrom": "chats",
+          "tableTo": "profiles",
+          "columnsFrom": [
+            "sender_id"
+          ],
+          "columnsTo": [
+            "profile_id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {
+        "edit-chats-policy": {
+          "name": "edit-chats-policy",
+          "as": "PERMISSIVE",
+          "for": "UPDATE",
+          "to": [
+            "authenticated"
+          ],
+          "using": "EXISTS (SELECT 1 FROM public.chat_room_members WHERE chat_room_id = \"chats\".\"chat_room_id\" and profile_id = (select auth.uid()))",
+          "withCheck": "EXISTS (SELECT 1 FROM public.chat_room_members WHERE chat_room_id = \"chats\".\"chat_room_id\" and profile_id = (select auth.uid()))"
+        },
+        "insert-chats-policy": {
+          "name": "insert-chats-policy",
+          "as": "PERMISSIVE",
+          "for": "INSERT",
+          "to": [
+            "authenticated"
+          ],
+          "withCheck": "(select auth.uid()) = \"chats\".\"sender_id\""
+        },
+        "delete-chats-policy": {
+          "name": "delete-chats-policy",
+          "as": "PERMISSIVE",
+          "for": "DELETE",
+          "to": [
+            "authenticated"
+          ],
+          "using": "(select auth.uid()) = \"chats\".\"sender_id\""
+        },
+        "select-chats-policy": {
+          "name": "select-chats-policy",
+          "as": "PERMISSIVE",
+          "for": "SELECT",
+          "to": [
+            "authenticated"
+          ],
+          "using": "EXISTS (\n      SELECT 1\n      FROM public.chat_room_members\n      WHERE chat_room_members.chat_room_id = \"chats\".\"chat_room_id\"\n      AND chat_room_members.profile_id = (select auth.uid())\n    )"
+        }
+      },
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.profiles": {
+      "name": "profiles",
+      "schema": "",
+      "columns": {
+        "profile_id": {
+          "name": "profile_id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "birth": {
+          "name": "birth",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "height": {
+          "name": "height",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "position": {
+          "name": "position",
+          "type": "text[]",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "avatar_url": {
+          "name": "avatar_url",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "sex": {
+          "name": "sex",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "profiles_profile_id_users_id_fk": {
+          "name": "profiles_profile_id_users_id_fk",
+          "tableFrom": "profiles",
+          "tableTo": "users",
+          "schemaTo": "auth",
+          "columnsFrom": [
+            "profile_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {
+        "edit-profile-policy": {
+          "name": "edit-profile-policy",
+          "as": "PERMISSIVE",
+          "for": "UPDATE",
+          "to": [
+            "authenticated"
+          ],
+          "using": "(select auth.uid()) = \"profiles\".\"profile_id\"",
+          "withCheck": "(select auth.uid()) = \"profiles\".\"profile_id\""
+        },
+        "delete-profile-policy": {
+          "name": "delete-profile-policy",
+          "as": "PERMISSIVE",
+          "for": "DELETE",
+          "to": [
+            "authenticated"
+          ],
+          "using": "(select auth.uid()) = \"profiles\".\"profile_id\""
+        },
+        "select-profile-policy": {
+          "name": "select-profile-policy",
+          "as": "PERMISSIVE",
+          "for": "SELECT",
+          "to": [
+            "public"
+          ],
+          "using": "true"
+        }
+      },
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    }
+  },
+  "enums": {
+    "public.game_gender_type": {
+      "name": "game_gender_type",
+      "schema": "public",
+      "values": [
+        "상관없음",
+        "남자",
+        "여자"
+      ]
+    },
+    "public.game_time_type": {
+      "name": "game_time_type",
+      "schema": "public",
+      "values": [
+        "1시간",
+        "1시간 30분",
+        "2시간",
+        "2시간 30분",
+        "3시간",
+        "3시간 30분 이상"
+      ]
+    },
+    "public.game_type": {
+      "name": "game_type",
+      "schema": "public",
+      "values": [
+        "1on1",
+        "3on3",
+        "5on5",
+        "기타"
+      ]
+    },
+    "public.participant_status": {
+      "name": "participant_status",
+      "schema": "public",
+      "values": [
+        "대기",
+        "입금 요청",
+        "입금 완료",
+        "참가 확정"
+      ]
+    },
+    "public.city": {
+      "name": "city",
+      "schema": "public",
+      "values": [
+        "서울",
+        "경기",
+        "인천",
+        "강원",
+        "부산",
+        "대구",
+        "광주",
+        "대전",
+        "세종",
+        "울산",
+        "충북",
+        "충남",
+        "전북",
+        "전남",
+        "경북",
+        "경남",
+        "제주"
+      ]
+    }
+  },
+  "schemas": {},
+  "sequences": {},
+  "roles": {},
+  "policies": {},
+  "views": {},
+  "_meta": {
+    "columns": {},
+    "schemas": {},
+    "tables": {}
+  }
+}

@@ -356,6 +356,8 @@ export const loader = async ({ request }: Route.LoaderArgs) => {
         max_participants: 15,
         fee: 5000,
         game_time: "3시간",
+        is_crawl: true,
+        title: post.title,
         city: output.city,
         district: output.district,
         link: post.url,

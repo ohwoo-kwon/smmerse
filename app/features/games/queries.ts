@@ -33,6 +33,8 @@ export const getGamesShort = async (
       fee,
       city,
       district,
+      is_crawl,
+      title,
       gym:gyms!inner(
         name,
         city,

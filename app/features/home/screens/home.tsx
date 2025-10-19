@@ -202,6 +202,8 @@ export default function Home({ loaderData }: Route.ComponentProps) {
               game_time,
               max_participants,
               fee,
+              is_crawl,
+              title,
               city,
               district,
             }) => (
@@ -214,10 +216,14 @@ export default function Home({ loaderData }: Route.ComponentProps) {
                   <span className="font-bold">{start_time.slice(0, 5)}</span>
                 </div>
                 <div className="flex-1 -space-y-1 text-sm">
-                  <div className="text-lg font-semibold">{gym.name}</div>
+                  <div className="text-lg font-semibold">
+                    {is_crawl ? title : gym.name}
+                  </div>
                   <div className="text-muted-foreground flex flex-wrap items-center text-xs">
                     <span>
-                      {city || gym.city} {district || gym.district}
+                      {is_crawl
+                        ? `${city} ${district}`
+                        : `${gym.city} ${gym.district}`}
                     </span>
                     <span className="-mx-1">
                       <DotIcon strokeWidth={1} />

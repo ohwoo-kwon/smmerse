@@ -27,6 +27,8 @@ export const insertGame = async (
     guard,
     forward,
     center,
+    is_crawl,
+    title,
     city,
     district,
     link,
@@ -45,6 +47,8 @@ export const insertGame = async (
     guard: boolean;
     forward: boolean;
     center: boolean;
+    is_crawl?: boolean;
+    title?: string;
     city?: (typeof cityEnum.enumValues)[number];
     district?: string;
     link?: string;
@@ -65,6 +69,8 @@ export const insertGame = async (
     guard,
     forward,
     center,
+    is_crawl,
+    title,
     city,
     district,
     link,

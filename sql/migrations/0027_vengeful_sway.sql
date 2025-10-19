@@ -1,0 +1,1 @@
+ALTER TABLE "games" ADD COLUMN "is_crawl" boolean DEFAULT false NOT NULL;
