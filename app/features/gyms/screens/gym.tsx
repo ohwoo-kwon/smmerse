@@ -29,13 +29,13 @@ import { getGym } from "../queries";
 export const meta: Route.MetaFunction = ({ data }) => {
   if (!data?.gym) {
     return [
-      { title: "체육관 정보 | smmerse" },
+      { title: `${import.meta.env.VITE_APP_NAME} | 체육관 정보` },
       { name: "description", content: "농구 체육관 상세 정보를 확인하세요." },
     ];
   }
 
   const { gym } = data;
-  const title = `${gym.name} | ${gym.city} ${gym.district} 농구 체육관`;
+  const title = `${import.meta.env.VITE_APP_NAME} | ${gym.name} | ${gym.city} ${gym.district} 농구 체육관`;
   const description = `${gym.name} (${gym.full_address}) 체육관 정보. ${
     gym.has_water_dispenser ? "정수기 · " : ""
   }${gym.has_heating_cooling ? "냉난방 · " : ""}${

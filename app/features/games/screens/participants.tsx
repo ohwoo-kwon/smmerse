@@ -26,6 +26,63 @@ import { copyToClipboard, openKakaoMap } from "~/core/lib/utils";
 import ParticipantCard from "../components/participant-card";
 import { getGameById, getGameParticipants } from "../queries";
 
+export const meta: Route.MetaFunction = ({ params, data }) => {
+  const gameTitle = data?.game?.is_crawl
+    ? data.game.title
+    : data?.game?.gym?.name || "체육관 경기";
+
+  const gameDateTime = data?.game
+    ? DateTime.fromFormat(
+        `${data.game.start_date} ${data.game.start_time}`,
+        "yyyy-MM-dd HH:mm:ss",
+      ).toFormat("yyyy년 MM월 dd일 HH:mm")
+    : "";
+
+  const description = data?.game
+    ? `${gameDateTime} 진행 예정 경기의 참가자를 확인하고 관리할 수 있는 페이지입니다.`
+    : "참가자 관리 페이지";
+
+  const url = `https://smmerse.com/games/${params.gameId}/participants`;
+
+  return [
+    // 기본 메타
+    { title: `${import.meta.env.VITE_APP_NAME} | ${gameTitle} 참가자 관리` },
+    { name: "description", content: description },
+
+    // Open Graph
+    {
+      property: "og:title",
+      content: `${import.meta.env.VITE_APP_NAME} | ${gameTitle} 참가자 관리`,
+    },
+    { property: "og:description", content: description },
+    {
+      property: "og:image",
+      content:
+        data?.game?.gym?.photos?.[0]?.url ||
+        "https://wujxmuluphdazgapgwrr.supabase.co/storage/v1/object/public/avatars/e421200d-88ca-4711-a667-b000290ef252",
+    },
+    { property: "og:url", content: url },
+    { property: "og:type", content: "website" },
+
+    // Twitter
+    { name: "twitter:card", content: "summary_large_image" },
+    {
+      name: "twitter:title",
+      content: `${import.meta.env.VITE_APP_NAME} | ${gameTitle} 참가자 관리`,
+    },
+    { name: "twitter:description", content: description },
+    {
+      name: "twitter:image",
+      content:
+        data?.game?.gym?.photos?.[0]?.url ||
+        "https://wujxmuluphdazgapgwrr.supabase.co/storage/v1/object/public/avatars/e421200d-88ca-4711-a667-b000290ef252",
+    },
+
+    // 기타
+    { name: "author", content: import.meta.env.VITE_APP_NAME },
+  ];
+};
+
 export const loader = async ({ request, params }: Route.LoaderArgs) => {
   const [client] = makeServerClient(request);
   const gameId = Number(params.gameId);

@@ -38,6 +38,64 @@ import { createParticipantAndSendMessage } from "../mutations";
 import { getGameById } from "../queries";
 import { makeCafeCOntent } from "../utils";
 
+export const meta: Route.MetaFunction = ({ params, data }) => {
+  if (!data?.game) {
+    return [
+      { title: `${import.meta.env.VITE_APP_NAME} | 경기 정보` },
+      {
+        name: "description",
+        content: "스멀스에서 다양한 농구 경기를 확인하고 참가해보세요.",
+      },
+    ];
+  }
+
+  const game = data.game;
+  const gameTitle = !game.is_crawl ? game.gym.name : game.title;
+
+  const gameDateTime = DateTime.fromFormat(
+    `${game.start_date} ${game.start_time}`,
+    "yyyy-MM-dd HH:mm:ss",
+  ).toFormat("yyyy년 MM월 dd일 HH:mm");
+
+  const description = !game.is_crawl
+    ? `${gameDateTime}에 ${game.gym.city} ${game.gym.district} ${game.gym.name}에서 진행되는 ${game.game_type} 경기입니다. 참가비는 ${game.fee.toLocaleString()}원이며, ${game.min_participants}명부터 ${game.max_participants}명까지 참여 가능합니다.`
+    : `${gameDateTime}에 ${game.city} ${game.district}에서 진행되는 ${game.game_type} 경기입니다.`;
+
+  const url = `https://smmerse.com/games/${params.gameId}`;
+  const image =
+    game.gym?.photos?.[0]?.url ||
+    "https://wujxmuluphdazgapgwrr.supabase.co/storage/v1/object/public/avatars/e421200d-88ca-4711-a667-b000290ef252";
+
+  return [
+    // 기본 메타
+    { title: `${import.meta.env.VITE_APP_NAME} | ${gameTitle} 경기` },
+    { name: "description", content: description },
+
+    // Open Graph
+    {
+      property: "og:title",
+      content: `${import.meta.env.VITE_APP_NAME} | ${gameTitle} 경기`,
+    },
+    { property: "og:description", content: description },
+    { property: "og:image", content: image },
+    { property: "og:url", content: url },
+    { property: "og:type", content: "website" },
+    { property: "og:site_name", content: "smmerse" },
+
+    // Twitter Card
+    { name: "twitter:card", content: "summary_large_image" },
+    {
+      name: "twitter:title",
+      content: `${import.meta.env.VITE_APP_NAME} | ${gameTitle} 경기`,
+    },
+    { name: "twitter:description", content: description },
+    { name: "twitter:image", content: image },
+
+    // 기타
+    { name: "author", content: "smmerse" },
+  ];
+};
+
 export const loader = async ({ request, params }: Route.LoaderArgs) => {
   const [client] = makeServerClient(request);
   const gameId = Number(params.gameId);
