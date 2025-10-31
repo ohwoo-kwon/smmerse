@@ -75,7 +75,7 @@ export default function Participants({ loaderData }: Route.ComponentProps) {
   }, [api]);
 
   return (
-    <div className="mx-auto max-w-screen-lg space-y-8">
+    <div className="mx-auto mb-8 max-w-screen-lg space-y-8">
       <div className="relative">
         <Toaster position="bottom-right" />
         <Carousel

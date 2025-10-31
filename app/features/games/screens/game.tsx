@@ -443,7 +443,7 @@ export default function Game({ loaderData }: Route.ComponentProps) {
           </>
         )}
       </div>
-      <div className="bg-background sticky bottom-0 left-0 w-screen space-y-2 border-t-1 px-4 py-5">
+      <div className="bg-background sticky bottom-0 left-0 w-screen max-w-screen-lg space-y-2 border-t-1 px-4 py-5">
         {game.link && (
           <Button className="w-full" variant="secondary" asChild>
             <Link to={game.link} target="_blank">

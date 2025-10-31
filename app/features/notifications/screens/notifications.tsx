@@ -11,6 +11,27 @@ import { cn } from "~/core/lib/utils";
 import { deleteNotification, updateIsRead } from "../mutations";
 import { getNotifications } from "../queries";
 
+export const meta: Route.MetaFunction = () => [
+  { title: `${import.meta.env.VITE_APP_NAME} | 알림` },
+  {
+    name: "description",
+    content: "나에게 온 알림을 확인하세요.",
+  },
+  {
+    property: "og:title",
+    content: `${import.meta.env.VITE_APP_NAME} | 알림`,
+  },
+  {
+    property: "og:description",
+    content: "나에게 온 알림을 확인하세요.",
+  },
+  {
+    property: "og:image",
+    content:
+      "https://wujxmuluphdazgapgwrr.supabase.co/storage/v1/object/public/avatars/e421200d-88ca-4711-a667-b000290ef252",
+  },
+];
+
 export const loader = async ({ request }: Route.LoaderArgs) => {
   const [client] = makeServerClient(request);
 
