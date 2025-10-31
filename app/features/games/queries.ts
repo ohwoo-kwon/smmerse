@@ -76,6 +76,25 @@ export const getGameById = async (
   return data;
 };
 
+export const getGameByProfileId = async (
+  client: SupabaseClient<Database>,
+  profileId: string,
+) => {
+  const { data, error } = await client
+    .from("games")
+    .select(
+      `*,
+      gym:gyms!inner(*, photos:gym_photos(url))`,
+    )
+    .eq("profile_id", profileId)
+    .order("start_date", { ascending: false })
+    .order("start_time", { ascending: false });
+
+  if (error) throw new Error(error.message);
+
+  return data;
+};
+
 export const checkAlreadyRegister = async (
   client: SupabaseClient<Database>,
   { gameId, profileId }: { gameId: number; profileId: string },
