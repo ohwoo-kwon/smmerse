@@ -57,7 +57,7 @@ export const sendMessage = async (
 ) => {
   const { count } = await client
     .from("notifications")
-    .select("notification_id")
+    .select("notification_id", { count: "exact" })
     .eq("sender_profile_id", senderId)
     .eq("chat_room_id", chatRoomId)
     .eq("is_read", false);

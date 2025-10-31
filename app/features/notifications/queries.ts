@@ -31,7 +31,8 @@ export const getNotifications = async (
     `,
       { count: "exact" },
     )
-    .eq("recipient_profile_id", profileId);
+    .eq("recipient_profile_id", profileId)
+    .order("created_at", { ascending: false });
 
   if (error) throw error;
 

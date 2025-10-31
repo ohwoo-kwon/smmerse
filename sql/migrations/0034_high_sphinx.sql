@@ -1,0 +1,1 @@
+ALTER POLICY "select-notification-policy" ON "notifications" TO authenticated USING ((select auth.uid()) = "notifications"."recipient_profile_id" or (select auth.uid()) = "notifications"."sender_profile_id");

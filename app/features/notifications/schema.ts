@@ -62,7 +62,7 @@ export const notifications = pgTable(
       for: "select",
       to: authenticatedRole,
       as: "permissive",
-      using: sql`${authUid} = ${table.recipient_profile_id}`,
+      using: sql`${authUid} = ${table.recipient_profile_id} or ${authUid} = ${table.sender_profile_id}`,
     }),
     // 삽입 권한: 로그인한 사용자가 자신의 알림만 추가 가능
     pgPolicy("insert-notification-policy", {
