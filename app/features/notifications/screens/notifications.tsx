@@ -6,6 +6,7 @@ import { Link, redirect, useRevalidator } from "react-router";
 import { Button } from "~/core/components/ui/button";
 import { browserClient } from "~/core/db/client.broswer";
 import makeServerClient from "~/core/lib/supa-client.server";
+import { cn } from "~/core/lib/utils";
 
 import { deleteNotification, updateIsRead } from "../mutations";
 import { getNotifications } from "../queries";
@@ -29,8 +30,8 @@ export default function Notifications({ loaderData }: Route.ComponentProps) {
   const revalidator = useRevalidator();
 
   return (
-    <div className="mx-auto max-w-screen-lg space-y-4 p-4">
-      <h1 className="text-3xl font-bold">알림</h1>
+    <div className="mx-auto max-w-screen-lg space-y-4 py-4">
+      <h1 className="px-4 text-3xl font-bold">알림</h1>
 
       <div>
         {notifications.length > 0 ? (
@@ -42,6 +43,7 @@ export default function Notifications({ loaderData }: Route.ComponentProps) {
               game_id,
               game,
               chat_room_id,
+              is_read,
             }) => {
               let title = "";
               let text = "";
@@ -69,7 +71,10 @@ export default function Notifications({ loaderData }: Route.ComponentProps) {
                 <Link
                   id={notification_id}
                   to={link}
-                  className="flex flex-col gap-1 border-b py-4 last:border-0"
+                  className={cn(
+                    "flex flex-col gap-1 border-b p-4 last:border-0",
+                    is_read ? "bg-muted" : "",
+                  )}
                   onClick={async () => {
                     await updateIsRead(browserClient, notification_id);
                   }}
