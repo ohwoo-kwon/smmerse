@@ -42,6 +42,16 @@ export default [
         index("features/users/screens/chats.tsx"),
         route("/:chatRoomId", "features/users/screens/chat.tsx"),
       ]),
+      ...prefix("/games", [
+        route(
+          "/:gameId/participants",
+          "features/games/screens/participants.tsx",
+        ),
+      ]),
+      route(
+        "/notifications",
+        "features/notifications/screens/notifications.tsx",
+      ),
     ]),
     // ...prefix("/basketball/games", [
     //   index("features/basketball/games/screens/games.tsx"),

@@ -15,12 +15,11 @@ import {
 } from "~/core/components/ui/avatar";
 import { Button } from "~/core/components/ui/button";
 import { Input } from "~/core/components/ui/input";
-import { Textarea } from "~/core/components/ui/textarea";
 import { browserClient } from "~/core/db/client.broswer";
 import makeServerClient from "~/core/lib/supa-client.server";
 import { cn } from "~/core/lib/utils";
 
-import { createMessage, updateChecked } from "../mutations";
+import { sendMessage, updateChecked } from "../mutations";
 import { getMessages, getRoomsParticipant } from "../queries";
 
 export const meta: Route.MetaFunction = () => {
@@ -41,6 +40,7 @@ const paramsSchema = z.object({
 
 const formSchema = z.object({
   senderId: z.string().min(1),
+  recipientId: z.string().min(1),
   content: z.string().min(1),
 });
 
@@ -58,9 +58,10 @@ export const action = async ({ request, params }: Route.ActionArgs) => {
   const { data: paramsData, success } = paramsSchema.safeParse(params);
   if (!success) return redirect("/chats");
 
-  await createMessage(client, {
-    chat_room_id: paramsData.chatRoomId,
-    sender_id: formValidData.senderId,
+  await sendMessage(client, {
+    chatRoomId: paramsData.chatRoomId,
+    senderId: formValidData.senderId,
+    recipientId: formValidData.recipientId,
     content: formValidData.content,
   });
 
@@ -239,6 +240,11 @@ export default function Chat({ loaderData }: Route.ComponentProps) {
           className="flex items-center gap-2"
         >
           <Input name="senderId" type="hidden" defaultValue={userId} />
+          <Input
+            name="recipientId"
+            type="hidden"
+            defaultValue={participant.profile.profile_id}
+          />
           <Input
             name="content"
             placeholder="메시지를 작성해주세요."

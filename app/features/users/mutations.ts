@@ -1,6 +1,8 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { Database } from "database.types";
 
+import { insertNotification } from "../notifications/mutations";
+
 export const getOrCreateChatRoom = async (
   client: SupabaseClient<Database>,
   { fromUserId, toUserId }: { fromUserId: string; toUserId: string },
@@ -44,35 +46,37 @@ export const sendMessage = async (
   {
     chatRoomId,
     senderId,
+    recipientId,
     content,
-  }: { chatRoomId: number; senderId: string; content: string },
+  }: {
+    chatRoomId: number;
+    senderId: string;
+    recipientId: string;
+    content: string;
+  },
 ) => {
+  const { count } = await client
+    .from("notifications")
+    .select("notification_id")
+    .eq("sender_profile_id", senderId)
+    .eq("chat_room_id", chatRoomId)
+    .eq("is_read", false);
+
+  if (!count) {
+    await insertNotification(client, {
+      recipientProfileId: recipientId,
+      senderProfileId: senderId,
+      chatRoomId: chatRoomId,
+      type: "CHAT_MESSAGE",
+    });
+  }
+
   const { error } = await client.from("chats").insert({
     chat_room_id: chatRoomId,
     sender_id: senderId,
     content,
   });
 
-  if (error) throw error;
-};
-
-export const createMessage = async (
-  client: SupabaseClient<Database>,
-  {
-    chat_room_id,
-    sender_id,
-    content,
-  }: {
-    chat_room_id: number;
-    sender_id: string;
-    content: string;
-  },
-) => {
-  const { error } = await client.from("chats").insert({
-    chat_room_id,
-    sender_id,
-    content,
-  });
   if (error) throw error;
 };
 

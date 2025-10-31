@@ -31,6 +31,7 @@ import { Textarea } from "~/core/components/ui/textarea";
 import { browserClient } from "~/core/db/client.broswer";
 import makeServerClient from "~/core/lib/supa-client.server";
 import { cn, copyToClipboard, openKakaoMap } from "~/core/lib/utils";
+import { insertNotification } from "~/features/notifications/mutations";
 import { getUserProfile } from "~/features/users/queries";
 
 import { createParticipantAndSendMessage } from "../mutations";
@@ -92,6 +93,12 @@ export default function Game({ loaderData }: Route.ComponentProps) {
       navigate("/profile");
     } else {
       try {
+        await insertNotification(browserClient, {
+          senderProfileId: profile.profile_id,
+          recipientProfileId: game.profile_id,
+          type: "GAME_JOIN_REQUEST",
+          gameId: game.game_id,
+        });
         const chatRoomId = await createParticipantAndSendMessage(
           browserClient,
           {
@@ -445,9 +452,18 @@ export default function Game({ loaderData }: Route.ComponentProps) {
           </Button>
         )}
         {isOwner ? (
-          <Button className="w-full" onClick={onClickCafe}>
-            카페 글 작성
-          </Button>
+          <>
+            <Button
+              className="w-full"
+              onClick={onClickCafe}
+              variant="secondary"
+            >
+              카페 글 작성
+            </Button>
+            <Button className="w-full" asChild>
+              <Link to="participants">참가자 관리</Link>
+            </Button>
+          </>
         ) : (
           <Button
             className="w-full"

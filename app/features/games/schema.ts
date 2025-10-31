@@ -114,7 +114,9 @@ export const participantStatusEnum = pgEnum("participant_status", [
 export const gameParticipants = pgTable(
   "game_participants",
   {
-    participant_id: serial().primaryKey(),
+    participant_id: bigint({ mode: "number" })
+      .primaryKey()
+      .generatedAlwaysAsIdentity(),
     game_id: bigint({ mode: "number" })
       .references(() => games.game_id, {
         onDelete: "cascade",

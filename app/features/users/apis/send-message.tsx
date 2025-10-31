@@ -43,6 +43,7 @@ export const action = async ({ request, params }: Route.ActionArgs) => {
   await sendMessage(client, {
     chatRoomId,
     senderId: user.id,
+    recipientId: toUserId,
     content: validData.content,
   });
 

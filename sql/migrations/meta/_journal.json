@@ -218,6 +218,20 @@
       "when": 1760873321157,
       "tag": "0030_panoramic_spacker_dave",
       "breakpoints": true
+    },
+    {
+      "idx": 31,
+      "version": "7",
+      "when": 1761564856594,
+      "tag": "0031_illegal_sabra",
+      "breakpoints": true
+    },
+    {
+      "idx": 32,
+      "version": "7",
+      "when": 1761872840091,
+      "tag": "0032_secret_squadron_supreme",
+      "breakpoints": true
     }
   ]
 }

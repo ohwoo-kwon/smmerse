@@ -116,7 +116,7 @@ export type Database = {
         Insert: {
           created_at?: string
           game_id: number
-          participant_id?: number
+          participant_id?: never
           profile_id: string
           status?: Database["public"]["Enums"]["participant_status"]
           updated_at?: string
@@ -124,7 +124,7 @@ export type Database = {
         Update: {
           created_at?: string
           game_id?: number
-          participant_id?: number
+          participant_id?: never
           profile_id?: string
           status?: Database["public"]["Enums"]["participant_status"]
           updated_at?: string
@@ -327,6 +327,81 @@ export type Database = {
           },
         ]
       }
+      notifications: {
+        Row: {
+          chat_room_id: number | null
+          created_at: string
+          game_id: number | null
+          is_read: boolean
+          notification_id: string
+          participant_id: number | null
+          recipient_profile_id: string
+          sender_profile_id: string
+          type: Database["public"]["Enums"]["notification_type"]
+          updated_at: string
+        }
+        Insert: {
+          chat_room_id?: number | null
+          created_at?: string
+          game_id?: number | null
+          is_read?: boolean
+          notification_id?: string
+          participant_id?: number | null
+          recipient_profile_id: string
+          sender_profile_id: string
+          type: Database["public"]["Enums"]["notification_type"]
+          updated_at?: string
+        }
+        Update: {
+          chat_room_id?: number | null
+          created_at?: string
+          game_id?: number | null
+          is_read?: boolean
+          notification_id?: string
+          participant_id?: number | null
+          recipient_profile_id?: string
+          sender_profile_id?: string
+          type?: Database["public"]["Enums"]["notification_type"]
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "notifications_chat_room_id_chat_rooms_chat_room_id_fk"
+            columns: ["chat_room_id"]
+            isOneToOne: false
+            referencedRelation: "chat_rooms"
+            referencedColumns: ["chat_room_id"]
+          },
+          {
+            foreignKeyName: "notifications_game_id_games_game_id_fk"
+            columns: ["game_id"]
+            isOneToOne: false
+            referencedRelation: "games"
+            referencedColumns: ["game_id"]
+          },
+          {
+            foreignKeyName: "notifications_participant_id_game_participants_participant_id_f"
+            columns: ["participant_id"]
+            isOneToOne: false
+            referencedRelation: "game_participants"
+            referencedColumns: ["participant_id"]
+          },
+          {
+            foreignKeyName: "notifications_recipient_profile_id_profiles_profile_id_fk"
+            columns: ["recipient_profile_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["profile_id"]
+          },
+          {
+            foreignKeyName: "notifications_sender_profile_id_profiles_profile_id_fk"
+            columns: ["sender_profile_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["profile_id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           avatar_url: string | null
@@ -438,6 +513,10 @@ export type Database = {
         | "3시간"
         | "3시간 30분 이상"
       game_type: "1on1" | "3on3" | "5on5" | "기타"
+      notification_type:
+        | "GAME_JOIN_REQUEST"
+        | "CHAT_MESSAGE"
+        | "PARTICIPATION_STATUS"
       participant_status: "대기" | "입금 요청" | "입금 완료" | "참가 확정"
     }
     CompositeTypes: {
@@ -595,6 +674,11 @@ export const Constants = {
         "3시간 30분 이상",
       ],
       game_type: ["1on1", "3on3", "5on5", "기타"],
+      notification_type: [
+        "GAME_JOIN_REQUEST",
+        "CHAT_MESSAGE",
+        "PARTICIPATION_STATUS",
+      ],
       participant_status: ["대기", "입금 요청", "입금 완료", "참가 확정"],
     },
   },

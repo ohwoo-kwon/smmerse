@@ -115,6 +115,7 @@ export const createParticipantAndSendMessage = async (
   await sendMessage(client, {
     chatRoomId,
     senderId: from_user_id,
+    recipientId: to_user_id,
     content: `${import.meta.env.VITE_SITE_URL}/games/${game_id}
 
     이름: ${profile?.name}

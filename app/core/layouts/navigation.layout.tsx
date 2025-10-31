@@ -1,18 +1,18 @@
 import type { Route } from "./+types/navigation.layout";
 
 import {
+  BellIcon,
   HandHelpingIcon,
-  HandshakeIcon,
   MenuIcon,
   MessageSquareMoreIcon,
   UniversityIcon,
   UserIcon,
 } from "lucide-react";
-import { Suspense } from "react";
-import { Await, Link, Outlet, useLocation, useNavigation } from "react-router";
+import { Link, Outlet, useLocation, useNavigation } from "react-router";
+
+import { getNotificationsUnReadCount } from "~/features/notifications/queries";
 
 import Footer from "../components/footer";
-import NavigationBar from "../components/navigation-bar";
 import { Button } from "../components/ui/button";
 import {
   Sheet,
@@ -24,13 +24,20 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "../components/ui/sheet";
-import { Skeleton } from "../components/ui/skeleton";
 import makeServerClient from "../lib/supa-client.server";
 
 export async function loader({ request }: Route.LoaderArgs) {
   const [client] = makeServerClient(request);
-  const userPromise = client.auth.getUser();
-  return { userPromise };
+  const {
+    data: { user },
+  } = await client.auth.getUser();
+
+  if (user) {
+    const count = await getNotificationsUnReadCount(client, user.id);
+    return { user, notificationCount: count };
+  }
+
+  return { user };
 }
 
 function MenuButton({ isLogin }: { isLogin: boolean }) {
@@ -96,6 +103,7 @@ export default function NavigationLayout({ loaderData }: Route.ComponentProps) {
   const location = useLocation();
   const navigation = useNavigation();
   const isLoading = navigation.state !== "idle";
+  const { user, notificationCount } = loaderData;
 
   return (
     <div>
@@ -105,33 +113,32 @@ export default function NavigationLayout({ loaderData }: Route.ComponentProps) {
             {import.meta.env.VITE_APP_NAME}
           </h1>
         </Link>
-        <Suspense
-          fallback={
-            <div className="flex gap-1">
-              <Skeleton className="size-8" />
-              <Skeleton className="size-8" />
-              <Skeleton className="size-8" />
-            </div>
-          }
-        >
-          <Await resolve={loaderData.userPromise}>
-            {({ data: { user } }) => (
-              <div className="flex gap-1">
-                <MenuButton isLogin={!!user} />
-                <Button size="icon" variant="ghost" asChild>
-                  <Link to={user ? "/profile" : "/login"}>
-                    <UserIcon />
-                  </Link>
-                </Button>
-              </div>
-            )}
-          </Await>
-        </Suspense>
+        <div className="flex gap-0.5">
+          {!!user && (
+            <Button size="icon" variant="ghost" asChild>
+              <Link className="relative" to={"/notifications"}>
+                <BellIcon />
+                {!!notificationCount && (
+                  <div className="absolute top-1.5 right-1.5 size-2 rounded-full bg-red-600 text-center text-xs text-white" />
+                )}
+              </Link>
+            </Button>
+          )}
+          <Button size="icon" variant="ghost" asChild>
+            <Link to={user ? "/profile" : "/login"}>
+              <UserIcon />
+            </Link>
+          </Button>
+          <MenuButton isLogin={!!user} />
+        </div>
       </nav>
       <div className="min-h-[calc(100vh-48px)]">
         <Outlet />
       </div>
-      <Footer />
+      {!(
+        location.pathname.includes("/games/") ||
+        location.pathname.includes("/chats")
+      ) && <Footer />}
     </div>
   );
 }
