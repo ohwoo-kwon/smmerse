@@ -52,6 +52,10 @@ export default [
         "/notifications",
         "features/notifications/screens/notifications.tsx",
       ),
+      ...prefix("/my", [
+        route("/registrations", "features/users/screens/my-registrations.tsx"),
+        route("/games", "features/users/screens/my-games.tsx"),
+      ]),
     ]),
     // ...prefix("/basketball/games", [
     //   index("features/basketball/games/screens/games.tsx"),

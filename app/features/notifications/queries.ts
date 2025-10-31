@@ -27,9 +27,7 @@ export const getNotifications = async (
       *,
       sender:profiles!sender_profile_id(name),
       game:game_id(gym:gym_id(name))
-
     `,
-      { count: "exact" },
     )
     .eq("recipient_profile_id", profileId)
     .order("created_at", { ascending: false });

@@ -105,3 +105,18 @@ export const getGameParticipants = async (
 
   return data;
 };
+
+export const getRegistratedGames = async (
+  client: SupabaseClient<Database>,
+  profileId: string,
+) => {
+  const { data, error } = await client
+    .from("game_participants")
+    .select("*, game:game_id(*, gym:gym_id(*))")
+    .eq("profile_id", profileId)
+    .order("created_at", { ascending: false });
+
+  if (error) throw new Error(error.message);
+
+  return data;
+};

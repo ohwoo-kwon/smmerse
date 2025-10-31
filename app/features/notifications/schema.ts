@@ -2,12 +2,9 @@ import { sql } from "drizzle-orm";
 import {
   bigint,
   boolean,
-  integer,
   pgEnum,
   pgPolicy,
   pgTable,
-  serial,
-  text,
   uuid,
 } from "drizzle-orm/pg-core";
 import { authUid, authenticatedRole } from "drizzle-orm/supabase";

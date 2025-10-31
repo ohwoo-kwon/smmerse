@@ -61,7 +61,7 @@ export default function Notifications({ loaderData }: Route.ComponentProps) {
                 case "PARTICIPATION_STATUS":
                   title = "참여 내역";
                   text = `${game?.gym.name}의 호스트가 참여 상태를 변경하였습니다.`;
-                  link = `/`;
+                  link = `/my/registrations`;
                   break;
               }
 

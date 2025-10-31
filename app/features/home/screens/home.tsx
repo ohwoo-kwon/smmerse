@@ -186,7 +186,7 @@ export default function Home({ loaderData }: Route.ComponentProps) {
 
       {/* 광고 */}
       <div className="space-y-2">
-        <KakaoAdfit />
+        <AdsenseInfeed />
       </div>
 
       {/* 경기 목록 */}

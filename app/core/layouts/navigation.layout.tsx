@@ -2,6 +2,8 @@ import type { Route } from "./+types/navigation.layout";
 
 import {
   BellIcon,
+  Clock5Icon,
+  Gamepad2Icon,
   HandHelpingIcon,
   MenuIcon,
   MessageSquareMoreIcon,
@@ -58,7 +60,7 @@ function MenuButton({ isLogin }: { isLogin: boolean }) {
         </div>
         <div className="space-y-4">
           <h3 className="text-xl font-semibold">매치</h3>
-          <div className="grid grid-cols-3">
+          <div className="grid grid-cols-3 gap-y-6">
             <SheetClose asChild>
               <Link to="/login" className="flex flex-col items-center gap-2">
                 <HandHelpingIcon />
@@ -77,12 +79,37 @@ function MenuButton({ isLogin }: { isLogin: boolean }) {
                 <span className="text-sm">체육관</span>
               </Link>
             </SheetClose>
-            <SheetClose asChild>
-              <Link to="/chats" className="flex flex-col items-center gap-2">
-                <MessageSquareMoreIcon />
-                <span className="text-sm">채팅</span>
-              </Link>
-            </SheetClose>
+            {isLogin && (
+              <>
+                <SheetClose asChild>
+                  <Link
+                    to="/chats"
+                    className="flex flex-col items-center gap-2"
+                  >
+                    <MessageSquareMoreIcon />
+                    <span className="text-sm">채팅</span>
+                  </Link>
+                </SheetClose>
+                <SheetClose asChild>
+                  <Link
+                    to="/my/registrations"
+                    className="flex flex-col items-center gap-2"
+                  >
+                    <Clock5Icon />
+                    <span className="text-sm">신청 내역</span>
+                  </Link>
+                </SheetClose>
+                <SheetClose asChild>
+                  <Link
+                    to="/my/games"
+                    className="flex flex-col items-center gap-2"
+                  >
+                    <Gamepad2Icon />
+                    <span className="text-sm">모집 내역</span>
+                  </Link>
+                </SheetClose>
+              </>
+            )}
           </div>
         </div>
         {isLogin && (
