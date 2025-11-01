@@ -63,8 +63,8 @@ export default function PrivacyPolicySheet() {
           <div className="space-y-4 px-10">
             <h3 className="text-lg font-bold">6. 개인정보 보호 책임자</h3>
             <ul className="list-disc pl-5">
-              <li>이름: 람몽</li>
-              <li>연락처: lammong0118@gmail.com</li>
+              <li>이름: 이른새벽다섯시</li>
+              <li>연락처: smilesmoothie.official@gmail.com</li>
             </ul>
           </div>
         </div>
