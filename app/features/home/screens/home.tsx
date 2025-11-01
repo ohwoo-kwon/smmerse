@@ -2,10 +2,10 @@ import type { Route } from "./+types/home";
 
 import { DotIcon, OctagonXIcon, PlusIcon } from "lucide-react";
 import { DateTime } from "luxon";
-import { Fragment } from "react";
-import { Link, redirect, useSearchParams } from "react-router";
+import { Link, redirect, useNavigation, useSearchParams } from "react-router";
 
 import AdsenseInfeed from "~/core/components/adsense-infeed";
+import CityDrawer from "~/core/components/city-drawer";
 import KakaoAdfit from "~/core/components/kakao-ad-fit";
 import { Button } from "~/core/components/ui/button";
 import {
@@ -13,18 +13,7 @@ import {
   CarouselContent,
   CarouselItem,
 } from "~/core/components/ui/carousel";
-import {
-  Drawer,
-  DrawerClose,
-  DrawerContent,
-  DrawerDescription,
-  DrawerFooter,
-  DrawerHeader,
-  DrawerTitle,
-  DrawerTrigger,
-} from "~/core/components/ui/drawer";
-import { ScrollArea } from "~/core/components/ui/scroll-area";
-import { Separator } from "~/core/components/ui/separator";
+import { Skeleton } from "~/core/components/ui/skeleton";
 import makeServerClient from "~/core/lib/supa-client.server";
 import { cn } from "~/core/lib/utils";
 import { getGamesShort } from "~/features/games/queries";
@@ -75,16 +64,14 @@ export const loader = async ({ request }: Route.LoaderArgs) => {
     return redirect(
       `/?date=${DateTime.now().setZone("Asia/Seoul").toFormat("yyyyMMdd")}`,
     );
-  const sido = searchParams.get("sido") as
-    | (typeof cityEnum.enumValues)[number]
-    | null;
+  const sidos = searchParams.get("sidos")?.split(",");
   const hasWater = !!searchParams.get("hasWater");
   const hasHeatAndCool = !!searchParams.get("hasHeatAndCool");
   const hasShower = !!searchParams.get("hasShower");
 
   const games = await getGamesShort(client, {
     start_date: date,
-    sido,
+    sidos,
     has_water_dispenser: hasWater,
     has_heating_cooling: hasHeatAndCool,
     has_shower: hasShower,
@@ -94,11 +81,13 @@ export const loader = async ({ request }: Route.LoaderArgs) => {
 };
 
 export default function Home({ loaderData }: Route.ComponentProps) {
+  const { games } = loaderData;
   const today = DateTime.now();
-
   const [searchParams, setSearchParams] = useSearchParams();
+  const navigation = useNavigation();
 
-  const sido = searchParams.get("sido");
+  const isLoading = navigation.state === "loading";
+
   const date = searchParams.get("date")!;
   const clikedDateTime = DateTime.fromFormat(date, "yyyyMMdd");
 
@@ -146,41 +135,7 @@ export default function Home({ loaderData }: Route.ComponentProps) {
 
         {/* 필터 */}
         <div>
-          <Drawer>
-            <DrawerTrigger asChild>
-              <Button
-                variant={sido ? "default" : "outline"}
-                className={cn("rounded-full", sido ? "" : "text-neutral-400")}
-                size="sm"
-              >
-                {sido || "전국"}
-              </Button>
-            </DrawerTrigger>
-            <DrawerContent>
-              <DrawerHeader>
-                <DrawerTitle>지역</DrawerTitle>
-                <DrawerDescription>지역을 선택해주세요.</DrawerDescription>
-              </DrawerHeader>
-              <ScrollArea className="h-70">
-                <div className="flex flex-col gap-2">
-                  <DrawerClose onClick={() => handleFilterChange("sido", "")}>
-                    전국
-                  </DrawerClose>
-                  {cityEnum.enumValues.map((value) => (
-                    <Fragment key={value}>
-                      <Separator className="mx-4" />
-                      <DrawerClose
-                        onClick={() => handleFilterChange("sido", value)}
-                      >
-                        {value}
-                      </DrawerClose>
-                    </Fragment>
-                  ))}
-                </div>
-              </ScrollArea>
-              <DrawerFooter></DrawerFooter>
-            </DrawerContent>
-          </Drawer>
+          <CityDrawer />
         </div>
       </div>
 
@@ -191,8 +146,21 @@ export default function Home({ loaderData }: Route.ComponentProps) {
 
       {/* 경기 목록 */}
       <div>
-        {loaderData.games.length > 0 ? (
-          loaderData.games.map(
+        {isLoading ? (
+          <div className="space-y-4">
+            <Skeleton className="h-20 w-full" />
+            <Skeleton className="h-20 w-full" />
+            <Skeleton className="h-20 w-full" />
+            <Skeleton className="h-20 w-full" />
+            <Skeleton className="h-20 w-full" />
+            <Skeleton className="h-20 w-full" />
+            <Skeleton className="h-20 w-full" />
+            <Skeleton className="h-20 w-full" />
+            <Skeleton className="h-20 w-full" />
+            <Skeleton className="h-20 w-full" />
+          </div>
+        ) : games.length > 0 ? (
+          games.map(
             ({
               game_id,
               start_time,

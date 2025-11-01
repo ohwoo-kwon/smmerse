@@ -9,13 +9,13 @@ export const getGamesShort = async (
   client: SupabaseClient<Database>,
   {
     start_date,
-    sido,
+    sidos,
     has_water_dispenser,
     has_heating_cooling,
     has_shower,
   }: {
     start_date: string | null;
-    sido: (typeof cityEnum.enumValues)[number] | null;
+    sidos?: string[];
     has_water_dispenser: boolean | null;
     has_heating_cooling: boolean | null;
     has_shower: boolean | null;
@@ -45,7 +45,18 @@ export const getGamesShort = async (
     .gte("start_date", DateTime.now().toFormat("yyyyMMdd"));
 
   if (start_date) baseQuery.eq("start_date", start_date);
-  if (sido) baseQuery.eq("city", sido);
+  if (sidos) {
+    const orConditions = sidos
+      .map((sido) => {
+        const city = sido.slice(0, 2);
+        const district = sido.slice(3);
+        if (district) return `and(city.eq.${city},district.eq.${district})`;
+        else return `and(city.eq.${city})`;
+      })
+      .join(",");
+
+    baseQuery.or(orConditions);
+  }
   if (has_water_dispenser) baseQuery.eq("gyms.has_water_dispenser", true);
   if (has_heating_cooling) baseQuery.eq("gyms.has_heating_cooling", true);
   if (has_shower) baseQuery.eq("gyms.has_shower", true);
