@@ -112,6 +112,11 @@ function MenuButton({ isLogin }: { isLogin: boolean }) {
             )}
           </div>
         </div>
+        <Button asChild variant="link">
+          <Link to="https://www.instagram.com/tiger.ow/" target="_blank">
+            마케팅 문의
+          </Link>
+        </Button>
         {isLogin && (
           <SheetFooter>
             <Button variant="secondary" asChild>
