@@ -129,3 +129,76 @@ export const createParticipantAndSendMessage = async (
 
   return chatRoomId;
 };
+
+export const updateGame = async (
+  client: SupabaseClient<Database>,
+  {
+    game_id,
+    gym_id,
+    game_type,
+    game_gender_type,
+    description,
+    start_date,
+    start_time,
+    game_time,
+    min_participants,
+    max_participants,
+    fee,
+    guard,
+    forward,
+    center,
+    is_crawl,
+    title,
+    city,
+    district,
+    link,
+  }: {
+    game_id: number;
+    gym_id: string;
+    game_type: (typeof gameTypeEnum.enumValues)[number];
+    game_gender_type: (typeof gameGenderTypeEnum.enumValues)[number];
+    description: string | null;
+    start_date: string;
+    start_time: string;
+    game_time: (typeof gameTimeEnum.enumValues)[number];
+    min_participants: number;
+    max_participants: number;
+    fee: number;
+    guard: boolean;
+    forward: boolean;
+    center: boolean;
+    is_crawl?: boolean;
+    title?: string;
+    city?: (typeof cityEnum.enumValues)[number];
+    district?: string;
+    link?: string;
+  },
+) => {
+  const { data, error } = await client
+    .from("games")
+    .update({
+      gym_id,
+      game_type,
+      game_gender_type,
+      description,
+      start_date,
+      start_time,
+      game_time,
+      min_participants,
+      max_participants,
+      fee,
+      guard,
+      forward,
+      center,
+      is_crawl,
+      title,
+      city,
+      district,
+      link,
+    })
+    .eq("game_id", game_id);
+
+  if (error) throw new Error(error.message);
+
+  return data;
+};

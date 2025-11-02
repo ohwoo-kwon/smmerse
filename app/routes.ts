@@ -39,18 +39,16 @@ export default [
         index("features/users/screens/my.tsx"),
         route("/profile", "features/users/screens/profile.tsx"),
       ]),
-      // route("/profile", "features/users/screens/profile.tsx"),
-      // route("/my", "features/users/screens/my.tsx"),
       route("/logout", "features/auth/screens/logout.tsx"),
       ...prefix("/chats", [
         index("features/users/screens/chats.tsx"),
         route("/:chatRoomId", "features/users/screens/chat.tsx"),
       ]),
       ...prefix("/games", [
-        route(
-          "/:gameId/participants",
-          "features/games/screens/participants.tsx",
-        ),
+        ...prefix("/:gameId", [
+          route("/participants", "features/games/screens/participants.tsx"),
+          route("/update", "features/games/screens/game-update.tsx"),
+        ]),
       ]),
       route(
         "/notifications",

@@ -205,6 +205,13 @@ export default function Game({ loaderData }: Route.ComponentProps) {
     });
   };
 
+  const onClickDelete = async () => {
+    const isOk = confirm("정말로 경기를 삭제하시겠어요?");
+    if (!isOk) return;
+    await browserClient.from("games").delete().eq("game_id", game.game_id);
+    navigate(-1);
+  };
+
   useEffect(() => {
     if (!api) {
       return;
@@ -517,6 +524,16 @@ export default function Game({ loaderData }: Route.ComponentProps) {
               variant="secondary"
             >
               카페 글 작성
+            </Button>
+            <Button
+              className="w-full"
+              variant="secondary"
+              onClick={onClickDelete}
+            >
+              삭제
+            </Button>
+            <Button className="w-full" asChild variant="outline">
+              <Link to="update">수정</Link>
             </Button>
             <Button className="w-full" asChild>
               <Link to="participants">참가자 관리</Link>
