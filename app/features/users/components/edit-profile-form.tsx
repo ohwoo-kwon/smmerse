@@ -72,7 +72,7 @@ export default function EditProfileForm({
       ref={formRef}
       action="/api/users/profile"
     >
-      <Card className="justify-between">
+      <Card className="justify-between border-none shadow-none">
         <CardHeader>
           <CardTitle>프로필 수정</CardTitle>
           <CardDescription>프로필을 수정해주세요.</CardDescription>

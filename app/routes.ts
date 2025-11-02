@@ -35,8 +35,12 @@ export default [
       ]),
     ]),
     layout("core/layouts/private.layout.tsx", { id: "private-auth" }, [
-      route("/profile", "features/users/screens/profile.tsx"),
-      route("/my", "features/users/screens/my.tsx"),
+      ...prefix("/my", [
+        index("features/users/screens/my.tsx"),
+        route("/profile", "features/users/screens/profile.tsx"),
+      ]),
+      // route("/profile", "features/users/screens/profile.tsx"),
+      // route("/my", "features/users/screens/my.tsx"),
       route("/logout", "features/auth/screens/logout.tsx"),
       ...prefix("/chats", [
         index("features/users/screens/chats.tsx"),

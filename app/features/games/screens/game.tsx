@@ -148,7 +148,7 @@ export default function Game({ loaderData }: Route.ComponentProps) {
       !profile.birth
     ) {
       alert("생년월일, 성별, 신장, 포지션 정보를 입력해주세요.");
-      navigate("/profile");
+      navigate("/my/profile");
     } else {
       try {
         await insertNotification(browserClient, {

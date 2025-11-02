@@ -29,7 +29,7 @@ export default function Profile({ loaderData }: Route.ComponentProps) {
   const { profile } = loaderData;
 
   return (
-    <div className="flex w-full flex-col items-center gap-10 pt-0 pb-8">
+    <div className="flex w-full flex-col items-center gap-10">
       <Suspense
         fallback={
           <div className="bg-card animate-fast-pulse h-60 w-full max-w-screen-md rounded-xl border shadow-sm" />

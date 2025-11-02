@@ -47,7 +47,7 @@ function UserMenu({
         <DropdownMenuSeparator />
         <DropdownMenuItem asChild>
           <SheetClose asChild>
-            <Link to="/profile" viewTransition>
+            <Link to="/my/profile" viewTransition>
               <UserIcon className="size-4" />
               프로필
             </Link>

@@ -5,6 +5,8 @@ import { z } from "zod";
 
 import makeServerClient from "~/core/lib/supa-client.server";
 
+import { isUserInfoExist } from "../../queries";
+
 export const meta: Route.MetaFunction = () => {
   return [
     {
@@ -44,13 +46,19 @@ export async function loader({ request }: Route.LoaderArgs) {
 
   const [client, headers] = makeServerClient(request);
 
-  const { error } = await client.auth.exchangeCodeForSession(validData.code);
+  const {
+    data: { user },
+    error,
+  } = await client.auth.exchangeCodeForSession(validData.code);
 
   if (error) {
     return data({ error: error.message }, { status: 400 });
   }
 
-  return redirect("/", { headers });
+  const isUserInfoExists = await isUserInfoExist(client, user!.id);
+
+  if (isUserInfoExists) return redirect("/", { headers });
+  else return redirect("/my/profile", { headers });
 }
 
 export default function Confirm({ loaderData }: Route.ComponentProps) {

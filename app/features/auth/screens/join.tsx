@@ -111,8 +111,8 @@ export default function Join({ actionData }: Route.ComponentProps) {
   }, [actionData]);
 
   return (
-    <div className="flex flex-col items-center justify-center gap-4">
-      <Card className="w-full max-w-sm">
+    <div className="mt-8 flex flex-col items-center justify-center">
+      <Card className="w-full max-w-sm border-none shadow-none">
         <CardHeader>
           <CardTitle>회원가입</CardTitle>
           <CardDescription>스멀스에 오신 것을 환영합니다.</CardDescription>

@@ -26,6 +26,7 @@ import { Label } from "~/core/components/ui/label";
 import makeServerClient from "~/core/lib/supa-client.server";
 
 import AuthLoginButtons from "../components/auth-login-buttons";
+import { isUserInfoExist } from "../queries";
 
 export const meta: Route.MetaFunction = () => {
   return [
@@ -61,7 +62,10 @@ export async function action({ request }: Route.ActionArgs) {
 
   const [client, headers] = makeServerClient(request);
 
-  const { error: signInError } = await client.auth.signInWithPassword({
+  const {
+    data: { user },
+    error: signInError,
+  } = await client.auth.signInWithPassword({
     ...validData,
   });
 
@@ -75,7 +79,10 @@ export async function action({ request }: Route.ActionArgs) {
     return data({ error: signInError.message }, { status: 400 });
   }
 
-  return redirect("/", { headers });
+  const isUserInfoExists = await isUserInfoExist(client, user!.id);
+
+  if (isUserInfoExists) return redirect("/", { headers });
+  else return redirect("/my/profile", { headers });
 }
 
 export default function Login({
@@ -98,13 +105,11 @@ export default function Login({
   };
 
   return (
-    <div className="flex flex-col items-center justify-center gap-4">
-      <Card className="w-full max-w-sm">
+    <div className="mt-8 flex flex-col items-center justify-center gap-4">
+      <Card className="w-full max-w-sm border-none shadow-none">
         <CardHeader>
           <CardTitle>로그인</CardTitle>
-          <CardDescription>
-            Starting Project 에 오신 것을 환영합니다.
-          </CardDescription>
+          <CardDescription>스멀스에 오신 것을 환영합니다.</CardDescription>
         </CardHeader>
         <CardContent>
           <Form className="flex flex-col gap-4" method="POST" ref={formRef}>

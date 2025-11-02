@@ -152,7 +152,7 @@ export default function NavigationLayout({ loaderData }: Route.ComponentProps) {
             </Button>
           )}
           <Button size="icon" variant="ghost" asChild>
-            <Link to={user ? "/profile" : "/login"}>
+            <Link to={user ? "/my/profile" : "/login"}>
               <UserIcon />
             </Link>
           </Button>
