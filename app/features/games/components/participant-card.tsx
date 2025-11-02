@@ -1,4 +1,5 @@
 import { MessageSquareMoreIcon } from "lucide-react";
+import { DateTime } from "luxon";
 import { useState } from "react";
 import { useNavigate } from "react-router";
 
@@ -28,7 +29,6 @@ export default function ParticipantCard({
   profile_id,
   owner_id,
   game_id,
-  gym_name,
   avatar_url,
   position,
   name,
@@ -36,12 +36,12 @@ export default function ParticipantCard({
   birth,
   height,
   initStatus,
+  createdAt,
 }: {
   participant_id: number;
   profile_id: string;
   owner_id: string;
   game_id: number;
-  gym_name: string;
   avatar_url: string;
   position: string[];
   name: string;
@@ -49,6 +49,7 @@ export default function ParticipantCard({
   birth: string;
   height: number;
   initStatus: (typeof participantStatusEnum.enumValues)[number];
+  createdAt: string;
 }) {
   const navigate = useNavigate();
 
@@ -134,18 +135,25 @@ export default function ParticipantCard({
           <Badge variant="secondary">{height}cm</Badge>
         </div>
       </div>
-      <Select value={status} onValueChange={onSelectValueChange}>
-        <SelectTrigger size="sm" className="w-26">
-          <SelectValue />
-        </SelectTrigger>
-        <SelectContent>
-          {participantStatusEnum.enumValues.map((v) => (
-            <SelectItem key={`${participant_id}_${v}`} value={v}>
-              {v}
-            </SelectItem>
-          ))}
-        </SelectContent>
-      </Select>
+      <div className="flex flex-col gap-1">
+        <span className="text-muted-foreground text-right text-xs">
+          {DateTime.fromISO(createdAt.replace(" ", "T"), { zone: "utc" })
+            .toLocal()
+            .toFormat("MM.dd HH:mm")}
+        </span>
+        <Select value={status} onValueChange={onSelectValueChange}>
+          <SelectTrigger size="sm" className="w-26">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            {participantStatusEnum.enumValues.map((v) => (
+              <SelectItem key={`${participant_id}_${v}`} value={v}>
+                {v}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
     </div>
   );
 }

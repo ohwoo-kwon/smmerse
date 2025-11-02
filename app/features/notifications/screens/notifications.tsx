@@ -1,6 +1,7 @@
 import type { Route } from "./+types/notifications";
 
 import { OctagonXIcon, Trash2Icon } from "lucide-react";
+import { DateTime } from "luxon";
 import { Link, redirect, useRevalidator } from "react-router";
 
 import { Button } from "~/core/components/ui/button";
@@ -65,6 +66,7 @@ export default function Notifications({ loaderData }: Route.ComponentProps) {
               game,
               chat_room_id,
               is_read,
+              created_at,
             }) => {
               let title = "";
               let text = "";
@@ -102,12 +104,29 @@ export default function Notifications({ loaderData }: Route.ComponentProps) {
                 >
                   <div className="flex items-center justify-between gap-2">
                     <div>
-                      <p className="text-primary text-sm font-bold">{title}</p>
-                      <p>{text}</p>
+                      <p
+                        className={cn(
+                          "text-primary flex items-center gap-2 text-sm font-bold",
+                          is_read ? "text-muted-foreground" : "",
+                        )}
+                      >
+                        {title}
+                        <span className="text-muted-foreground text-xs font-light">
+                          {DateTime.fromISO(created_at.replace(" ", "T"), {
+                            zone: "utc",
+                          })
+                            .toLocal()
+                            .toFormat("MM.dd HH:mm")}
+                        </span>
+                      </p>
+                      <p className={cn(is_read ? "text-muted-foreground" : "")}>
+                        {text}
+                      </p>
                     </div>
                     <Button
                       size="icon"
                       variant="ghost"
+                      className={is_read ? "text-muted-foreground" : ""}
                       onClick={async (e) => {
                         e.preventDefault();
                         await deleteNotification(

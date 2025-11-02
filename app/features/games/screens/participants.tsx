@@ -235,14 +235,19 @@ export default function Participants({ loaderData }: Route.ComponentProps) {
           <div className="text-lg font-bold">참가자 관리</div>
           {participants.length > 0 ? (
             participants.map(
-              ({ profile, profile_id, participant_id, status: initStatus }) => (
+              ({
+                profile,
+                profile_id,
+                participant_id,
+                status: initStatus,
+                created_at,
+              }) => (
                 <ParticipantCard
                   key={`participant_${participant_id}`}
                   participant_id={participant_id}
                   profile_id={profile_id}
                   owner_id={game.profile_id}
                   game_id={game.game_id}
-                  gym_name={game.gym.name}
                   avatar_url={profile.avatar_url || ""}
                   position={profile.position || []}
                   name={profile.name}
@@ -250,6 +255,7 @@ export default function Participants({ loaderData }: Route.ComponentProps) {
                   birth={profile.birth || ""}
                   height={profile.height || 0}
                   initStatus={initStatus}
+                  createdAt={created_at}
                 />
               ),
             )
