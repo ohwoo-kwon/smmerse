@@ -139,17 +139,6 @@ export const action = async ({ request }: Route.ActionArgs) => {
   }
 };
 
-export const loader = async ({ request }: Route.LoaderArgs) => {
-  const [client] = makeServerClient(request);
-
-  const {
-    data: { user },
-  } = await client.auth.getUser();
-
-  if (!user || user.id !== "e421200d-88ca-4711-a667-b000290ef252")
-    return redirect("/gyms");
-};
-
 export default function GymCreate({ actionData }: Route.ComponentProps) {
   const navigation = useNavigation();
   const isLoading = navigation.state === "submitting";
