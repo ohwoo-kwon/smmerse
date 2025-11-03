@@ -10,7 +10,7 @@ import {
   ShowerHeadIcon,
 } from "lucide-react";
 import { useEffect, useState } from "react";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { Toaster, toast } from "sonner";
 
 import { Button } from "~/core/components/ui/button";
@@ -21,6 +21,7 @@ import {
   CarouselItem,
 } from "~/core/components/ui/carousel";
 import { Textarea } from "~/core/components/ui/textarea";
+import { browserClient } from "~/core/db/client.broswer";
 import makeServerClient from "~/core/lib/supa-client.server";
 import { cn, copyToClipboard, openKakaoMap } from "~/core/lib/utils";
 
@@ -70,13 +71,19 @@ export const loader = async ({ request, params }: Route.LoaderArgs) => {
   const [client] = makeServerClient(request);
   const gymId = params.gymId;
 
-  const gym = await getGym(client, gymId);
+  const {
+    data: { user },
+  } = await client.auth.getUser();
 
-  return { gym };
+  const gym = await getGym(client, gymId);
+  const isOwner = user?.id === gym.profile_id;
+
+  return { gym, isOwner };
 };
 
 export default function Gym({ loaderData }: Route.ComponentProps) {
-  const { gym } = loaderData;
+  const { gym, isOwner } = loaderData;
+  const navigate = useNavigate();
 
   const [api, setApi] = useState<CarouselApi>();
   const [current, setCurrent] = useState(0);
@@ -90,6 +97,13 @@ export default function Gym({ loaderData }: Route.ComponentProps) {
         onClick: () => {},
       },
     });
+  };
+
+  const onClickDelete = async () => {
+    const isOk = confirm("정말로 체육관을 삭제하시겠어요?");
+    if (!isOk) return;
+    await browserClient.from("gyms").delete().eq("gym_id", gym.gym_id);
+    navigate(-1);
   };
 
   useEffect(() => {
@@ -254,6 +268,17 @@ export default function Gym({ loaderData }: Route.ComponentProps) {
             className="resize-none border-none shadow-none"
           />
         </div>
+
+        {isOwner && (
+          <div className="mb-8 flex flex-col gap-1">
+            <Button variant="secondary" onClick={onClickDelete}>
+              삭제
+            </Button>
+            <Button asChild>
+              <Link to="update">수정</Link>
+            </Button>
+          </div>
+        )}
       </div>
     </div>
   );

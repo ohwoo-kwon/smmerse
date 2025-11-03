@@ -12,8 +12,6 @@ export default [
     route("/error", "core/screens/error.tsx"),
     ...prefix("/gyms", [
       index("features/gyms/screens/gyms.tsx"),
-      route("/create", "features/gyms/screens/gym-create.tsx"),
-      route("/update", "features/gyms/screens/gym-update.tsx"),
       route("/:gymId", "features/gyms/screens/gym.tsx"),
     ]),
     ...prefix("/games", [
@@ -49,6 +47,10 @@ export default [
           route("/participants", "features/games/screens/participants.tsx"),
           route("/update", "features/games/screens/game-update.tsx"),
         ]),
+      ]),
+      ...prefix("/gyms", [
+        route("/create", "features/gyms/screens/gym-create.tsx"),
+        route("/:gymId/update", "features/gyms/screens/gym-update.tsx"),
       ]),
       route(
         "/notifications",
