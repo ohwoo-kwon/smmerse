@@ -20,9 +20,8 @@ export default function ServiceSheet() {
         </SheetHeader>
         <div className="space-y-8">
           <h1 className="pl-10 font-bold">
-            본 약관은 {import.meta.env.VITE_APP_NAME}(이하 "회사")가 제공하는
-            서비스 이용과 관련하여 회원과 회사 간의 권리, 의무 및 책임사항을
-            규정합니다.
+            본 약관은 이른새벽다섯시(이하 "회사")가 제공하는 서비스 이용과
+            관련하여 회원과 회사 간의 권리, 의무 및 책임사항을 규정합니다.
           </h1>
           <div className="space-y-4 px-10">
             <h3 className="text-lg font-bold">제1조 (목적)</h3>
