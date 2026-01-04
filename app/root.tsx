@@ -4,6 +4,7 @@ import type { Route } from "./+types/root";
 
 import { useEffect } from "react";
 import {
+  Link,
   Links,
   Meta,
   Outlet,
@@ -15,8 +16,13 @@ import {
   useSearchParams,
 } from "react-router";
 
-import { Dialog } from "./core/components/ui/dialog";
-import { Sheet } from "./core/components/ui/sheet";
+import { Button } from "./core/components/ui/button";
+import {
+  Card,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "./core/components/ui/card";
 
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -85,6 +91,28 @@ export function Layout({ children }: { children: React.ReactNode }) {
         />
       </head>
       <body>
+        <div className="px-4">
+          <Card className="my-4 w-full">
+            <CardHeader className="flex items-center justify-between">
+              <div>
+                <CardTitle className="mb-3">
+                  👉 새로운 smmerse를 준비 중입니다
+                </CardTitle>
+                <CardDescription>
+                  <p>
+                    더 나은 농구 경험을 위해 smmerse v2를 개발하고 있습니다.
+                  </p>
+                  <p>
+                    개발 소식과 업데이트는 Discord에서 가장 먼저 공개됩니다.
+                  </p>
+                </CardDescription>
+              </div>
+              <Button asChild>
+                <Link to="https://discord.gg/tjUbE3Ch">참여하기</Link>
+              </Button>
+            </CardHeader>
+          </Card>
+        </div>
         {children}
         <ScrollRestoration />
         <Scripts />
